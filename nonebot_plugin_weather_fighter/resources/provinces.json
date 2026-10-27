@@ -1,0 +1,810 @@
+{
+ "updated": "2026-10-27",
+ "source": "weather-fighter web/data/cities.json + places.json（离线快照）",
+ "note": "M0 仅开放省级；capital 为省会/首府代表城市。coords=[lat,lon] 城市中心，station_coords=[lat,lon] 国家站。地级市数据见 regions.json，后续再启用。",
+ "timezone": "Asia/Shanghai",
+ "provinces": [
+  {
+   "name": "北京市",
+   "short": "北京",
+   "capital": "北京",
+   "city_id": "101010100",
+   "cma_station": "54511",
+   "coords": [
+    39.905,
+    116.4053
+   ],
+   "station_coords": [
+    39.81,
+    116.47
+   ],
+   "pinyin": "beijing",
+   "aliases": [
+    "101010100",
+    "beijing",
+    "北京",
+    "北京市"
+   ]
+  },
+  {
+   "name": "天津市",
+   "short": "天津",
+   "capital": "天津",
+   "city_id": "101030100",
+   "cma_station": "54517_tj",
+   "coords": [
+    39.1256,
+    117.1902
+   ],
+   "station_coords": [
+    39.07,
+    117.21
+   ],
+   "pinyin": "tianjin",
+   "aliases": [
+    "101030100",
+    "tianjin",
+    "天津",
+    "天津市"
+   ]
+  },
+  {
+   "name": "河北省",
+   "short": "河北",
+   "capital": "石家庄",
+   "city_id": "101090101",
+   "cma_station": "53698-sjz",
+   "coords": [
+    38.0455,
+    114.5025
+   ],
+   "station_coords": [
+    38.0167,
+    114.4
+   ],
+   "pinyin": "hebei",
+   "aliases": [
+    "101090101",
+    "hebei",
+    "shijiazhuang",
+    "河北",
+    "河北省",
+    "石家庄"
+   ]
+  },
+  {
+   "name": "山西省",
+   "short": "山西",
+   "capital": "太原",
+   "city_id": "101100101",
+   "cma_station": "53679",
+   "coords": [
+    37.857,
+    112.5492
+   ],
+   "station_coords": [
+    37.75,
+    112.54
+   ],
+   "pinyin": "shanxi",
+   "aliases": [
+    "101100101",
+    "shanxi",
+    "taiyuan",
+    "太原",
+    "山西",
+    "山西省"
+   ]
+  },
+  {
+   "name": "内蒙古自治区",
+   "short": "内蒙古",
+   "capital": "呼和浩特",
+   "city_id": "101080101",
+   "cma_station": "53466",
+   "coords": [
+    40.8183,
+    111.6708
+   ],
+   "station_coords": [
+    40.76,
+    111.71
+   ],
+   "pinyin": "neimenggu",
+   "aliases": [
+    "101080101",
+    "hohhot",
+    "neimenggu",
+    "内蒙古",
+    "内蒙古自治区",
+    "呼和浩特"
+   ]
+  },
+  {
+   "name": "辽宁省",
+   "short": "辽宁",
+   "capital": "沈阳",
+   "city_id": "101070101",
+   "cma_station": "54342",
+   "coords": [
+    41.7968,
+    123.4291
+   ],
+   "station_coords": [
+    41.73,
+    123.51
+   ],
+   "pinyin": "liaoning",
+   "aliases": [
+    "101070101",
+    "liaoning",
+    "shenyang",
+    "沈阳",
+    "辽宁",
+    "辽宁省"
+   ]
+  },
+  {
+   "name": "吉林省",
+   "short": "吉林",
+   "capital": "长春",
+   "city_id": "101060101",
+   "cma_station": "54161",
+   "coords": [
+    43.8868,
+    125.3245
+   ],
+   "station_coords": [
+    43.89,
+    125.23
+   ],
+   "pinyin": "jilin",
+   "aliases": [
+    "101060101",
+    "changchun",
+    "jilin",
+    "吉林",
+    "吉林省",
+    "长春"
+   ]
+  },
+  {
+   "name": "黑龙江省",
+   "short": "黑龙江",
+   "capital": "哈尔滨",
+   "city_id": "101050101",
+   "cma_station": "50953",
+   "coords": [
+    45.757,
+    126.6425
+   ],
+   "station_coords": [
+    45.93,
+    126.58
+   ],
+   "pinyin": "heilongjiang",
+   "aliases": [
+    "101050101",
+    "harbin",
+    "heilongjiang",
+    "哈尔滨",
+    "黑龙江",
+    "黑龙江省"
+   ]
+  },
+  {
+   "name": "上海市",
+   "short": "上海",
+   "capital": "上海",
+   "city_id": "101020100",
+   "cma_station": "58367",
+   "coords": [
+    31.2317,
+    121.4726
+   ],
+   "station_coords": [
+    31.19,
+    121.43
+   ],
+   "pinyin": "shanghai",
+   "aliases": [
+    "101020100",
+    "shanghai",
+    "上海",
+    "上海市"
+   ]
+  },
+  {
+   "name": "江苏省",
+   "short": "江苏",
+   "capital": "南京",
+   "city_id": "101190101",
+   "cma_station": "58238",
+   "coords": [
+    32.0415,
+    118.7674
+   ],
+   "station_coords": [
+    31.93,
+    118.9
+   ],
+   "pinyin": "jiangsu",
+   "aliases": [
+    "101190101",
+    "jiangsu",
+    "nanjing",
+    "南京",
+    "江苏",
+    "江苏省"
+   ]
+  },
+  {
+   "name": "浙江省",
+   "short": "浙江",
+   "capital": "杭州",
+   "city_id": "101210101",
+   "cma_station": "58457",
+   "coords": [
+    30.2875,
+    120.1536
+   ],
+   "station_coords": [
+    30.23,
+    120.16
+   ],
+   "pinyin": "zhejiang",
+   "aliases": [
+    "101210101",
+    "hangzhou",
+    "zhejiang",
+    "杭州",
+    "浙江",
+    "浙江省"
+   ]
+  },
+  {
+   "name": "安徽省",
+   "short": "安徽",
+   "capital": "合肥",
+   "city_id": "101220101",
+   "cma_station": "58321",
+   "coords": [
+    31.8612,
+    117.283
+   ],
+   "station_coords": [
+    31.96,
+    117.06
+   ],
+   "pinyin": "anhui",
+   "aliases": [
+    "101220101",
+    "anhui",
+    "hefei",
+    "合肥",
+    "安徽",
+    "安徽省"
+   ]
+  },
+  {
+   "name": "福建省",
+   "short": "福建",
+   "capital": "福州",
+   "city_id": "101230101",
+   "cma_station": "58847",
+   "coords": [
+    26.0753,
+    119.3062
+   ],
+   "station_coords": [
+    26.08,
+    119.29
+   ],
+   "pinyin": "fujian",
+   "aliases": [
+    "101230101",
+    "fujian",
+    "fuzhou",
+    "福州",
+    "福建",
+    "福建省"
+   ]
+  },
+  {
+   "name": "江西省",
+   "short": "江西",
+   "capital": "南昌",
+   "city_id": "101240101",
+   "cma_station": "58606",
+   "coords": [
+    28.6765,
+    115.8922
+   ],
+   "station_coords": [
+    28.59,
+    115.9
+   ],
+   "pinyin": "jiangxi",
+   "aliases": [
+    "101240101",
+    "jiangxi",
+    "nanchang",
+    "南昌",
+    "江西",
+    "江西省"
+   ]
+  },
+  {
+   "name": "山东省",
+   "short": "山东",
+   "capital": "济南",
+   "city_id": "101120101",
+   "cma_station": "54823",
+   "coords": [
+    36.6758,
+    117.0009
+   ],
+   "station_coords": [
+    36.6,
+    117.01
+   ],
+   "pinyin": "shandong",
+   "aliases": [
+    "101120101",
+    "jinan",
+    "shandong",
+    "山东",
+    "山东省",
+    "济南"
+   ]
+  },
+  {
+   "name": "河南省",
+   "short": "河南",
+   "capital": "郑州",
+   "city_id": "101180101",
+   "cma_station": "57083",
+   "coords": [
+    34.758,
+    113.6654
+   ],
+   "station_coords": [
+    34.71,
+    113.66
+   ],
+   "pinyin": "henan",
+   "aliases": [
+    "101180101",
+    "henan",
+    "zhengzhou",
+    "河南",
+    "河南省",
+    "郑州"
+   ]
+  },
+  {
+   "name": "湖北省",
+   "short": "湖北",
+   "capital": "武汉",
+   "city_id": "101200101",
+   "cma_station": "57494",
+   "coords": [
+    30.5844,
+    114.2986
+   ],
+   "station_coords": [
+    30.6,
+    114.05
+   ],
+   "pinyin": "hubei",
+   "aliases": [
+    "101200101",
+    "hubei",
+    "wuhan",
+    "武汉",
+    "湖北",
+    "湖北省"
+   ]
+  },
+  {
+   "name": "湖南省",
+   "short": "湖南",
+   "capital": "长沙",
+   "city_id": "101250101",
+   "cma_station": "57687",
+   "coords": [
+    28.1941,
+    112.9823
+   ],
+   "station_coords": [
+    28.11,
+    112.79
+   ],
+   "pinyin": "hunan",
+   "aliases": [
+    "101250101",
+    "changsha",
+    "hunan",
+    "湖南",
+    "湖南省",
+    "长沙"
+   ]
+  },
+  {
+   "name": "广东省",
+   "short": "广东",
+   "capital": "广州",
+   "city_id": "101280101",
+   "cma_station": "59287",
+   "coords": [
+    23.1252,
+    113.2806
+   ],
+   "station_coords": [
+    23.21,
+    113.48
+   ],
+   "pinyin": "guangdong",
+   "aliases": [
+    "101280101",
+    "guangdong",
+    "guangzhou",
+    "广东",
+    "广东省",
+    "广州"
+   ]
+  },
+  {
+   "name": "广西壮族自治区",
+   "short": "广西",
+   "capital": "南宁",
+   "city_id": "101300101",
+   "cma_station": "59431",
+   "coords": [
+    22.824,
+    108.32
+   ],
+   "station_coords": [
+    22.78,
+    108.55
+   ],
+   "pinyin": "guangxi",
+   "aliases": [
+    "101300101",
+    "guangxi",
+    "nanning",
+    "南宁",
+    "广西",
+    "广西壮族自治区"
+   ]
+  },
+  {
+   "name": "海南省",
+   "short": "海南",
+   "capital": "海口",
+   "city_id": "101310101",
+   "cma_station": "59758",
+   "coords": [
+    20.032,
+    110.3312
+   ],
+   "station_coords": [
+    19.99,
+    110.25
+   ],
+   "pinyin": "hainan",
+   "aliases": [
+    "101310101",
+    "haikou",
+    "hainan",
+    "海南",
+    "海南省",
+    "海口"
+   ]
+  },
+  {
+   "name": "重庆市",
+   "short": "重庆",
+   "capital": "重庆",
+   "city_id": "101040100",
+   "cma_station": "57516",
+   "coords": [
+    29.5332,
+    106.505
+   ],
+   "station_coords": [
+    29.58,
+    106.46
+   ],
+   "pinyin": "chongqing",
+   "aliases": [
+    "101040100",
+    "chongqing",
+    "重庆",
+    "重庆市"
+   ]
+  },
+  {
+   "name": "四川省",
+   "short": "四川",
+   "capital": "成都",
+   "city_id": "101270101",
+   "cma_station": "S1003",
+   "coords": [
+    30.6595,
+    104.0657
+   ],
+   "station_coords": [
+    30.59,
+    104.16
+   ],
+   "pinyin": "sichuan",
+   "aliases": [
+    "101270101",
+    "chengdu",
+    "sichuan",
+    "四川",
+    "四川省",
+    "成都"
+   ]
+  },
+  {
+   "name": "贵州省",
+   "short": "贵州",
+   "capital": "贵阳",
+   "city_id": "101260101",
+   "cma_station": "57816",
+   "coords": [
+    26.5783,
+    106.7135
+   ],
+   "station_coords": [
+    26.59,
+    106.73
+   ],
+   "pinyin": "guizhou",
+   "aliases": [
+    "101260101",
+    "guiyang",
+    "guizhou",
+    "贵州",
+    "贵州省",
+    "贵阳"
+   ]
+  },
+  {
+   "name": "云南省",
+   "short": "云南",
+   "capital": "昆明",
+   "city_id": "101290101",
+   "cma_station": "56778",
+   "coords": [
+    25.0406,
+    102.7123
+   ],
+   "station_coords": [
+    25.01,
+    102.65
+   ],
+   "pinyin": "yunnan",
+   "aliases": [
+    "101290101",
+    "kunming",
+    "yunnan",
+    "云南",
+    "云南省",
+    "昆明"
+   ]
+  },
+  {
+   "name": "西藏自治区",
+   "short": "西藏",
+   "capital": "拉萨",
+   "city_id": "101140101",
+   "cma_station": "55591",
+   "coords": [
+    29.6604,
+    91.1322
+   ],
+   "station_coords": [
+    29.66,
+    91.14
+   ],
+   "pinyin": "xizang",
+   "aliases": [
+    "101140101",
+    "lhasa",
+    "xizang",
+    "拉萨",
+    "西藏",
+    "西藏自治区"
+   ]
+  },
+  {
+   "name": "陕西省",
+   "short": "陕西",
+   "capital": "西安",
+   "city_id": "101110101",
+   "cma_station": "V8870",
+   "coords": [
+    34.2632,
+    108.948
+   ],
+   "station_coords": [
+    34.31,
+    108.94
+   ],
+   "pinyin": "shaanxi",
+   "aliases": [
+    "101110101",
+    "shaanxi",
+    "xian",
+    "西安",
+    "陕西",
+    "陕西省"
+   ]
+  },
+  {
+   "name": "甘肃省",
+   "short": "甘肃",
+   "capital": "兰州",
+   "city_id": "101160101",
+   "cma_station": "52889",
+   "coords": [
+    36.058,
+    103.8236
+   ],
+   "station_coords": [
+    36.04,
+    103.88
+   ],
+   "pinyin": "gansu",
+   "aliases": [
+    "101160101",
+    "gansu",
+    "lanzhou",
+    "兰州",
+    "甘肃",
+    "甘肃省"
+   ]
+  },
+  {
+   "name": "青海省",
+   "short": "青海",
+   "capital": "西宁",
+   "city_id": "101150101",
+   "cma_station": "52866",
+   "coords": [
+    36.6232,
+    101.7789
+   ],
+   "station_coords": [
+    36.66,
+    101.73
+   ],
+   "pinyin": "qinghai",
+   "aliases": [
+    "101150101",
+    "qinghai",
+    "xining",
+    "西宁",
+    "青海",
+    "青海省"
+   ]
+  },
+  {
+   "name": "宁夏回族自治区",
+   "short": "宁夏",
+   "capital": "银川",
+   "city_id": "101170101",
+   "cma_station": "53614",
+   "coords": [
+    38.4664,
+    106.2782
+   ],
+   "station_coords": [
+    38.47,
+    106.21
+   ],
+   "pinyin": "ningxia",
+   "aliases": [
+    "101170101",
+    "ningxia",
+    "yinchuan",
+    "宁夏",
+    "宁夏回族自治区",
+    "银川"
+   ]
+  },
+  {
+   "name": "新疆维吾尔自治区",
+   "short": "新疆",
+   "capital": "乌鲁木齐",
+   "city_id": "101130101",
+   "cma_station": "51463",
+   "coords": [
+    43.7928,
+    87.6177
+   ],
+   "station_coords": [
+    43.79,
+    87.65
+   ],
+   "pinyin": "xinjiang",
+   "aliases": [
+    "101130101",
+    "urumqi",
+    "xinjiang",
+    "乌鲁木齐",
+    "新疆",
+    "新疆维吾尔自治区"
+   ]
+  },
+  {
+   "name": "香港特别行政区",
+   "short": "香港",
+   "capital": "香港",
+   "city_id": "101320101",
+   "cma_station": "",
+   "coords": [
+    22.32,
+    114.1734
+   ],
+   "station_coords": null,
+   "pinyin": "hongkong",
+   "aliases": [
+    "101320101",
+    "hong kong",
+    "hongkong",
+    "香港",
+    "香港特别行政区"
+   ]
+  },
+  {
+   "name": "澳门特别行政区",
+   "short": "澳门",
+   "capital": "澳门",
+   "city_id": "101330101",
+   "cma_station": "45011B",
+   "coords": [
+    22.199,
+    113.5491
+   ],
+   "station_coords": [
+    22.16,
+    113.57
+   ],
+   "pinyin": "macau",
+   "aliases": [
+    "101330101",
+    "macau",
+    "澳门",
+    "澳门特别行政区"
+   ]
+  },
+  {
+   "name": "台湾省",
+   "short": "台湾",
+   "capital": "台北",
+   "city_id": "101340101",
+   "cma_station": "58968",
+   "coords": [
+    25.0443,
+    121.5091
+   ],
+   "station_coords": [
+    25.03,
+    121.53
+   ],
+   "pinyin": "taiwan",
+   "aliases": [
+    "101340101",
+    "taipei",
+    "taiwan",
+    "台北",
+    "台湾",
+    "台湾省"
+   ]
+  }
+ ]
+}

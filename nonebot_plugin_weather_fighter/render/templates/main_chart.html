@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WXI</title>
+  <style>{{ theme_css }}</style>
+</head>
+<body>
+  {% if header %}
+  <section class="quote-head">
+    <div class="qh-left">
+      <div class="qh-name">
+        <h1>{{ header.title }}</h1>
+        <span class="qh-code">{{ header.subtitle }}</span>
+        <span class="qh-tags">
+          {% for tag in header.tags %}<span class="tag">{{ tag }}</span>{% endfor %}
+        </span>
+      </div>
+      <div class="qh-price">
+        <span class="qh-last {{ 'up' if header.up else 'down' }}">{{ header.price }}</span>
+        <span class="qh-unit">℃</span>
+        <span class="qh-chg {{ 'up' if header.up else 'down' }}">{{ header.change }}</span>
+        <span class="qh-pct {{ 'up' if header.up else 'down' }}">{{ header.change_pct }}</span>
+      </div>
+    </div>
+    <div class="qh-stats">
+      {% for group in header.groups %}
+      <div class="qg">
+        {% for label, value in group %}
+        <div class="qs"><b>{{ label }}</b><span>{{ value }}</span></div>
+        {% endfor %}
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+  <div id="main-chart"></div>
+  <script type="text/plain" id="wf-font">{{ font_data }}</script>
+  <script>{{ echarts_js }}</script>
+  <script>
+    const option = {{ option_json }};
+    const chart = echarts.init(document.getElementById('main-chart'), null, { renderer: 'canvas' });
+    let drawn = false;
+    function draw(withFont) {
+      if (drawn) return;
+      drawn = true;
+      if (withFont) {
+        document.body.classList.add('wf-ready');
+      }
+      chart.setOption(option);
+      chart.resize();
+      window.__chartReady = true;
+    }
+    const binary = document.getElementById('wf-font').textContent.trim();
+    const face = new FontFace('WF Mono', 'url(data:font/woff2;base64,' + binary + ')');
+    document.fonts.add(face);
+    face.load().then(() => draw(true)).catch(() => draw(false));
+  </script>
+</body>
+</html>
