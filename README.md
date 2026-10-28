@@ -113,7 +113,6 @@
 | `WEATHER_FIGHTER_SAFETY_TARGET_PCT` | 35 | 补到默认余额的百分比后停止触发 |
 | `WEATHER_FIGHTER_CHART_BARS` | 64 | 主图节点数（64 根 ≈ 4 个交易日，其中约 15% 为预测尾段） |
 | `WEATHER_FIGHTER_ENABLE_REGION` | true | 是否加载同省区域指数 |
-| `WEATHER_FIGHTER_DEFAULT_PROVINCE` | 河北 | 启动时用于建盘的默认省份 |
 | `WEATHER_FIGHTER_CAIYUN_TOKEN` | 空 | 彩云 token（预留） |
 
 ## 主图

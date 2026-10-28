@@ -6,8 +6,9 @@ from functools import lru_cache
 from importlib.resources import files
 from typing import Any
 
-from .provinces import Province
+from .provinces import Province, resolve_province
 
+# 直辖市＝省会本身就是整个省级单位（没有同城其他站点可交叉验证），故优先于省会 2.2；香港澳门按省会档。
 MUNICIPALITIES = {"北京市", "上海市", "天津市", "重庆市"}
 
 
@@ -81,6 +82,37 @@ def all_cities() -> tuple[City, ...]:
             )
         )
     return tuple(out)
+
+
+@lru_cache(maxsize=1)
+def _name_index() -> dict[str, City]:
+    index: dict[str, City] = {}
+    for city in all_cities():
+        for key in (city.name, city.pinyin):
+            normalized = "".join(key.split()).casefold()
+            if normalized:
+                index.setdefault(normalized, city)
+    return index
+
+
+def resolve_city(text: str | None) -> City | None:
+    if not text:
+        return None
+    key = "".join(text.split()).casefold()
+    if not key:
+        return None
+    return _name_index().get(key)
+
+
+def resolve_province_or_city(text: str | None) -> Province | None:
+    """省份优先；城市/地区名暂时归到所属省级。"""
+    province = resolve_province(text)
+    if province is not None:
+        return province
+    city = resolve_city(text)
+    if city is None:
+        return None
+    return resolve_province(city.province)
 
 
 @lru_cache(maxsize=1)

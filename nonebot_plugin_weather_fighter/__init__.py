@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import os
 
-from nonebot import get_driver, get_plugin_config, logger, require
+from nonebot import get_driver, get_plugin_config, require
 from nonebot.plugin import PluginMetadata
 
 require("nonebot_plugin_localstore")
@@ -39,10 +39,8 @@ require("nonebot_plugin_htmlrender")
 from . import consts  # noqa: E402
 from . import matcher as matcher  # noqa: E402
 from .config import Config  # noqa: E402
-from .game.engine import get_engine  # noqa: E402
 from .services.http import close_http, configure_http  # noqa: E402
 from .services.openmeteo import OpenMeteoConfig, configure_client  # noqa: E402
-from .services.provinces import resolve_province  # noqa: E402
 from .services.store import close_store, init_store  # noqa: E402
 
 __plugin_meta__ = PluginMetadata(
@@ -68,14 +66,6 @@ async def _startup() -> None:
         )
     )
     await init_store()
-    province = resolve_province(config.weather_fighter_default_province)
-    if province is None:
-        logger.warning("默认省份 {} 无效，跳过启动开盘", config.weather_fighter_default_province)
-        return
-    try:
-        await get_engine().open_board(province)
-    except Exception as exc:  # noqa: BLE001 - 启动开盘失败时等首次命令重试
-        logger.opt(exception=exc).warning("启动开盘失败，首次命令时会重试")
 
 
 @_driver.on_shutdown

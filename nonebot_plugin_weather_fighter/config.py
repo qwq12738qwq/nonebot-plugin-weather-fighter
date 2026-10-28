@@ -23,4 +23,3 @@ class Config(BaseModel):
     weather_fighter_safety_target_pct: float = Field(default=35.0, gt=0, le=100)
     weather_fighter_chart_bars: int = Field(default=64, ge=8, le=1000)
     weather_fighter_enable_region: bool = True
-    weather_fighter_default_province: str = "河北"
