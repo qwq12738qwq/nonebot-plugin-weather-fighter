@@ -6,6 +6,7 @@ from zoneinfo import ZoneInfo
 import pytest
 
 from nonebot_plugin_weather_fighter.game.engine import (
+    TOTAL_BARS,
     CloseOutcome,
     GameEngine,
     GameError,
@@ -78,7 +79,7 @@ async def test_shared_board_and_independent_players(tmp_path: Path) -> None:
     assert first.season.id == second.season.id
     assert first.session.id != second.session.id
     assert first.wxi.region_cities
-    assert len(engine.chart_data(first).bars) == 115
+    assert len(engine.chart_data(first).bars) == 120
 
     outcome = await engine.open_position("u1", "g1", hebei, Side.LONG, stake=1000)
     assert outcome.trade.stake == pytest.approx(1000)
@@ -155,16 +156,16 @@ async def test_board_clock_lunch_and_afternoon(tmp_path: Path) -> None:
 
     now["value"] = at(27, 12, 0)
     lunch = await engine.quote("u1", "g1", hebei)
-    assert lunch.season.current_bar == state.season.current_bar + 5
+    assert lunch.current.time != state.current.time
     assert "午休" in engine.quote_stats(lunch).market_status
 
     now["value"] = at(27, 12, 45)
     still = await engine.quote("u1", "g1", hebei)
-    assert still.season.current_bar == lunch.season.current_bar
+    assert still.current.time == lunch.current.time
 
     now["value"] = at(27, 13, 15)
     afternoon = await engine.quote("u1", "g1", hebei)
-    assert afternoon.season.current_bar == lunch.season.current_bar + 2
+    assert afternoon.current.time != lunch.current.time
     await store.close()
 
 
@@ -211,9 +212,7 @@ async def test_price_triggered_bet_and_close(tmp_path: Path) -> None:
     assert hebei is not None
     state = await engine.ensure_game("u1", "g1", hebei)
 
-    upcoming = await engine._market_bar(state.season, hebei.name, state.relative_bar + 1)
-    assert upcoming is not None
-    target = (upcoming.low + upcoming.high) / 2
+    target = state.current.close
     await engine.place_order("u1", "g1", hebei, OrderKind.BET, Side.LONG, target, stake=1000)
 
     now["value"] = at(27, 10, 15)
@@ -223,16 +222,30 @@ async def test_price_triggered_bet_and_close(tmp_path: Path) -> None:
     assert filled.positions[0].province == "河北省"
     assert filled.orders == ()
 
-    upcoming_close = await engine._market_bar(
-        filled.season, filled.wxi.province_name, filled.relative_bar + 1
-    )
-    assert upcoming_close is not None
-    close_target = (upcoming_close.low + upcoming_close.high) / 2
+    close_target = filled.current.close
     await engine.place_order("u1", "g1", hebei, OrderKind.CLOSE, None, close_target)
 
     now["value"] = at(27, 10, 30)
     closed = await engine.quote("u1", "g1", hebei)
     assert closed.positions == ()
+    await store.close()
+
+
+async def test_long_offline_backfills_order(tmp_path: Path) -> None:
+    now = {"value": at(27, 10, 0)}
+    engine, store, _ = await make_engine(tmp_path, now)
+    hebei = resolve_province("河北")
+    assert hebei is not None
+    state = await engine.ensure_game("u1", "g1", hebei)
+    target = state.current.close
+    await engine.place_order("u1", "g1", hebei, OrderKind.BET, Side.LONG, target, stake=1000)
+
+    from datetime import datetime
+
+    now["value"] = datetime(2026, 11, 24, 10, 0, tzinfo=TZ).timestamp()
+    back = await engine.quote("u1", "g1", hebei)
+    assert len(back.positions) == 1
+    assert back.positions[0].entry_price == pytest.approx(target)
     await store.close()
 
 
@@ -348,8 +361,8 @@ async def test_board_runs_continuously_without_end(tmp_path: Path) -> None:
     assert later.ended is False
     assert later.session.status.value == "running"
     assert later.season.id == state.season.id
-    assert later.relative_bar > state.relative_bar + 30 * 16
-    assert len(later.wxi) > 30 * 16
+    assert later.relative_bar == state.relative_bar
+    assert len(later.wxi) == TOTAL_BARS
     await store.close()
 
 

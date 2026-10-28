@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import math
 import random
-from dataclasses import dataclass, replace
+from dataclasses import dataclass
 from datetime import datetime
 from statistics import median
 
@@ -12,7 +12,7 @@ from ..services.regions import city_amp, dish_scale
 
 BASE = 1000.0
 WARM_DAYS = 7
-TRADE_DAYS = 30
+TRADE_DAYS = 8
 
 # 原版 game.js 的可标定系数（WXI-lite：去掉 PM2.5/地震/台风/天文）
 P = {
@@ -522,71 +522,4 @@ def build_wxi_series(
         warm_bars=warm_bars,
         trade_bars=trade_bars,
         window_start=window_start,
-    )
-
-
-def _repeat_offsets(values: list[float | None]) -> list[float]:
-    """去趋势重复的偏移：每个周期首尾都落在同一个锚点上。"""
-    count = len(values)
-    known = [(index, value) for index, value in enumerate(values) if value is not None]
-    if count < 2 or len(known) < 2:
-        return [0.0] * count
-    mean = sum(value for _, value in known) / len(known)
-    first_index, first = known[0]
-    last_index, last = known[-1]
-    span = last_index - first_index
-    end_offset = last - mean
-    offsets: list[float] = []
-    for index, value in enumerate(values):
-        if value is None:
-            offsets.append(0.0)
-            continue
-        trend = first - mean + (last - first) * (index - first_index) / span
-        offsets.append(end_offset - trend)
-    return offsets
-
-
-def extend_wxi(wxi: WxiSeries, cycles: int = 50) -> WxiSeries:
-    """把 30 个交易日的行情首尾相接滚动，价格在接缝处连续，没有“到期”。
-
-    温度不照搬 WXI 的价格偏移，而是抹掉窗口内的线性趋势后重复：
-    每个周期都从上一周期的收盘温度出发，也回到同一个温度，接缝不跳变，
-    且温度长期保持在原始区间内。
-    """
-    if cycles <= 1 or wxi.trade_bars <= 0:
-        return wxi
-    base_start = wxi.warm_bars
-    base_bars = wxi.bars[base_start:]
-    base_regional = wxi.regional_line[base_start:]
-    if not base_bars:
-        return wxi
-    step = base_bars[-1].close - base_bars[0].open
-    temp_offsets = _repeat_offsets([bar.temp for bar in base_bars])
-    dew_offsets = _repeat_offsets([bar.dew for bar in base_bars])
-    bars = list(wxi.bars[:base_start])
-    regional = list(wxi.regional_line[:base_start])
-    for cycle in range(cycles):
-        shift = cycle * step
-        for index, bar in enumerate(base_bars):
-            temp_offset = 0.0 if cycle == 0 else temp_offsets[index]
-            dew_offset = 0.0 if cycle == 0 else dew_offsets[index]
-            bars.append(
-                replace(
-                    bar,
-                    open=bar.open + shift,
-                    high=bar.high + shift,
-                    low=bar.low + shift,
-                    close=bar.close + shift,
-                    temp=bar.temp + temp_offset,
-                    dew=None if bar.dew is None else bar.dew + dew_offset,
-                    regional=None if bar.regional is None else bar.regional + shift,
-                )
-            )
-        for value in base_regional:
-            regional.append(None if value is None else value + shift)
-    return replace(
-        wxi,
-        bars=tuple(bars),
-        regional_line=tuple(regional),
-        trade_bars=wxi.trade_bars * cycles,
     )
