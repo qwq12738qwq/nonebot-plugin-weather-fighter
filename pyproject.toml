@@ -1,7 +1,7 @@
 [project]
 name = "nonebot-plugin-weather-fighter"
-version = "0.4.0"
-description = "NoneBot2 群盘天气指数小游戏 + 天气查询（M2：所有群共用一个盘 / 多省 / 真实交易时间）"
+version = "0.4.0.1"
+description = "老实看天气,很枯燥吧"
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.10"
