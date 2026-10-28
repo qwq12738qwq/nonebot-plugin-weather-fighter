@@ -333,6 +333,7 @@ class OpenMeteoClient:
             "past_days": str(self.config.past_days),
             "forecast_days": str(self.config.forecast_days),
             "timezone": TIMEZONE,
+            "wind_speed_unit": "ms",
         }
         errors: list[str] = []
         for host in FORECAST_HOSTS:
@@ -413,6 +414,7 @@ class OpenMeteoClient:
             "start_date": start_date,
             "end_date": end_date,
             "timezone": TIMEZONE,
+            "wind_speed_unit": "ms",
         }
         errors: list[str] = []
         for host in FORECAST_HOSTS:

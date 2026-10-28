@@ -48,6 +48,7 @@ async def test_fetch_and_cache() -> None:
     assert len(result.value) == 192
     assert result.value.city_id == "101090101"
     assert result.value.source == FORECAST_HOSTS[0]
+    assert route.calls[0].request.url.params.get("wind_speed_unit") == "ms"
 
     again = await subject.fetch_minutely_15(province())
     assert again.value.time == result.value.time
