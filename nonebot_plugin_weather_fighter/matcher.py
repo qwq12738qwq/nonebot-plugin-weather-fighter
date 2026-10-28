@@ -52,7 +52,7 @@ def _split_leverage(rest: list[str]) -> tuple[float | None, list[str]]:
             try:
                 leverage = float(rest[index + 1].removesuffix("倍"))
             except ValueError as exc:
-                raise AmountError("倍数格式不对，例如：倍数 5") from exc
+                raise AmountError("倍数格式不对捏，例如：倍数 5") from exc
             index += 2
             continue
         match = LEVERAGE_PATTERN.fullmatch(token)

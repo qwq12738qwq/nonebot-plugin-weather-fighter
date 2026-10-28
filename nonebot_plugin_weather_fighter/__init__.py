@@ -51,10 +51,11 @@ from .services.store import close_store, init_store  # noqa: E402
 
 __plugin_meta__ = PluginMetadata(
     name="天气战士",
-    description="群盘天气指数小游戏 + 天气查询（所有群共用一个盘 / 多省 / 真实交易时间）",
+    description="老实看天气,很枯燥吧",
     usage=consts.HELP_TEXT,
     type="application",
     config=Config,
+    homepage="https://github.com/qwq12738qwq/nonebot-plugin-beatsaberscore",
     supported_adapters={"~onebot.v11"},
 )
 

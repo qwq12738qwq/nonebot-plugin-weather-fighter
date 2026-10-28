@@ -41,7 +41,7 @@ def parse_amount(text: str | None, cash: float, *, default_pct: float = 20.0) ->
         except ValueError as exc:
             raise AmountError("金额格式不对，例如：1000 / 1万 / 30% / 全") from exc
     if amount <= 0:
-        raise AmountError("金额必须大于 0")
+        raise AmountError("还有反向消费?")
     if amount > cash + 1e-6:
-        raise AmountError(f"余额只有 {cash:,.0f}")
+        raise AmountError(f"穷了,只有 {cash:,.0f}")
     return amount
