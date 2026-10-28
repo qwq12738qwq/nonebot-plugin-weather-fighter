@@ -6,7 +6,7 @@ import math
 import time
 import uuid
 from collections import OrderedDict
-from collections.abc import Callable
+from collections.abc import Awaitable, Callable
 from dataclasses import dataclass, replace
 from datetime import date, datetime, timedelta
 
@@ -34,7 +34,13 @@ from ..services.market_time import (
     market_status,
     trading_bar_of_day,
 )
-from ..services.openmeteo import OpenMeteoClient, filter_trading, filter_trading_region
+from ..services.openmeteo import (
+    OpenMeteoClient,
+    filter_trading,
+    filter_trading_region,
+    merge_minutely,
+    prune_minutely,
+)
 from ..services.provinces import Province, resolve_province
 from ..services.regions import region_cities
 from ..services.store import Store
@@ -44,8 +50,6 @@ from .wxi import (
     WxiBar,
     WxiSeries,
     build_wxi_series,
-    extend_wxi,
-    pick_window_start,
 )
 
 DEFAULT_PRINCIPAL = 10_000.0
@@ -59,7 +63,7 @@ DISPLAY_WICK_FACTOR = 0.8
 DISPLAY_REGIONAL_FACTOR = 0.02
 CHART_BARS = 64
 TOTAL_BARS = (WARM_DAYS + TRADE_DAYS) * BARS_PER_DAY
-HORIZON_CYCLES = 50
+REFRESH_SECONDS = 30 * 60
 
 
 class GameError(RuntimeError):
@@ -274,13 +278,20 @@ def _trading_day_count(start: date, end: date) -> int:
     return count
 
 
-def _board_current_bar(created_at: float, now: float) -> int:
-    first = _first_trade_day(created_at)
-    today = datetime.fromtimestamp(now, TZ).date()
-    if today < first:
-        return WARM_DAYS * BARS_PER_DAY
-    offset = max(0, _trading_day_count(first, today) - 1)
-    return WARM_DAYS * BARS_PER_DAY + offset * BARS_PER_DAY + trading_bar_of_day(now)
+def _elapsed_trading_bars(start: float, end: float) -> int:
+    """start→end 之间经过的 15 分钟交易 bar 数（非交易时段为 0）。"""
+    if end <= start:
+        return 0
+    first = _first_trade_day(start)
+
+    def relative(epoch: float) -> int:
+        today = datetime.fromtimestamp(epoch, TZ).date()
+        if today < first:
+            return 0
+        offset = max(0, _trading_day_count(first, today) - 1)
+        return offset * BARS_PER_DAY + trading_bar_of_day(epoch)
+
+    return max(0, relative(end) - relative(start))
 
 
 class GameEngine:
@@ -308,7 +319,7 @@ class GameEngine:
         self.chart_bars = chart_bars
         self.region_enabled = region_enabled
         self._clock = clock
-        self._wxi_cache: OrderedDict[tuple[str, str], WxiSeries] = OrderedDict()
+        self._wxi_cache: OrderedDict[tuple[str, str, str], WxiSeries] = OrderedDict()
         self._board_locks: dict[str, asyncio.Lock] = {}
         self._user_locks: dict[str, asyncio.Lock] = {}
 
@@ -398,12 +409,21 @@ class GameEngine:
 
             raw_local = (await self.client.fetch_minutely_15(province)).value
             local = filter_trading(raw_local)
-            seed = _stable_seed(BOARD_OWNER, str(int(self._clock())))
-            start = pick_window_start(local.time, seed)
-            start_time = local.time[start]
-            end_time = local.time[start + TOTAL_BARS - 1]
             now = int(self._clock())
-            initial_bar = _board_current_bar(now, now)
+            now_key = datetime.fromtimestamp(now, TZ).strftime("%Y-%m-%dT%H:%M")
+            local = prune_minutely(local, TOTAL_BARS, now_key)
+            end = len(local.time) - 1
+            for index, value in enumerate(local.time):
+                if value > now_key:
+                    end = max(0, index - 1)
+                    break
+            if end + 1 < TOTAL_BARS:
+                raise GameError(f"行情历史不足：需要 {TOTAL_BARS} 根，当前只有 {end + 1} 根")
+            start = end - TOTAL_BARS + 1
+            seed = _stable_seed(BOARD_OWNER, str(now))
+            start_time = local.time[start]
+            end_time = local.time[end]
+            initial_bar = TOTAL_BARS - 1
             board = Season(
                 id=f"{BOARD_OWNER}:{uuid.uuid4().hex[:8]}",
                 province=province.name,
@@ -472,10 +492,10 @@ class GameEngine:
     # 共享盘时钟 + 玩家账户懒推进
     # ------------------------------------------------------------------
     async def _advance_board(self, board: Season) -> Season:
-        now = int(self._clock())
-        target = _board_current_bar(board.created_at, now)
-        if target <= board.current_bar:
+        target = TOTAL_BARS - 1
+        if board.current_bar == target:
             return board
+        now = int(self._clock())
         await self.store.update_season_clock(board.id, current_bar=target, updated_at=now)
         return replace(board, current_bar=target, updated_at=now)
 
@@ -518,8 +538,12 @@ class GameEngine:
         await self.store.set_session_safety(session.id, active=active, grant_date=today)
         return session, amount
 
-    async def _market_bar(self, board: Season, province_name: str, relative: int) -> WxiBar | None:
-        market = await self._load_wxi_for_name(board, province_name)
+    async def _market_bar(
+        self, board: Season, province_name: str, relative: int, *, series: WxiSeries | None = None
+    ) -> WxiBar | None:
+        market = (
+            series if series is not None else await self._load_wxi_for_name(board, province_name)
+        )
         if market is None:
             return None
         index = min(relative, len(market) - 1)
@@ -533,16 +557,77 @@ class GameEngine:
         cash: float,
         relative: int,
         leverage: float,
+        *,
+        bar_at: Callable[[str, int], Awaitable[WxiBar | None]] | None = None,
     ) -> float:
         total = cash
         for position in positions.values():
-            bar = await self._market_bar(board, position.province, relative)
+            if bar_at is not None:
+                bar = await bar_at(position.province, relative)
+            else:
+                bar = await self._market_bar(board, position.province, relative)
             price = bar.close if bar is not None else position.entry_price
             total += _bet_value(position, price, leverage)
         return total
 
+    async def _backfill_series_map(
+        self, board: Season, provinces: set[str], begin_ts: float, now_ts: float
+    ) -> tuple[dict[str, WxiSeries], int, int]:
+        """离线超窗口时，用最多 92 天历史构造回补序列，覆盖 (begin_ts, now_ts]。"""
+        now_key = datetime.fromtimestamp(now_ts, TZ).strftime("%Y-%m-%dT%H:%M")
+        begin_key = datetime.fromtimestamp(begin_ts, TZ).strftime("%Y-%m-%dT%H:%M")
+        series_map: dict[str, WxiSeries] = {}
+        start_rel = 0
+        end_rel = 0
+        window_start: int | None = None
+        trade_days = TRADE_DAYS
+        for name in sorted(provinces):
+            province = resolve_province(name)
+            if province is None:
+                continue
+            raw = (await self.client.fetch_minutely_15(province)).value
+            local = filter_trading(raw)
+            begin_idx = 0
+            for index, stamp in enumerate(local.time):
+                if stamp > begin_key:
+                    begin_idx = index
+                    break
+            end_idx = len(local.time) - 1
+            for index, stamp in enumerate(local.time):
+                if stamp > now_key:
+                    end_idx = index - 1
+                    break
+            if end_idx < begin_idx:
+                continue
+            if window_start is None:
+                window_start = max(0, begin_idx - WARM_DAYS * BARS_PER_DAY)
+                needed = end_idx - window_start + 1
+                trade_days = max(1, (needed + BARS_PER_DAY - 1) // BARS_PER_DAY)
+                start_rel = begin_idx - window_start
+                end_rel = end_idx - window_start
+            if window_start + (WARM_DAYS + trade_days) * BARS_PER_DAY > len(local.time):
+                trade_days = max(1, (len(local.time) - window_start) // BARS_PER_DAY - WARM_DAYS)
+                if window_start + (WARM_DAYS + trade_days) * BARS_PER_DAY > len(local.time):
+                    continue
+            region = await self._market_region(board, province)
+            series_map[name] = build_wxi_series(
+                local,
+                region,
+                province_name=province.name,
+                province_short=province.short,
+                city_name=province.capital,
+                city_id=province.city_id,
+                seed=board.seed ^ _stable_seed(province.name),
+                window_start=window_start,
+                warm_days=WARM_DAYS,
+                trade_days=trade_days,
+            )
+        return series_map, start_rel, end_rel
+
     async def _advance_player(self, session: Session, board: Season) -> Session:
-        if session.status is not SessionStatus.RUNNING or session.current_bar >= board.current_bar:
+        now = int(self._clock())
+        elapsed = _elapsed_trading_bars(session.updated_at, now)
+        if session.status is not SessionStatus.RUNNING or elapsed <= 0:
             return session
         account = await self.store.get_account(session.id)
         if account is None:
@@ -551,14 +636,30 @@ class GameEngine:
             position.province: position for position in await self.store.get_positions(session.id)
         }
         orders = list(await self.store.list_open_orders(session.id))
-        now = int(self._clock())
 
-        for relative in range(session.current_bar + 1, board.current_bar + 1):
+        start_rel = max(0, board.current_bar + 1 - elapsed)
+        end_rel = board.current_bar
+        series_map: dict[str, WxiSeries] = {}
+        if elapsed > board.current_bar + 1:
+            provinces = {board.province} | {order.province for order in orders} | set(positions)
+            series_map, mapped_start, mapped_end = await self._backfill_series_map(
+                board, provinces, session.updated_at, now
+            )
+            if series_map:
+                start_rel, end_rel = mapped_start, mapped_end
+
+        async def bar_at(province_name: str, relative: int) -> WxiBar | None:
+            series = series_map.get(province_name)
+            if series is not None:
+                return await self._market_bar(board, province_name, relative, series=series)
+            return await self._market_bar(board, province_name, relative)
+
+        for relative in range(start_rel, end_rel + 1):
             opened_this_bar: set[str] = set()
             for index, order in enumerate(orders):
                 if order.status is not OrderStatus.OPEN:
                     continue
-                bar = await self._market_bar(board, order.province, relative)
+                bar = await bar_at(order.province, relative)
                 if bar is None or not _hit(order, bar):
                     continue
                 if order.kind is OrderKind.BET:
@@ -613,7 +714,7 @@ class GameEngine:
             for province, position in list(positions.items()):
                 if province in opened_this_bar:
                     continue
-                bar = await self._market_bar(board, province, relative)
+                bar = await bar_at(province, relative)
                 if bar is None:
                     continue
                 wipe = _wipe_price(position, session.leverage)
@@ -645,7 +746,7 @@ class GameEngine:
             account = replace(
                 account,
                 equity=await self._equity_at(
-                    board, positions, account.cash, relative, session.leverage
+                    board, positions, account.cash, relative, session.leverage, bar_at=bar_at
                 ),
                 stake=sum(item.stake for item in positions.values()),
             )
@@ -659,12 +760,16 @@ class GameEngine:
     # ------------------------------------------------------------------
     async def _market_series(self, board: Season, province: Province):
         local = await self.store.load_market_series(board.id, province.name)
-        if local is not None:
+        now = int(self._clock())
+        if local is not None and now - int(local.fetched_at) < REFRESH_SECONDS:
             return local
         raw = (await self.client.fetch_minutely_15(province)).value
-        local = filter_trading(raw)
-        await self.store.save_market_series(board.id, province.name, local)
-        return local
+        fresh = filter_trading(raw)
+        merged = merge_minutely(local, fresh) if local is not None else fresh
+        now_key = datetime.fromtimestamp(now, TZ).strftime("%Y-%m-%dT%H:%M")
+        pruned = prune_minutely(merged, TOTAL_BARS, now_key)
+        await self.store.save_market_series(board.id, province.name, pruned)
+        return pruned
 
     async def _market_region(self, board: Season, province: Province):
         region = await self.store.load_market_region(board.id, province.name)
@@ -694,44 +799,38 @@ class GameEngine:
         return await self._load_wxi(board, province)
 
     async def _load_wxi(self, board: Season, province: Province) -> WxiSeries:
-        key = (board.id, province.name)
-        cycle_bars = TRADE_DAYS * BARS_PER_DAY
+        local = await self._market_series(board, province)
+        now = int(self._clock())
+        now_key = datetime.fromtimestamp(now, TZ).strftime("%Y-%m-%dT%H:%M")
+        end = len(local.time) - 1
+        for index, stamp in enumerate(local.time):
+            if stamp > now_key:
+                end = max(0, index - 1)
+                break
+        if end + 1 < TOTAL_BARS:
+            raise GameError(f"{province.short}的行情历史不足，无法建盘")
+        start = end - TOTAL_BARS + 1
+        key = (board.id, province.name, local.time[end])
         cached = self._wxi_cache.get(key)
-        if cached is not None and board.current_bar < len(cached) - cycle_bars:
+        if cached is not None:
             self._wxi_cache.move_to_end(key)
             return cached
-        cycles = HORIZON_CYCLES
-        if cached is not None:
-            cycles = max(HORIZON_CYCLES, (cached.trade_bars // cycle_bars) * 2)
-        local = await self._market_series(board, province)
         region = await self._market_region(board, province)
         forecast = None
         try:
             forecast = (await self.client.fetch_forecast_deviation(province)).value
         except Exception as exc:  # noqa: BLE001 - 预报偏离失败不影响主行情
             logger.warning(f"预报偏离取数失败，按 0 处理：{exc}")
-        try:
-            start = local.time.index(board.start_time)
-        except ValueError as exc:
-            raise GameError(f"{province.short}的行情时间轴与当前盘未对齐") from exc
-        if (
-            start + TOTAL_BARS > len(local.time)
-            or local.time[start + TOTAL_BARS - 1] != board.end_time
-        ):
-            raise GameError(f"{province.short}的行情时间轴与当前盘未对齐")
-        wxi = extend_wxi(
-            build_wxi_series(
-                local,
-                region,
-                province_name=province.name,
-                province_short=province.short,
-                city_name=province.capital,
-                city_id=province.city_id,
-                seed=board.seed ^ _stable_seed(province.name),
-                window_start=start,
-                forecast=forecast,
-            ),
-            cycles,
+        wxi = build_wxi_series(
+            local,
+            region,
+            province_name=province.name,
+            province_short=province.short,
+            city_name=province.capital,
+            city_id=province.city_id,
+            seed=board.seed ^ _stable_seed(province.name),
+            window_start=start,
+            forecast=forecast,
         )
         self._wxi_cache[key] = wxi
         self._wxi_cache.move_to_end(key)
@@ -1061,21 +1160,24 @@ class GameEngine:
         regional_change_pct: float | None = None
         if regional is not None and previous_regional is not None and previous_regional != 0:
             regional_change_pct = (regional - previous_regional) / previous_regional * 100
-        day = max(1, relative // BARS_PER_DAY + 1 - WARM_DAYS)
-        day_start = (relative // BARS_PER_DAY) * BARS_PER_DAY
+        today = bar.time[:10]
+        day_start = relative
+        while day_start > 0 and bars[day_start - 1].time[:10] == today:
+            day_start -= 1
         day_bars = bars[day_start : relative + 1]
         temp_high = max(item.temp for item in day_bars)
         temp_low = min(item.temp for item in day_bars)
         day_open_temp = day_bars[0].temp
-        prev_day_start = day_start - BARS_PER_DAY
-        prev_day_bars = bars[prev_day_start:day_start] if prev_day_start >= 0 else []
+        previous_day = bars[day_start - 1].time[:10] if day_start > 0 else None
+        prev_day_bars = [item for item in bars[:day_start] if item.time[:10] == previous_day]
+        day = relative // BARS_PER_DAY + 1
         prev_day_high = max((item.temp for item in prev_day_bars), default=None)
         prev_day_low = min((item.temp for item in prev_day_bars), default=None)
         prev_day_close_temp = bars[day_start - 1].temp if day_start > 0 else None
         humidity = _humidity(bar.temp, bar.dew)
         feels_like = _feels_like(bar.temp, humidity, bar.gust * 0.7)
         moment = datetime.fromisoformat(bar.time)
-        time_label = f"第 {day} 天 {moment:%H:%M}"
+        time_label = f"{moment:%m-%d} {moment:%H:%M}"
         session_label = "早盘" if moment.hour < 12 else "午盘"
         status, is_open = market_status(self._clock())
         return QuoteStats(
@@ -1199,18 +1301,17 @@ class GameEngine:
         for time_value, temp_value in zip(local.time, local.temp, strict=True):
             if time_value <= now_key or temp_value is None:
                 continue
-            points.append((time_value[11:16], float(temp_value)))
+            points.append((time_value, float(temp_value)))
             if len(points) >= count:
                 break
         previous = state.current.close
         bars: list[Bar] = []
-        for offset, (clock, temp) in enumerate(points, start=1):
-            day = max(1, (state.relative_bar + offset) // BARS_PER_DAY + 1 - WARM_DAYS)
+        for stamp, temp in points:
             close = temp
             wick = max(0.05, abs(close - previous) * 0.15 + 0.02)
             bars.append(
                 Bar(
-                    time=f"{day}日 {clock}",
+                    time=f"{stamp[5:10]} {stamp[11:16]}",
                     open=previous,
                     high=max(previous, close) + wick,
                     low=min(previous, close) - wick,
@@ -1233,10 +1334,9 @@ class GameEngine:
         for index in range(start, relative + 1):
             previous = state.wxi.bars[index - 1].temp if index > 0 else None
             item = _display_bar(state.wxi.bars[index], previous)
-            day = max(1, index // BARS_PER_DAY + 1 - WARM_DAYS)
             bars.append(
                 Bar(
-                    time=f"{day}日 {item.time[11:16]}",
+                    time=f"{item.time[5:10]} {item.time[11:16]}",
                     open=item.open,
                     high=item.high,
                     low=item.low,

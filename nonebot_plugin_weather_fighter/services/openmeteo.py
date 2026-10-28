@@ -98,6 +98,64 @@ class MinutelySeries:
         return cls.from_dict(json.loads(payload))
 
 
+def _slice_minutely(series: MinutelySeries, start: int, end: int) -> MinutelySeries:
+    return MinutelySeries(
+        city_id=series.city_id,
+        city_name=series.city_name,
+        time=series.time[start:end],
+        temp=series.temp[start:end],
+        gust=series.gust[start:end],
+        precip=series.precip[start:end],
+        wcode=series.wcode[start:end],
+        cape=series.cape[start:end],
+        dew=series.dew[start:end],
+        fetched_at=series.fetched_at,
+        source=series.source,
+    )
+
+
+def merge_minutely(old: MinutelySeries | None, new: MinutelySeries) -> MinutelySeries:
+    """按时间戳合并，新抓到的真实数据覆盖旧值。"""
+    if old is None:
+        return new
+    rows: dict[str, tuple[Any, ...]] = {}
+    for series in (old, new):
+        for index, stamp in enumerate(series.time):
+            rows[stamp] = (
+                series.temp[index],
+                series.gust[index],
+                series.precip[index],
+                series.wcode[index],
+                series.cape[index],
+                series.dew[index],
+            )
+    stamps = sorted(rows)
+    return MinutelySeries(
+        city_id=new.city_id,
+        city_name=new.city_name,
+        time=tuple(stamps),
+        temp=tuple(rows[stamp][0] for stamp in stamps),
+        gust=tuple(rows[stamp][1] for stamp in stamps),
+        precip=tuple(rows[stamp][2] for stamp in stamps),
+        wcode=tuple(rows[stamp][3] for stamp in stamps),
+        cape=tuple(rows[stamp][4] for stamp in stamps),
+        dew=tuple(rows[stamp][5] for stamp in stamps),
+        fetched_at=new.fetched_at,
+        source=new.source,
+    )
+
+
+def prune_minutely(series: MinutelySeries, keep_past: int, now_key: str) -> MinutelySeries:
+    """只保留 now 之前的 keep_past 根 + now 之后的预报尾段，避免无限增长。"""
+    end = len(series.time) - 1
+    for index, stamp in enumerate(series.time):
+        if stamp > now_key:
+            end = max(0, index - 1)
+            break
+    start = max(0, end - keep_past + 1)
+    return _slice_minutely(series, start, len(series.time))
+
+
 def _float_or_none(value: Any) -> float | None:
     if value is None:
         return None

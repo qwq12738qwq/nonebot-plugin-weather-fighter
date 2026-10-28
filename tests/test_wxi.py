@@ -3,8 +3,6 @@ from __future__ import annotations
 import math
 from datetime import datetime, timedelta
 
-import pytest
-
 from nonebot_plugin_weather_fighter.game.wxi import (
     BARS_PER_DAY,
     TRADE_DAYS,
@@ -13,7 +11,6 @@ from nonebot_plugin_weather_fighter.game.wxi import (
     arrays_from_minutely,
     build_wxi_series,
     comfort_values,
-    extend_wxi,
     forecast_series,
     pick_window_start,
 )
@@ -87,7 +84,6 @@ def test_wxi_series_shape_and_regional_line() -> None:
         window_start=window_start,
     )
     assert len(wxi) == (WARM_DAYS + TRADE_DAYS) * BARS_PER_DAY
-    assert len(wxi) == 592
     assert wxi.warm_bars == WARM_DAYS * BARS_PER_DAY
     assert len(wxi.regional_line) == len(wxi)
     assert all(value is not None for value in wxi.regional_line)
@@ -131,60 +127,6 @@ def test_forecast_deviation_enters_wxi() -> None:
     without = build_wxi_series(local, region, **kwargs)
     assert with_forecast.bars[0].forecast_dev is not None
     assert [bar.close for bar in with_forecast.bars] != [bar.close for bar in without.bars]
-
-
-def test_extend_wxi_is_continuous() -> None:
-    raw = make_local()
-    local = filter_trading(raw)
-    region = filter_trading_region(make_region(raw))
-    seed = 123456789
-    window_start = pick_window_start(local.time, seed)
-    wxi = build_wxi_series(
-        local,
-        region,
-        province_name="河北省",
-        province_short="河北",
-        city_name="石家庄",
-        city_id=local.city_id,
-        seed=seed,
-        window_start=window_start,
-    )
-    extended = extend_wxi(wxi, cycles=2)
-    assert len(extended) == wxi.warm_bars + wxi.trade_bars * 2
-    seam = wxi.warm_bars + wxi.trade_bars
-    assert extended.bars[seam - 1].close == pytest.approx(extended.bars[seam].open)
-    assert extended.bars[seam - 1].temp == pytest.approx(extended.bars[seam].temp)
-    assert extended.bars[seam - 1].dew == pytest.approx(extended.bars[seam].dew)
-    assert len(extended.regional_line) == len(extended)
-
-
-def test_extend_wxi_temperature_stays_bounded() -> None:
-    raw = make_local()
-    local = filter_trading(raw)
-    region = filter_trading_region(make_region(raw))
-    seed = 123456789
-    window_start = pick_window_start(local.time, seed)
-    wxi = build_wxi_series(
-        local,
-        region,
-        province_name="河北省",
-        province_short="河北",
-        city_name="石家庄",
-        city_id=local.city_id,
-        seed=seed,
-        window_start=window_start,
-    )
-    cycles = 50
-    extended = extend_wxi(wxi, cycles=cycles)
-    base = wxi.bars[wxi.warm_bars :]
-    span = abs(base[-1].temp - base[0].temp)
-    temps = [bar.temp for bar in extended.bars]
-    assert min(temps) >= min(bar.temp for bar in base) - span
-    assert max(temps) <= max(bar.temp for bar in base) + span
-    for cycle in range(1, cycles):
-        seam = wxi.warm_bars + cycle * wxi.trade_bars
-        assert extended.bars[seam - 1].temp == pytest.approx(extended.bars[seam].temp)
-        assert extended.bars[seam - 1].dew == pytest.approx(extended.bars[seam].dew)
 
 
 def test_wxi_is_deterministic() -> None:
