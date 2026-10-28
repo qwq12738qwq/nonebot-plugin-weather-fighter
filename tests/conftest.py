@@ -4,6 +4,7 @@ import os
 import tempfile
 
 os.environ.setdefault("LOCALSTORE_DATA_DIR", tempfile.mkdtemp(prefix="wf-test-"))
+os.environ.setdefault("LOCALSTORE_CACHE_DIR", tempfile.mkdtemp(prefix="wf-test-cache-"))
 
 import nonebot
 

@@ -1,8 +1,6 @@
 from __future__ import annotations
 
 import os
-import platform
-from pathlib import Path
 
 from nonebot import get_driver, get_plugin_config, logger, require
 from nonebot.plugin import PluginMetadata
@@ -16,12 +14,10 @@ def _playwright_cache_dir() -> str:
     configured = os.environ.get("PLAYWRIGHT_BROWSERS_PATH")
     if configured:
         return configured
-    if platform.system() == "Windows":
-        base = Path(os.environ.get("LOCALAPPDATA", Path.home() / "AppData" / "Local"))
-        return str(base / "ms-playwright")
-    if platform.system() == "Darwin":
-        return str(Path.home() / "Library" / "Caches" / "ms-playwright")
-    return str(Path.home() / ".cache" / "ms-playwright")
+
+    from nonebot_plugin_localstore import get_plugin_cache_dir
+
+    return str(get_plugin_cache_dir() / "ms-playwright")
 
 
 if getattr(_driver.config, "render", None) is None:
