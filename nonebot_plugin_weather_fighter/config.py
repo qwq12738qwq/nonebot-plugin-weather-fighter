@@ -12,6 +12,7 @@ class Config(BaseModel):
     weather_fighter_bucket_daily: int = Field(default=10800, ge=300)
     weather_fighter_stale_seconds: int = Field(default=6 * 3600, ge=60)
     weather_fighter_http_timeout: float = Field(default=30.0, gt=0)
+    weather_fighter_retry_count: int = Field(default=3, ge=1, le=10)
     weather_fighter_preload_season_series: bool = True
     weather_fighter_caiyun_token: str = ""
     weather_fighter_command_cooldown: float = Field(default=5.0, ge=0)
