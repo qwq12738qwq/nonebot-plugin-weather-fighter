@@ -13,7 +13,7 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    environment: pypi
+    environment: pypi_upload
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
