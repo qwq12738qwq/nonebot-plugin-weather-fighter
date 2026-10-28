@@ -150,21 +150,31 @@ def _weather_score(code: int) -> float:
     return 60.0
 
 
-def comfort_values(arrays: WeatherArrays) -> list[float]:
-    out: list[float] = []
-    for index in range(len(arrays.time)):
-        temp_raw = arrays.temp[index]
-        gust_raw = arrays.gust[index]
-        precip_raw = arrays.precip[index]
-        temp = float(temp_raw) if temp_raw is not None else 24.0
-        gust = float(gust_raw) if gust_raw is not None else 0.0
-        precip = float(precip_raw) if precip_raw is not None else 0.0
-        code = int(arrays.wcode[index] or 0) if arrays.wcode[index] is not None else 0
-        dew_value = arrays.dew[index]
-        dew = float(dew_value) if dew_value is not None else temp - 8.0
+COMFORT_WEIGHTS: dict[str, float] = {
+    "temp": 0.34,
+    "dew": 0.15,
+    "precip": 0.21,
+    "code": 0.20,
+    "gust": 0.05,
+    "air": 0.05,
+}
 
-        s_temp = _ramp(
-            temp,
+
+def bar_scores(
+    temp: float | None,
+    dew: float | None,
+    precip: float | None,
+    code: float | None,
+    gust: float | None,
+) -> dict[str, float]:
+    temp_value = float(temp) if temp is not None else 24.0
+    dew_value = float(dew) if dew is not None else temp_value - 8.0
+    precip_value = float(precip) if precip is not None else 0.0
+    gust_value = float(gust) if gust is not None else 0.0
+    code_value = int(code) if code is not None else 0
+    return {
+        "temp": _ramp(
+            temp_value,
             [
                 (-5, 0),
                 (0, 10),
@@ -177,31 +187,42 @@ def comfort_values(arrays: WeatherArrays) -> list[float]:
                 (40, 0),
                 (45, 0),
             ],
-        )
-        s_dew = _ramp(
-            dew,
+        ),
+        "dew": _ramp(
+            dew_value,
             [(0, 100), (10, 100), (16, 95), (20, 75), (24, 40), (27, 15), (30, 0)],
-        )
-        s_precip = _ramp(
-            precip,
+        ),
+        "precip": _ramp(
+            precip_value,
             [(0, 100), (0.05, 90), (0.3, 65), (0.8, 40), (2, 15), (5, 0), (20, 0)],
-        )
-        s_code = _weather_score(code)
-        s_gust = _ramp(
-            gust,
+        ),
+        "code": _weather_score(code_value),
+        "gust": _ramp(
+            gust_value,
             [(0, 100), (15, 98), (25, 88), (40, 62), (60, 28), (80, 10), (110, 0)],
-        )
+        ),
         # 原版没有 PM2.5 时空气项按 85 分计入；保留这一项让 comfort 标尺一致。
-        total = (
-            0.34 * s_temp
-            + 0.15 * s_dew
-            + 0.21 * s_precip
-            + 0.20 * s_code
-            + 0.05 * s_gust
-            + 0.05 * 85.0
+        "air": 85.0,
+    }
+
+
+def comfort_from_scores(scores: dict[str, float]) -> float:
+    return sum(COMFORT_WEIGHTS[key] * value for key, value in scores.items())
+
+
+def comfort_values(arrays: WeatherArrays) -> list[float]:
+    return [
+        comfort_from_scores(
+            bar_scores(
+                arrays.temp[index],
+                arrays.dew[index],
+                arrays.precip[index],
+                arrays.wcode[index],
+                arrays.gust[index],
+            )
         )
-        out.append(total)
-    return out
+        for index in range(len(arrays.time))
+    ]
 
 
 def severity(comfort: list[float]) -> list[float]:

@@ -9,6 +9,7 @@ from collections import OrderedDict
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass, replace
 from datetime import date, datetime, timedelta
+from typing import Any
 
 from nonebot import logger
 
@@ -45,10 +46,12 @@ from ..services.provinces import Province, resolve_province
 from ..services.regions import region_cities
 from ..services.store import Store
 from .wxi import (
+    COMFORT_WEIGHTS,
     TRADE_DAYS,
     WARM_DAYS,
     WxiBar,
     WxiSeries,
+    bar_scores,
     build_wxi_series,
 )
 
@@ -1208,6 +1211,65 @@ class GameEngine:
             observations=len(state.wxi.region_cities),
         )
 
+    def comfort_pressure(self, state: GameState) -> tuple[dict[str, Any], ...]:
+        """天气压力表：六个维度近 7 个交易日的分位、方向与贡献点。"""
+        relative = state.relative_bar
+        bars = state.wxi.bars
+        start = max(0, relative - 7 * BARS_PER_DAY + 1)
+        window = bars[start : relative + 1]
+        current = bars[relative]
+        previous = bars[relative - 1] if relative > 0 else None
+        current_scores = bar_scores(
+            current.temp, current.dew, current.precip, current.wcode, current.gust
+        )
+        window_scores = [
+            bar_scores(item.temp, item.dew, item.precip, item.wcode, item.gust) for item in window
+        ]
+        previous_scores = (
+            bar_scores(previous.temp, previous.dew, previous.precip, previous.wcode, previous.gust)
+            if previous is not None
+            else current_scores
+        )
+        labels = {
+            "temp": "气温",
+            "dew": "露点",
+            "precip": "降水",
+            "code": "天气",
+            "gust": "阵风",
+            "air": "空气",
+        }
+        rows: list[dict[str, Any]] = []
+        for key, weight in COMFORT_WEIGHTS.items():
+            score = current_scores[key]
+            series = [item[key] for item in window_scores]
+            percentile = 100.0 * sum(1 for value in series if value <= score) / len(series)
+            delta = score - previous_scores[key]
+            arrow = "升" if delta > 0.5 else "降" if delta < -0.5 else "平"
+            contribution = weight * (score - 100.0)
+            if key == "air":
+                # 原版没有 PM2.5，空气项固定 85 分，没有分位可言
+                text = f"固定 {contribution:+.1f}"
+            else:
+                text = f"{percentile:.0f}% {arrow} {contribution:+.1f}"
+            rows.append(
+                {
+                    "key": key,
+                    "label": labels[key],
+                    "percentile": percentile,
+                    "direction": arrow,
+                    "contribution": contribution,
+                    "dominant": False,
+                    "text": text,
+                }
+            )
+        # 空气是占位值，恒定 85 分，不能让它抢「主导」
+        worst = min(
+            (row for row in rows if row["key"] != "air"),
+            key=lambda row: float(row["contribution"]),
+        )
+        worst["dominant"] = True
+        return tuple(rows)
+
     def quote_head(self, state: GameState, stats: QuoteStats) -> dict[str, object]:
         bar = state.current
 
@@ -1264,6 +1326,7 @@ class GameEngine:
                 ("观测点", f"{stats.observations} 个"),
             ),
         )
+        pressure = self.comfort_pressure(state)
         return {
             "title": f"{state.wxi.province_short} · {state.wxi.city_name}",
             "subtitle": f"{state.wxi.city_id} · {state.wxi.province_name}",
@@ -1276,6 +1339,7 @@ class GameEngine:
             "change": f"{stats.change:+.1f}",
             "change_pct": f"{stats.change_pct:+.2f}%",
             "up": stats.change >= 0,
+            "pressure": pressure,
             "groups": groups,
         }
 

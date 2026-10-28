@@ -32,6 +32,13 @@
         {% endfor %}
       </div>
       {% endfor %}
+      {% if header.pressure %}
+      <div class="qg qg-pressure">
+        {% for row in header.pressure %}
+        <div class="qs{% if row.dominant %} qs-worst{% endif %}"><b>{{ row.label }}</b><span>{{ row.text }}</span></div>
+        {% endfor %}
+      </div>
+      {% endif %}
     </div>
   </section>
   {% endif %}
