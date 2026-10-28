@@ -51,7 +51,7 @@ __plugin_meta__ = PluginMetadata(
     usage=consts.HELP_TEXT,
     type="application",
     config=Config,
-    homepage="https://github.com/qwq12738qwq/nonebot-plugin-beatsaberscore",
+    homepage="https://github.com/qwq12738qwq/nonebot-plugin-weather-fighter",
     supported_adapters={"~onebot.v11"},
 )
 
