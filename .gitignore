@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# 本地配置与数据库
+.env
+.env.*
+!.env.example
+data/
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+
+# 缓存
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# 本地工具
+.commandcode/
+
+# 仅本地开发（不入库）
+uv.lock
+
+# 构建产物
+build/
+dist/
+*.whl
+
+# Playwright
+.playwright/
+test-results/

@@ -1,0 +1,6810 @@
+{
+ "updated": "2026-10-27",
+ "source": "weather-fighter web/data/cities.json + places.json（离线快照）",
+ "note": "地级市/地区级数据，M0 不启用，保留给后续阶段。coords=[lat,lon]。",
+ "timezone": "Asia/Shanghai",
+ "provinces": [
+  {
+   "name": "北京市",
+   "short": "北京",
+   "capital": "北京",
+   "cities": [
+    "101010100"
+   ]
+  },
+  {
+   "name": "天津市",
+   "short": "天津",
+   "capital": "天津",
+   "cities": [
+    "101030100"
+   ]
+  },
+  {
+   "name": "河北省",
+   "short": "河北",
+   "capital": "石家庄",
+   "cities": [
+    "101090101",
+    "101090201",
+    "101090301",
+    "101090402",
+    "101090501",
+    "101090601",
+    "101090701",
+    "101090801",
+    "101090901",
+    "101091001",
+    "101091101",
+    "101091201"
+   ]
+  },
+  {
+   "name": "山西省",
+   "short": "山西",
+   "capital": "太原",
+   "cities": [
+    "101100101",
+    "101100201",
+    "101100301",
+    "101100401",
+    "101100501",
+    "101100601",
+    "101100701",
+    "101100801",
+    "101100901",
+    "101101001",
+    "101101101"
+   ]
+  },
+  {
+   "name": "内蒙古自治区",
+   "short": "内蒙古",
+   "capital": "呼和浩特",
+   "cities": [
+    "101080101",
+    "101080201",
+    "101080301",
+    "101080401",
+    "101080501",
+    "101080601",
+    "101080701",
+    "101080801",
+    "101080901",
+    "101081001",
+    "101081101",
+    "101081201"
+   ]
+  },
+  {
+   "name": "辽宁省",
+   "short": "辽宁",
+   "capital": "沈阳",
+   "cities": [
+    "101010300",
+    "101070101",
+    "101070201",
+    "101070301",
+    "101070401",
+    "101070501",
+    "101070601",
+    "101070701",
+    "101070801",
+    "101070901",
+    "101071001",
+    "101071101",
+    "101071301",
+    "101071401"
+   ]
+  },
+  {
+   "name": "吉林省",
+   "short": "吉林",
+   "capital": "长春",
+   "cities": [
+    "101060101",
+    "101060201",
+    "101060301",
+    "101060401",
+    "101060501",
+    "101060601",
+    "101060701",
+    "101060801",
+    "101060901"
+   ]
+  },
+  {
+   "name": "黑龙江省",
+   "short": "黑龙江",
+   "capital": "哈尔滨",
+   "cities": [
+    "101050101",
+    "101050201",
+    "101050301",
+    "101050401",
+    "101050501",
+    "101050601",
+    "101050701",
+    "101050801",
+    "101050901",
+    "101051002",
+    "101051101",
+    "101051201",
+    "101051301"
+   ]
+  },
+  {
+   "name": "上海市",
+   "short": "上海",
+   "capital": "上海",
+   "cities": [
+    "101020100"
+   ]
+  },
+  {
+   "name": "江苏省",
+   "short": "江苏",
+   "capital": "南京",
+   "cities": [
+    "101190101",
+    "101190201",
+    "101190301",
+    "101190401",
+    "101190501",
+    "101190601",
+    "101190701",
+    "101190801",
+    "101190901",
+    "101191001",
+    "101191101",
+    "101191201",
+    "101191301"
+   ]
+  },
+  {
+   "name": "浙江省",
+   "short": "浙江",
+   "capital": "杭州",
+   "cities": [
+    "101210101",
+    "101210201",
+    "101210301",
+    "101210401",
+    "101210507",
+    "101210601",
+    "101210701",
+    "101210801",
+    "101210901",
+    "101211001",
+    "101211101"
+   ]
+  },
+  {
+   "name": "安徽省",
+   "short": "安徽",
+   "capital": "合肥",
+   "cities": [
+    "101220101",
+    "101220201",
+    "101220301",
+    "101220401",
+    "101220501",
+    "101220601",
+    "101220701",
+    "101220801",
+    "101220901",
+    "101221001",
+    "101221101",
+    "101221201",
+    "101221301",
+    "101221401",
+    "101221501",
+    "101221701"
+   ]
+  },
+  {
+   "name": "福建省",
+   "short": "福建",
+   "capital": "福州",
+   "cities": [
+    "101230101",
+    "101230201",
+    "101230301",
+    "101230401",
+    "101230501",
+    "101230601",
+    "101230701",
+    "101230801",
+    "101230901"
+   ]
+  },
+  {
+   "name": "江西省",
+   "short": "江西",
+   "capital": "南昌",
+   "cities": [
+    "101240101",
+    "101240201",
+    "101240301",
+    "101240401",
+    "101240501",
+    "101240601",
+    "101240701",
+    "101240801",
+    "101240901",
+    "101241001",
+    "101241101"
+   ]
+  },
+  {
+   "name": "山东省",
+   "short": "山东",
+   "capital": "济南",
+   "cities": [
+    "101120101",
+    "101120201",
+    "101120301",
+    "101120401",
+    "101120501",
+    "101120601",
+    "101120701",
+    "101120801",
+    "101120901",
+    "101121001",
+    "101121101",
+    "101121201",
+    "101121301",
+    "101121401",
+    "101121501",
+    "101121601",
+    "101121701"
+   ]
+  },
+  {
+   "name": "河南省",
+   "short": "河南",
+   "capital": "郑州",
+   "cities": [
+    "101180101",
+    "101180201",
+    "101180301",
+    "101180401",
+    "101180501",
+    "101180601",
+    "101180701",
+    "101180801",
+    "101180901",
+    "101181001",
+    "101181101",
+    "101181201",
+    "101181301",
+    "101181401",
+    "101181501",
+    "101181601",
+    "101181701",
+    "101181801"
+   ]
+  },
+  {
+   "name": "湖北省",
+   "short": "湖北",
+   "capital": "武汉",
+   "cities": [
+    "101200101",
+    "101200201",
+    "101200301",
+    "101200401",
+    "101200501",
+    "101200601",
+    "101200701",
+    "101200801",
+    "101200901",
+    "101201001",
+    "101201101",
+    "101201201",
+    "101201301",
+    "101201401",
+    "101201501",
+    "101201601",
+    "101201701"
+   ]
+  },
+  {
+   "name": "湖南省",
+   "short": "湖南",
+   "capital": "长沙",
+   "cities": [
+    "101250101",
+    "101250201",
+    "101250301",
+    "101250401",
+    "101250501",
+    "101250601",
+    "101250701",
+    "101250801",
+    "101250901",
+    "101251001",
+    "101251101",
+    "101251201",
+    "101251401",
+    "101251501"
+   ]
+  },
+  {
+   "name": "广东省",
+   "short": "广东",
+   "capital": "广州",
+   "cities": [
+    "101280101",
+    "101280201",
+    "101280301",
+    "101280401",
+    "101280501",
+    "101280601",
+    "101280701",
+    "101280801",
+    "101280901",
+    "101281001",
+    "101281101",
+    "101281201",
+    "101281301",
+    "101281401",
+    "101281501",
+    "101281601",
+    "101281701",
+    "101281801",
+    "101281901",
+    "101282001",
+    "101282101"
+   ]
+  },
+  {
+   "name": "广西壮族自治区",
+   "short": "广西",
+   "capital": "南宁",
+   "cities": [
+    "101300101",
+    "101300201",
+    "101300301",
+    "101300401",
+    "101300501",
+    "101300601",
+    "101300701",
+    "101300801",
+    "101300901",
+    "101301001",
+    "101301101",
+    "101301201",
+    "101301301",
+    "101301401"
+   ]
+  },
+  {
+   "name": "海南省",
+   "short": "海南",
+   "capital": "海口",
+   "cities": [
+    "101310101",
+    "101310201",
+    "101310205"
+   ]
+  },
+  {
+   "name": "重庆市",
+   "short": "重庆",
+   "capital": "重庆",
+   "cities": [
+    "101040100"
+   ]
+  },
+  {
+   "name": "四川省",
+   "short": "四川",
+   "capital": "成都",
+   "cities": [
+    "101270101",
+    "101270201",
+    "101270301",
+    "101270401",
+    "101270501",
+    "101270601",
+    "101270701",
+    "101270801",
+    "101270901",
+    "101271001",
+    "101271101",
+    "101271201",
+    "101271301",
+    "101271401",
+    "101271501",
+    "101271601",
+    "101271701",
+    "101271801",
+    "101271901",
+    "101272001",
+    "101272101"
+   ]
+  },
+  {
+   "name": "贵州省",
+   "short": "贵州",
+   "capital": "贵阳",
+   "cities": [
+    "101260101",
+    "101260201",
+    "101260301",
+    "101260401",
+    "101260501",
+    "101260601",
+    "101260701",
+    "101260801",
+    "101260901"
+   ]
+  },
+  {
+   "name": "云南省",
+   "short": "云南",
+   "capital": "昆明",
+   "cities": [
+    "101290101",
+    "101290201",
+    "101290301",
+    "101290401",
+    "101290501",
+    "101290601",
+    "101290701",
+    "101290801",
+    "101290901",
+    "101291001",
+    "101291101",
+    "101291201",
+    "101291301",
+    "101291401",
+    "101291501",
+    "101291601"
+   ]
+  },
+  {
+   "name": "西藏自治区",
+   "short": "西藏",
+   "capital": "拉萨",
+   "cities": [
+    "101140101",
+    "101140201",
+    "101140301",
+    "101140401",
+    "101140501",
+    "101140601",
+    "101140701"
+   ]
+  },
+  {
+   "name": "陕西省",
+   "short": "陕西",
+   "capital": "西安",
+   "cities": [
+    "101110101",
+    "101110201",
+    "101110300",
+    "101110401",
+    "101110501",
+    "101110601",
+    "101110701",
+    "101110801",
+    "101110901",
+    "101111001",
+    "101111101"
+   ]
+  },
+  {
+   "name": "甘肃省",
+   "short": "甘肃",
+   "capital": "兰州",
+   "cities": [
+    "101160101",
+    "101160201",
+    "101160301",
+    "101160401",
+    "101160501",
+    "101160601",
+    "101160701",
+    "101160801",
+    "101160901",
+    "101161001",
+    "101161101",
+    "101161201",
+    "101161301",
+    "101161401"
+   ]
+  },
+  {
+   "name": "青海省",
+   "short": "青海",
+   "capital": "西宁",
+   "cities": [
+    "101150101",
+    "101150201",
+    "101150301",
+    "101150401",
+    "101150501",
+    "101150601",
+    "101150701",
+    "101150801",
+    "101150901"
+   ]
+  },
+  {
+   "name": "宁夏回族自治区",
+   "short": "宁夏",
+   "capital": "银川",
+   "cities": [
+    "101170101",
+    "101170201",
+    "101170301",
+    "101170401",
+    "101170501"
+   ]
+  },
+  {
+   "name": "新疆维吾尔自治区",
+   "short": "新疆",
+   "capital": "乌鲁木齐",
+   "cities": [
+    "101130101",
+    "101130201",
+    "101130301",
+    "101130401",
+    "101130501",
+    "101130601",
+    "101130701",
+    "101130801",
+    "101130901",
+    "101131001",
+    "101131101",
+    "101131201",
+    "101131301",
+    "101131401",
+    "101131501",
+    "101131601"
+   ]
+  },
+  {
+   "name": "香港特别行政区",
+   "short": "香港",
+   "capital": "香港",
+   "cities": [
+    "101320101"
+   ]
+  },
+  {
+   "name": "澳门特别行政区",
+   "short": "澳门",
+   "capital": "澳门",
+   "cities": [
+    "101330101"
+   ]
+  },
+  {
+   "name": "台湾省",
+   "short": "台湾",
+   "capital": "台北",
+   "cities": [
+    "101340101",
+    "101340201",
+    "101340401"
+   ]
+  }
+ ],
+ "cities": {
+  "101010100": {
+   "city_id": "101010100",
+   "name": "北京",
+   "province": "北京市",
+   "pinyin": "beijing",
+   "coords": [
+    39.905,
+    116.4053
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    39.81,
+    116.47
+   ],
+   "cma_station": "54511",
+   "is_capital": true,
+   "path": "中国, 北京, 北京"
+  },
+  "101030100": {
+   "city_id": "101030100",
+   "name": "天津",
+   "province": "天津市",
+   "pinyin": "tianjin",
+   "coords": [
+    39.1256,
+    117.1902
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    39.07,
+    117.21
+   ],
+   "cma_station": "54517_tj",
+   "is_capital": true,
+   "path": "中国, 天津, 天津"
+  },
+  "101090101": {
+   "city_id": "101090101",
+   "name": "石家庄",
+   "province": "河北省",
+   "pinyin": "shijiazhuang",
+   "coords": [
+    38.0455,
+    114.5025
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    38.0167,
+    114.4
+   ],
+   "cma_station": "53698-sjz",
+   "is_capital": true,
+   "path": "中国, 河北, 石家庄"
+  },
+  "101090201": {
+   "city_id": "101090201",
+   "name": "保定",
+   "province": "河北省",
+   "pinyin": "baoding",
+   "coords": [
+    38.8677,
+    115.4823
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    38.73,
+    115.48
+   ],
+   "cma_station": "54602",
+   "is_capital": false,
+   "path": "中国, 河北, 保定"
+  },
+  "101090301": {
+   "city_id": "101090301",
+   "name": "张家口",
+   "province": "河北省",
+   "pinyin": "zhangjiakou",
+   "coords": [
+    40.8119,
+    114.8841
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    40.77,
+    114.92
+   ],
+   "cma_station": "54401",
+   "is_capital": false,
+   "path": "中国, 河北, 张家口"
+  },
+  "101090402": {
+   "city_id": "101090402",
+   "name": "承德",
+   "province": "河北省",
+   "pinyin": "chengde",
+   "coords": [
+    40.9762,
+    117.9392
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    40.97,
+    117.92
+   ],
+   "cma_station": "54423",
+   "is_capital": false,
+   "path": "中国, 河北, 承德"
+  },
+  "101090501": {
+   "city_id": "101090501",
+   "name": "唐山",
+   "province": "河北省",
+   "pinyin": "tangshan",
+   "coords": [
+    39.6351,
+    118.1754
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    39.72,
+    118.1
+   ],
+   "cma_station": "54534",
+   "is_capital": false,
+   "path": "中国, 河北, 唐山"
+  },
+  "101090601": {
+   "city_id": "101090601",
+   "name": "廊坊",
+   "province": "河北省",
+   "pinyin": "langfang",
+   "coords": [
+    39.5239,
+    116.7044
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    39.49,
+    116.69
+   ],
+   "cma_station": "54515",
+   "is_capital": false,
+   "path": "中国, 河北, 廊坊"
+  },
+  "101090701": {
+   "city_id": "101090701",
+   "name": "沧州",
+   "province": "河北省",
+   "pinyin": "cangzhou",
+   "coords": [
+    38.3106,
+    116.8575
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    38.34,
+    116.85
+   ],
+   "cma_station": "54616",
+   "is_capital": false,
+   "path": "中国, 河北, 沧州"
+  },
+  "101090801": {
+   "city_id": "101090801",
+   "name": "衡水",
+   "province": "河北省",
+   "pinyin": "hengshui",
+   "coords": [
+    37.7351,
+    115.666
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    37.72,
+    115.71
+   ],
+   "cma_station": "54702",
+   "is_capital": false,
+   "path": "中国, 河北, 衡水"
+  },
+  "101090901": {
+   "city_id": "101090901",
+   "name": "邢台",
+   "province": "河北省",
+   "pinyin": "xingtai",
+   "coords": [
+    37.0682,
+    114.5089
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    37.18,
+    114.36
+   ],
+   "cma_station": "53798",
+   "is_capital": false,
+   "path": "中国, 河北, 邢台"
+  },
+  "101091001": {
+   "city_id": "101091001",
+   "name": "邯郸",
+   "province": "河北省",
+   "pinyin": "handan",
+   "coords": [
+    36.6123,
+    114.4907
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    36.62,
+    114.46
+   ],
+   "cma_station": "53892",
+   "is_capital": false,
+   "path": "中国, 河北, 邯郸"
+  },
+  "101091101": {
+   "city_id": "101091101",
+   "name": "秦皇岛",
+   "province": "河北省",
+   "pinyin": "qinhuangdao",
+   "coords": [
+    39.9425,
+    119.5866
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    39.85,
+    119.51
+   ],
+   "cma_station": "54449",
+   "is_capital": false,
+   "path": "中国, 河北, 秦皇岛"
+  },
+  "101091201": {
+   "city_id": "101091201",
+   "name": "雄安新区",
+   "province": "河北省",
+   "pinyin": "xiongan",
+   "coords": [
+    38.0455,
+    114.5025
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": false,
+   "path": ""
+  },
+  "101100101": {
+   "city_id": "101100101",
+   "name": "太原",
+   "province": "山西省",
+   "pinyin": "taiyuan",
+   "coords": [
+    37.857,
+    112.5492
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    37.75,
+    112.54
+   ],
+   "cma_station": "53679",
+   "is_capital": true,
+   "path": "中国, 山西, 太原"
+  },
+  "101100201": {
+   "city_id": "101100201",
+   "name": "大同",
+   "province": "山西省",
+   "pinyin": "datong",
+   "coords": [
+    40.0903,
+    113.2953
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    40.08,
+    113.41
+   ],
+   "cma_station": "53487",
+   "is_capital": false,
+   "path": "中国, 山西, 大同"
+  },
+  "101100301": {
+   "city_id": "101100301",
+   "name": "阳泉",
+   "province": "山西省",
+   "pinyin": "yangquan",
+   "coords": [
+    37.8612,
+    113.5833
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    37.93,
+    113.62
+   ],
+   "cma_station": "53782",
+   "is_capital": false,
+   "path": "中国, 山西, 阳泉"
+  },
+  "101100401": {
+   "city_id": "101100401",
+   "name": "晋中",
+   "province": "山西省",
+   "pinyin": "jinzhong",
+   "coords": [
+    37.6965,
+    112.7365
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": false,
+   "path": ""
+  },
+  "101100501": {
+   "city_id": "101100501",
+   "name": "长治",
+   "province": "山西省",
+   "pinyin": "changzhi",
+   "coords": [
+    36.1911,
+    113.1136
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": false,
+   "path": ""
+  },
+  "101100601": {
+   "city_id": "101100601",
+   "name": "晋城",
+   "province": "山西省",
+   "pinyin": "jincheng",
+   "coords": [
+    35.4976,
+    112.8513
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    35.5,
+    112.86
+   ],
+   "cma_station": "53976",
+   "is_capital": false,
+   "path": "中国, 山西, 晋城"
+  },
+  "101100701": {
+   "city_id": "101100701",
+   "name": "临汾",
+   "province": "山西省",
+   "pinyin": "linfen",
+   "coords": [
+    36.0842,
+    111.518
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    36.06,
+    111.49
+   ],
+   "cma_station": "53868",
+   "is_capital": false,
+   "path": "中国, 山西, 临汾"
+  },
+  "101100801": {
+   "city_id": "101100801",
+   "name": "运城",
+   "province": "山西省",
+   "pinyin": "yuncheng",
+   "coords": [
+    35.0228,
+    111.004
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    35.11,
+    111.07
+   ],
+   "cma_station": "53959",
+   "is_capital": false,
+   "path": "中国, 山西, 运城"
+  },
+  "101100901": {
+   "city_id": "101100901",
+   "name": "朔州",
+   "province": "山西省",
+   "pinyin": "shuozhou",
+   "coords": [
+    39.3313,
+    112.4334
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    39.37,
+    112.43
+   ],
+   "cma_station": "53578",
+   "is_capital": false,
+   "path": "中国, 山西, 朔州"
+  },
+  "101101001": {
+   "city_id": "101101001",
+   "name": "忻州",
+   "province": "山西省",
+   "pinyin": "xinzhou",
+   "coords": [
+    38.4177,
+    112.7335
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": false,
+   "path": ""
+  },
+  "101101101": {
+   "city_id": "101101101",
+   "name": "吕梁",
+   "province": "山西省",
+   "pinyin": "luliang",
+   "coords": [
+    37.5244,
+    111.1343
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": false,
+   "path": ""
+  },
+  "101080101": {
+   "city_id": "101080101",
+   "name": "呼和浩特",
+   "province": "内蒙古自治区",
+   "pinyin": "hohhot",
+   "coords": [
+    40.8183,
+    111.6708
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    40.76,
+    111.71
+   ],
+   "cma_station": "53466",
+   "is_capital": true,
+   "path": "中国, 内蒙古, 呼和浩特"
+  },
+  "101080201": {
+   "city_id": "101080201",
+   "name": "包头",
+   "province": "内蒙古自治区",
+   "pinyin": "baotou",
+   "coords": [
+    40.6582,
+    109.8404
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    40.53,
+    109.88
+   ],
+   "cma_station": "53446",
+   "is_capital": false,
+   "path": "中国, 内蒙古, 包头"
+  },
+  "101080301": {
+   "city_id": "101080301",
+   "name": "乌海",
+   "province": "内蒙古自治区",
+   "pinyin": "wuhai",
+   "coords": [
+    39.6737,
+    106.8256
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    39.79,
+    106.8
+   ],
+   "cma_station": "53512",
+   "is_capital": false,
+   "path": "中国, 内蒙古, 乌海"
+  },
+  "101080401": {
+   "city_id": "101080401",
+   "name": "乌兰察布",
+   "province": "内蒙古自治区",
+   "pinyin": "ulanqab",
+   "coords": [
+    41.0341,
+    113.1145
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    41.03,
+    113.07
+   ],
+   "cma_station": "53480",
+   "is_capital": false,
+   "path": "中国, 内蒙古, 集宁"
+  },
+  "101080501": {
+   "city_id": "101080501",
+   "name": "通辽",
+   "province": "内蒙古自治区",
+   "pinyin": "tongliao",
+   "coords": [
+    43.6174,
+    122.2631
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    43.67,
+    122.35
+   ],
+   "cma_station": "54135",
+   "is_capital": false,
+   "path": "中国, 内蒙古, 通辽"
+  },
+  "101080601": {
+   "city_id": "101080601",
+   "name": "赤峰",
+   "province": "内蒙古自治区",
+   "pinyin": "chifeng",
+   "coords": [
+    42.2753,
+    118.9568
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    42.31,
+    118.83
+   ],
+   "cma_station": "54218",
+   "is_capital": false,
+   "path": "中国, 内蒙古, 赤峰"
+  },
+  "101080701": {
+   "city_id": "101080701",
+   "name": "鄂尔多斯",
+   "province": "内蒙古自治区",
+   "pinyin": "ordos",
+   "coords": [
+    39.8172,
+    109.9903
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": false,
+   "path": ""
+  },
+  "101080801": {
+   "city_id": "101080801",
+   "name": "巴彦淖尔",
+   "province": "内蒙古自治区",
+   "pinyin": "bayannur",
+   "coords": [
+    40.7574,
+    107.417
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    40.72,
+    107.37
+   ],
+   "cma_station": "53513",
+   "is_capital": false,
+   "path": "中国, 内蒙古, 临河"
+  },
+  "101080901": {
+   "city_id": "101080901",
+   "name": "锡林郭勒",
+   "province": "内蒙古自治区",
+   "pinyin": "xilingol",
+   "coords": [
+    43.944,
+    116.091
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    43.95,
+    116.12
+   ],
+   "cma_station": "54102",
+   "is_capital": false,
+   "path": "中国, 内蒙古, 锡林浩特"
+  },
+  "101081001": {
+   "city_id": "101081001",
+   "name": "呼伦贝尔",
+   "province": "内蒙古自治区",
+   "pinyin": "hulunbuir",
+   "coords": [
+    49.2153,
+    119.7582
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    49.25,
+    119.7
+   ],
+   "cma_station": "50527",
+   "is_capital": false,
+   "path": "中国, 内蒙古, 海拉尔"
+  },
+  "101081101": {
+   "city_id": "101081101",
+   "name": "兴安盟",
+   "province": "内蒙古自治区",
+   "pinyin": "xingan",
+   "coords": [
+    46.0763,
+    122.0703
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": false,
+   "path": ""
+  },
+  "101081201": {
+   "city_id": "101081201",
+   "name": "阿拉善盟",
+   "province": "内蒙古自治区",
+   "pinyin": "alxa",
+   "coords": [
+    38.8448,
+    105.7064
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": false,
+   "path": ""
+  },
+  "101010300": {
+   "city_id": "101010300",
+   "name": "朝阳",
+   "province": "辽宁省",
+   "pinyin": "chaoyang",
+   "coords": [
+    41.5768,
+    120.4512
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    41.55,
+    120.43
+   ],
+   "cma_station": "54324",
+   "is_capital": false,
+   "path": "中国, 辽宁, 朝阳"
+  },
+  "101070101": {
+   "city_id": "101070101",
+   "name": "沈阳",
+   "province": "辽宁省",
+   "pinyin": "shenyang",
+   "coords": [
+    41.7968,
+    123.4291
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    41.73,
+    123.51
+   ],
+   "cma_station": "54342",
+   "is_capital": true,
+   "path": "中国, 辽宁, 沈阳"
+  },
+  "101070201": {
+   "city_id": "101070201",
+   "name": "大连",
+   "province": "辽宁省",
+   "pinyin": "dalian",
+   "coords": [
+    38.9146,
+    121.6186
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    38.91,
+    121.64
+   ],
+   "cma_station": "54662",
+   "is_capital": false,
+   "path": "中国, 辽宁, 大连"
+  },
+  "101070301": {
+   "city_id": "101070301",
+   "name": "鞍山",
+   "province": "辽宁省",
+   "pinyin": "anshan",
+   "coords": [
+    41.1106,
+    122.9956
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    41.09,
+    123.0
+   ],
+   "cma_station": "54339",
+   "is_capital": false,
+   "path": "中国, 辽宁, 鞍山"
+  },
+  "101070401": {
+   "city_id": "101070401",
+   "name": "抚顺",
+   "province": "辽宁省",
+   "pinyin": "fushun",
+   "coords": [
+    41.876,
+    123.9211
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    41.92,
+    124.08
+   ],
+   "cma_station": "54351fs",
+   "is_capital": false,
+   "path": "中国, 辽宁, 抚顺"
+  },
+  "101070501": {
+   "city_id": "101070501",
+   "name": "本溪",
+   "province": "辽宁省",
+   "pinyin": "benxi",
+   "coords": [
+    41.2979,
+    123.7705
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    41.31,
+    123.78
+   ],
+   "cma_station": "54346",
+   "is_capital": false,
+   "path": "中国, 辽宁, 本溪"
+  },
+  "101070601": {
+   "city_id": "101070601",
+   "name": "丹东",
+   "province": "辽宁省",
+   "pinyin": "dandong",
+   "coords": [
+    40.1243,
+    124.383
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    40.03,
+    124.33
+   ],
+   "cma_station": "54497",
+   "is_capital": false,
+   "path": "中国, 辽宁, 丹东"
+  },
+  "101070701": {
+   "city_id": "101070701",
+   "name": "锦州",
+   "province": "辽宁省",
+   "pinyin": "jinzhou",
+   "coords": [
+    41.1193,
+    121.1357
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    41.14,
+    121.12
+   ],
+   "cma_station": "54337",
+   "is_capital": false,
+   "path": "中国, 辽宁, 锦州"
+  },
+  "101070801": {
+   "city_id": "101070801",
+   "name": "营口",
+   "province": "辽宁省",
+   "pinyin": "yingkou",
+   "coords": [
+    40.6674,
+    122.2352
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    40.67,
+    122.17
+   ],
+   "cma_station": "54471",
+   "is_capital": false,
+   "path": "中国, 辽宁, 营口"
+  },
+  "101070901": {
+   "city_id": "101070901",
+   "name": "阜新",
+   "province": "辽宁省",
+   "pinyin": "fuxin",
+   "coords": [
+    42.0118,
+    121.649
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    42.07,
+    121.75
+   ],
+   "cma_station": "54237",
+   "is_capital": false,
+   "path": "中国, 辽宁, 阜新"
+  },
+  "101071001": {
+   "city_id": "101071001",
+   "name": "辽阳",
+   "province": "辽宁省",
+   "pinyin": "liaoyang",
+   "coords": [
+    41.2694,
+    123.1815
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    41.25,
+    123.18
+   ],
+   "cma_station": "54347",
+   "is_capital": false,
+   "path": "中国, 辽宁, 辽阳"
+  },
+  "101071101": {
+   "city_id": "101071101",
+   "name": "铁岭",
+   "province": "辽宁省",
+   "pinyin": "tieling",
+   "coords": [
+    42.2906,
+    123.8443
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    42.3,
+    123.86
+   ],
+   "cma_station": "54249",
+   "is_capital": false,
+   "path": "中国, 辽宁, 铁岭"
+  },
+  "101071301": {
+   "city_id": "101071301",
+   "name": "盘锦",
+   "province": "辽宁省",
+   "pinyin": "panjin",
+   "coords": [
+    41.1245,
+    122.0696
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": false,
+   "path": ""
+  },
+  "101071401": {
+   "city_id": "101071401",
+   "name": "葫芦岛",
+   "province": "辽宁省",
+   "pinyin": "huludao",
+   "coords": [
+    40.7556,
+    120.8564
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": false,
+   "path": ""
+  },
+  "101060101": {
+   "city_id": "101060101",
+   "name": "长春",
+   "province": "吉林省",
+   "pinyin": "changchun",
+   "coords": [
+    43.8868,
+    125.3245
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    43.89,
+    125.23
+   ],
+   "cma_station": "54161",
+   "is_capital": true,
+   "path": "中国, 吉林, 长春"
+  },
+  "101060201": {
+   "city_id": "101060201",
+   "name": "吉林",
+   "province": "吉林省",
+   "pinyin": "jilin",
+   "coords": [
+    43.8868,
+    125.3245
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": false,
+   "path": ""
+  },
+  "101060301": {
+   "city_id": "101060301",
+   "name": "延边",
+   "province": "吉林省",
+   "pinyin": "yanbian",
+   "coords": [
+    42.9048,
+    129.5132
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    42.87,
+    129.5
+   ],
+   "cma_station": "54292",
+   "is_capital": false,
+   "path": "中国, 吉林, 延吉"
+  },
+  "101060401": {
+   "city_id": "101060401",
+   "name": "四平",
+   "province": "吉林省",
+   "pinyin": "siping",
+   "coords": [
+    43.1703,
+    124.3708
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    43.12,
+    124.39
+   ],
+   "cma_station": "54157",
+   "is_capital": false,
+   "path": "中国, 吉林, 四平"
+  },
+  "101060501": {
+   "city_id": "101060501",
+   "name": "通化",
+   "province": "吉林省",
+   "pinyin": "tonghua",
+   "coords": [
+    41.7212,
+    125.9365
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    41.72,
+    125.92
+   ],
+   "cma_station": "54363",
+   "is_capital": false,
+   "path": "中国, 吉林, 通化"
+  },
+  "101060601": {
+   "city_id": "101060601",
+   "name": "白城",
+   "province": "吉林省",
+   "pinyin": "baicheng",
+   "coords": [
+    45.619,
+    122.8411
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    45.61,
+    122.79
+   ],
+   "cma_station": "50936",
+   "is_capital": false,
+   "path": "中国, 吉林, 白城"
+  },
+  "101060701": {
+   "city_id": "101060701",
+   "name": "辽源",
+   "province": "吉林省",
+   "pinyin": "liaoyuan",
+   "coords": [
+    42.9027,
+    125.1453
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    42.91,
+    125.08
+   ],
+   "cma_station": "54260",
+   "is_capital": false,
+   "path": "中国, 吉林, 辽源"
+  },
+  "101060801": {
+   "city_id": "101060801",
+   "name": "松原",
+   "province": "吉林省",
+   "pinyin": "songyuan",
+   "coords": [
+    45.1182,
+    124.8236
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    45.17,
+    124.85
+   ],
+   "cma_station": "50946",
+   "is_capital": false,
+   "path": "中国, 吉林, 松原"
+  },
+  "101060901": {
+   "city_id": "101060901",
+   "name": "白山",
+   "province": "吉林省",
+   "pinyin": "baishan",
+   "coords": [
+    41.9425,
+    126.4278
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    41.94,
+    126.44
+   ],
+   "cma_station": "54371",
+   "is_capital": false,
+   "path": "中国, 吉林, 白山"
+  },
+  "101050101": {
+   "city_id": "101050101",
+   "name": "哈尔滨",
+   "province": "黑龙江省",
+   "pinyin": "harbin",
+   "coords": [
+    45.757,
+    126.6425
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    45.93,
+    126.58
+   ],
+   "cma_station": "50953",
+   "is_capital": true,
+   "path": "中国, 黑龙江, 哈尔滨"
+  },
+  "101050201": {
+   "city_id": "101050201",
+   "name": "齐齐哈尔",
+   "province": "黑龙江省",
+   "pinyin": "qiqihaer",
+   "coords": [
+    47.3421,
+    123.9579
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    47.38,
+    123.92
+   ],
+   "cma_station": "50745",
+   "is_capital": false,
+   "path": "中国, 黑龙江, 齐齐哈尔"
+  },
+  "101050301": {
+   "city_id": "101050301",
+   "name": "牡丹江",
+   "province": "黑龙江省",
+   "pinyin": "mudanjiang",
+   "coords": [
+    44.583,
+    129.6186
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    44.5,
+    129.67
+   ],
+   "cma_station": "54094",
+   "is_capital": false,
+   "path": "中国, 黑龙江, 牡丹江"
+  },
+  "101050401": {
+   "city_id": "101050401",
+   "name": "佳木斯",
+   "province": "黑龙江省",
+   "pinyin": "jiamusi",
+   "coords": [
+    46.8096,
+    130.3616
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    46.79,
+    130.3
+   ],
+   "cma_station": "50873",
+   "is_capital": false,
+   "path": "中国, 黑龙江, 佳木斯"
+  },
+  "101050501": {
+   "city_id": "101050501",
+   "name": "绥化",
+   "province": "黑龙江省",
+   "pinyin": "suihua",
+   "coords": [
+    46.6374,
+    126.9929
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": false,
+   "path": ""
+  },
+  "101050601": {
+   "city_id": "101050601",
+   "name": "黑河",
+   "province": "黑龙江省",
+   "pinyin": "heihe",
+   "coords": [
+    50.2496,
+    127.499
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": false,
+   "path": ""
+  },
+  "101050701": {
+   "city_id": "101050701",
+   "name": "大兴安岭",
+   "province": "黑龙江省",
+   "pinyin": "daxinganling",
+   "coords": [
+    52.3353,
+    124.7115
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": false,
+   "path": ""
+  },
+  "101050801": {
+   "city_id": "101050801",
+   "name": "伊春",
+   "province": "黑龙江省",
+   "pinyin": "yichun",
+   "coords": [
+    47.7248,
+    128.8994
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    47.71,
+    128.84
+   ],
+   "cma_station": "50774",
+   "is_capital": false,
+   "path": "中国, 黑龙江, 伊春"
+  },
+  "101050901": {
+   "city_id": "101050901",
+   "name": "大庆",
+   "province": "黑龙江省",
+   "pinyin": "daqing",
+   "coords": [
+    46.5907,
+    125.1127
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    46.62,
+    124.99
+   ],
+   "cma_station": "50850",
+   "is_capital": false,
+   "path": "中国, 黑龙江, 大庆"
+  },
+  "101051002": {
+   "city_id": "101051002",
+   "name": "七台河",
+   "province": "黑龙江省",
+   "pinyin": "qitaihe",
+   "coords": [
+    45.7713,
+    131.0156
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    45.84,
+    130.98
+   ],
+   "cma_station": "50971",
+   "is_capital": false,
+   "path": "中国, 黑龙江, 七台河"
+  },
+  "101051101": {
+   "city_id": "101051101",
+   "name": "鸡西",
+   "province": "黑龙江省",
+   "pinyin": "jixi",
+   "coords": [
+    45.3,
+    130.976
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    45.31,
+    130.91
+   ],
+   "cma_station": "50978",
+   "is_capital": false,
+   "path": "中国, 黑龙江, 鸡西"
+  },
+  "101051201": {
+   "city_id": "101051201",
+   "name": "鹤岗",
+   "province": "黑龙江省",
+   "pinyin": "hegang",
+   "coords": [
+    47.3321,
+    130.2775
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    47.34,
+    130.2
+   ],
+   "cma_station": "50775",
+   "is_capital": false,
+   "path": "中国, 黑龙江, 鹤岗"
+  },
+  "101051301": {
+   "city_id": "101051301",
+   "name": "双鸭山",
+   "province": "黑龙江省",
+   "pinyin": "shuangyashan",
+   "coords": [
+    46.6434,
+    131.1573
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    46.65,
+    131.15
+   ],
+   "cma_station": "50884",
+   "is_capital": false,
+   "path": "中国, 黑龙江, 双鸭山"
+  },
+  "101020100": {
+   "city_id": "101020100",
+   "name": "上海",
+   "province": "上海市",
+   "pinyin": "shanghai",
+   "coords": [
+    31.2317,
+    121.4726
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    31.19,
+    121.43
+   ],
+   "cma_station": "58367",
+   "is_capital": true,
+   "path": "中国, 上海, 徐家汇"
+  },
+  "101190101": {
+   "city_id": "101190101",
+   "name": "南京",
+   "province": "江苏省",
+   "pinyin": "nanjing",
+   "coords": [
+    32.0415,
+    118.7674
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    31.93,
+    118.9
+   ],
+   "cma_station": "58238",
+   "is_capital": true,
+   "path": "中国, 江苏, 南京"
+  },
+  "101190201": {
+   "city_id": "101190201",
+   "name": "无锡",
+   "province": "江苏省",
+   "pinyin": "wuxi",
+   "coords": [
+    31.5747,
+    120.3017
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    31.61,
+    120.35
+   ],
+   "cma_station": "58354",
+   "is_capital": false,
+   "path": "中国, 江苏, 无锡"
+  },
+  "101190301": {
+   "city_id": "101190301",
+   "name": "镇江",
+   "province": "江苏省",
+   "pinyin": "zhenjiang",
+   "coords": [
+    32.2044,
+    119.4528
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    32.22,
+    119.47
+   ],
+   "cma_station": "58248",
+   "is_capital": false,
+   "path": "中国, 江苏, 镇江"
+  },
+  "101190401": {
+   "city_id": "101190401",
+   "name": "苏州",
+   "province": "江苏省",
+   "pinyin": "suzhou",
+   "coords": [
+    31.2994,
+    120.6196
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    31.41,
+    120.56
+   ],
+   "cma_station": "58349",
+   "is_capital": false,
+   "path": "中国, 江苏, 苏州"
+  },
+  "101190501": {
+   "city_id": "101190501",
+   "name": "南通",
+   "province": "江苏省",
+   "pinyin": "nantong",
+   "coords": [
+    32.0162,
+    120.8646
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    32.08,
+    120.98
+   ],
+   "cma_station": "58259",
+   "is_capital": false,
+   "path": "中国, 江苏, 南通"
+  },
+  "101190601": {
+   "city_id": "101190601",
+   "name": "扬州",
+   "province": "江苏省",
+   "pinyin": "yangzhou",
+   "coords": [
+    32.3932,
+    119.421
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    32.41,
+    119.42
+   ],
+   "cma_station": "58245",
+   "is_capital": false,
+   "path": "中国, 江苏, 扬州"
+  },
+  "101190701": {
+   "city_id": "101190701",
+   "name": "盐城",
+   "province": "江苏省",
+   "pinyin": "yancheng",
+   "coords": [
+    33.3776,
+    120.14
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    33.32,
+    120.1
+   ],
+   "cma_station": "58154",
+   "is_capital": false,
+   "path": "中国, 江苏, 盐城"
+  },
+  "101190801": {
+   "city_id": "101190801",
+   "name": "徐州",
+   "province": "江苏省",
+   "pinyin": "xuzhou",
+   "coords": [
+    34.2618,
+    117.1848
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    34.29,
+    117.16
+   ],
+   "cma_station": "58027",
+   "is_capital": false,
+   "path": "中国, 江苏, 徐州"
+  },
+  "101190901": {
+   "city_id": "101190901",
+   "name": "淮安",
+   "province": "江苏省",
+   "pinyin": "huaian",
+   "coords": [
+    33.5975,
+    119.0213
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    33.5,
+    119.16
+   ],
+   "cma_station": "58145",
+   "is_capital": false,
+   "path": "中国, 江苏, 淮安"
+  },
+  "101191001": {
+   "city_id": "101191001",
+   "name": "连云港",
+   "province": "江苏省",
+   "pinyin": "lianyungang",
+   "coords": [
+    34.6,
+    119.1788
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    34.55,
+    119.23
+   ],
+   "cma_station": "58044",
+   "is_capital": false,
+   "path": "中国, 江苏, 连云港"
+  },
+  "101191101": {
+   "city_id": "101191101",
+   "name": "常州",
+   "province": "江苏省",
+   "pinyin": "changzhou",
+   "coords": [
+    31.7728,
+    119.947
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    31.87,
+    119.98
+   ],
+   "cma_station": "58343",
+   "is_capital": false,
+   "path": "中国, 江苏, 常州"
+  },
+  "101191201": {
+   "city_id": "101191201",
+   "name": "泰州",
+   "province": "江苏省",
+   "pinyin": "taizhou",
+   "coords": [
+    32.4849,
+    119.9152
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    32.56,
+    119.99
+   ],
+   "cma_station": "58246",
+   "is_capital": false,
+   "path": "中国, 江苏, 泰州"
+  },
+  "101191301": {
+   "city_id": "101191301",
+   "name": "宿迁",
+   "province": "江苏省",
+   "pinyin": "suqian",
+   "coords": [
+    33.963,
+    118.2752
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    33.97,
+    118.22
+   ],
+   "cma_station": "58131",
+   "is_capital": false,
+   "path": "中国, 江苏, 宿迁"
+  },
+  "101210101": {
+   "city_id": "101210101",
+   "name": "杭州",
+   "province": "浙江省",
+   "pinyin": "hangzhou",
+   "coords": [
+    30.2875,
+    120.1536
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    30.23,
+    120.16
+   ],
+   "cma_station": "58457",
+   "is_capital": true,
+   "path": "中国, 浙江, 杭州"
+  },
+  "101210201": {
+   "city_id": "101210201",
+   "name": "湖州",
+   "province": "浙江省",
+   "pinyin": "huzhou",
+   "coords": [
+    30.8672,
+    120.1024
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    30.86,
+    120.05
+   ],
+   "cma_station": "K5454",
+   "is_capital": false,
+   "path": "中国, 浙江, 湖州"
+  },
+  "101210301": {
+   "city_id": "101210301",
+   "name": "嘉兴",
+   "province": "浙江省",
+   "pinyin": "jiaxing",
+   "coords": [
+    30.7627,
+    120.7509
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    30.73,
+    120.76
+   ],
+   "cma_station": "58452",
+   "is_capital": false,
+   "path": "中国, 浙江, 嘉兴"
+  },
+  "101210401": {
+   "city_id": "101210401",
+   "name": "宁波",
+   "province": "浙江省",
+   "pinyin": "ningbo",
+   "coords": [
+    29.8684,
+    121.5498
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    29.8,
+    121.5
+   ],
+   "cma_station": "58562",
+   "is_capital": false,
+   "path": "中国, 浙江, 宁波"
+  },
+  "101210507": {
+   "city_id": "101210507",
+   "name": "绍兴",
+   "province": "浙江省",
+   "pinyin": "shaoxing",
+   "coords": [
+    29.9971,
+    120.5821
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    30.0,
+    120.63
+   ],
+   "cma_station": "K4026",
+   "is_capital": false,
+   "path": "中国, 浙江, 绍兴"
+  },
+  "101210601": {
+   "city_id": "101210601",
+   "name": "台州",
+   "province": "浙江省",
+   "pinyin": "taizhou",
+   "coords": [
+    28.6614,
+    121.4286
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    28.62,
+    121.42
+   ],
+   "cma_station": "58665",
+   "is_capital": false,
+   "path": "中国, 浙江, 台州"
+  },
+  "101210701": {
+   "city_id": "101210701",
+   "name": "温州",
+   "province": "浙江省",
+   "pinyin": "wenzhou",
+   "coords": [
+    28.0006,
+    120.6721
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    28.03,
+    120.66
+   ],
+   "cma_station": "58659",
+   "is_capital": false,
+   "path": "中国, 浙江, 温州"
+  },
+  "101210801": {
+   "city_id": "101210801",
+   "name": "丽水",
+   "province": "浙江省",
+   "pinyin": "lishui",
+   "coords": [
+    28.452,
+    119.9218
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    28.39,
+    119.85
+   ],
+   "cma_station": "58646",
+   "is_capital": false,
+   "path": "中国, 浙江, 丽水"
+  },
+  "101210901": {
+   "city_id": "101210901",
+   "name": "金华",
+   "province": "浙江省",
+   "pinyin": "jinhua",
+   "coords": [
+    29.0895,
+    119.6495
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    29.11,
+    119.66
+   ],
+   "cma_station": "58549",
+   "is_capital": false,
+   "path": "中国, 浙江, 金华"
+  },
+  "101211001": {
+   "city_id": "101211001",
+   "name": "衢州",
+   "province": "浙江省",
+   "pinyin": "quzhou",
+   "coords": [
+    28.9417,
+    118.8726
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    28.99,
+    118.89
+   ],
+   "cma_station": "58633",
+   "is_capital": false,
+   "path": "中国, 浙江, 衢州"
+  },
+  "101211101": {
+   "city_id": "101211101",
+   "name": "舟山",
+   "province": "浙江省",
+   "pinyin": "zhoushan",
+   "coords": [
+    30.016,
+    122.1069
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    30.04,
+    122.11
+   ],
+   "cma_station": "58477",
+   "is_capital": false,
+   "path": "中国, 浙江, 舟山"
+  },
+  "101220101": {
+   "city_id": "101220101",
+   "name": "合肥",
+   "province": "安徽省",
+   "pinyin": "hefei",
+   "coords": [
+    31.8612,
+    117.283
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    31.96,
+    117.06
+   ],
+   "cma_station": "58321",
+   "is_capital": true,
+   "path": "中国, 安徽, 合肥"
+  },
+  "101220201": {
+   "city_id": "101220201",
+   "name": "蚌埠",
+   "province": "安徽省",
+   "pinyin": "bengbu",
+   "coords": [
+    32.9397,
+    117.3632
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    32.84,
+    117.3
+   ],
+   "cma_station": "58221",
+   "is_capital": false,
+   "path": "中国, 安徽, 蚌埠"
+  },
+  "101220301": {
+   "city_id": "101220301",
+   "name": "芜湖",
+   "province": "安徽省",
+   "pinyin": "wuhu",
+   "coords": [
+    31.3263,
+    118.3765
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    31.38,
+    118.41
+   ],
+   "cma_station": "58334",
+   "is_capital": false,
+   "path": "中国, 安徽, 芜湖"
+  },
+  "101220401": {
+   "city_id": "101220401",
+   "name": "淮南",
+   "province": "安徽省",
+   "pinyin": "huainan",
+   "coords": [
+    32.6476,
+    117.0183
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    32.61,
+    117.05
+   ],
+   "cma_station": "58224",
+   "is_capital": false,
+   "path": "中国, 安徽, 淮南"
+  },
+  "101220501": {
+   "city_id": "101220501",
+   "name": "马鞍山",
+   "province": "安徽省",
+   "pinyin": "maanshan",
+   "coords": [
+    31.6894,
+    118.5079
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    31.71,
+    118.56
+   ],
+   "cma_station": "58336",
+   "is_capital": false,
+   "path": "中国, 安徽, 马鞍山"
+  },
+  "101220601": {
+   "city_id": "101220601",
+   "name": "安庆",
+   "province": "安徽省",
+   "pinyin": "anqing",
+   "coords": [
+    30.5088,
+    117.0436
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    30.62,
+    116.97
+   ],
+   "cma_station": "58424",
+   "is_capital": false,
+   "path": "中国, 安徽, 安庆"
+  },
+  "101220701": {
+   "city_id": "101220701",
+   "name": "宿州",
+   "province": "安徽省",
+   "pinyin": "suzhou",
+   "coords": [
+    33.6339,
+    116.9841
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    33.64,
+    117.08
+   ],
+   "cma_station": "58122",
+   "is_capital": false,
+   "path": "中国, 安徽, 宿州"
+  },
+  "101220801": {
+   "city_id": "101220801",
+   "name": "阜阳",
+   "province": "安徽省",
+   "pinyin": "fuyang",
+   "coords": [
+    32.897,
+    115.8197
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    32.88,
+    115.74
+   ],
+   "cma_station": "58203",
+   "is_capital": false,
+   "path": "中国, 安徽, 阜阳"
+  },
+  "101220901": {
+   "city_id": "101220901",
+   "name": "亳州",
+   "province": "安徽省",
+   "pinyin": "bozhou",
+   "coords": [
+    33.8693,
+    115.7829
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    33.79,
+    115.74
+   ],
+   "cma_station": "58102",
+   "is_capital": false,
+   "path": "中国, 安徽, 亳州"
+  },
+  "101221001": {
+   "city_id": "101221001",
+   "name": "黄山",
+   "province": "安徽省",
+   "pinyin": "huangshan",
+   "coords": [
+    29.7092,
+    118.3173
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    30.13,
+    118.16
+   ],
+   "cma_station": "58437",
+   "is_capital": false,
+   "path": "中国, 安徽, 黄山"
+  },
+  "101221101": {
+   "city_id": "101221101",
+   "name": "滁州",
+   "province": "安徽省",
+   "pinyin": "chuzhou",
+   "coords": [
+    32.3036,
+    118.3163
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    32.36,
+    118.25
+   ],
+   "cma_station": "58236",
+   "is_capital": false,
+   "path": "中国, 安徽, 滁州"
+  },
+  "101221201": {
+   "city_id": "101221201",
+   "name": "淮北",
+   "province": "安徽省",
+   "pinyin": "huaibei",
+   "coords": [
+    33.9717,
+    116.7947
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    34.03,
+    116.87
+   ],
+   "cma_station": "58116",
+   "is_capital": false,
+   "path": "中国, 安徽, 淮北"
+  },
+  "101221301": {
+   "city_id": "101221301",
+   "name": "铜陵",
+   "province": "安徽省",
+   "pinyin": "tongling",
+   "coords": [
+    30.9299,
+    117.8166
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    30.97,
+    117.85
+   ],
+   "cma_station": "58429",
+   "is_capital": false,
+   "path": "中国, 安徽, 铜陵"
+  },
+  "101221401": {
+   "city_id": "101221401",
+   "name": "宣城",
+   "province": "安徽省",
+   "pinyin": "xuancheng",
+   "coords": [
+    30.9457,
+    118.758
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    30.93,
+    118.76
+   ],
+   "cma_station": "58433",
+   "is_capital": false,
+   "path": "中国, 安徽, 宣城"
+  },
+  "101221501": {
+   "city_id": "101221501",
+   "name": "六安",
+   "province": "安徽省",
+   "pinyin": "luan",
+   "coords": [
+    31.7529,
+    116.5077
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    31.74,
+    116.51
+   ],
+   "cma_station": "58311",
+   "is_capital": false,
+   "path": "中国, 安徽, 六安"
+  },
+  "101221701": {
+   "city_id": "101221701",
+   "name": "池州",
+   "province": "安徽省",
+   "pinyin": "chizhou",
+   "coords": [
+    30.656,
+    117.4892
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    30.65,
+    117.51
+   ],
+   "cma_station": "58427",
+   "is_capital": false,
+   "path": "中国, 安徽, 池州"
+  },
+  "101230101": {
+   "city_id": "101230101",
+   "name": "福州",
+   "province": "福建省",
+   "pinyin": "fuzhou",
+   "coords": [
+    26.0753,
+    119.3062
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    26.08,
+    119.29
+   ],
+   "cma_station": "58847",
+   "is_capital": true,
+   "path": "中国, 福建, 福州"
+  },
+  "101230201": {
+   "city_id": "101230201",
+   "name": "厦门",
+   "province": "福建省",
+   "pinyin": "xiamen",
+   "coords": [
+    24.4905,
+    118.1102
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    24.49,
+    118.08
+   ],
+   "cma_station": "59134",
+   "is_capital": false,
+   "path": "中国, 福建, 厦门"
+  },
+  "101230301": {
+   "city_id": "101230301",
+   "name": "宁德",
+   "province": "福建省",
+   "pinyin": "ningde",
+   "coords": [
+    26.6592,
+    119.5271
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    26.66,
+    119.52
+   ],
+   "cma_station": "58846",
+   "is_capital": false,
+   "path": "中国, 福建, 宁德"
+  },
+  "101230401": {
+   "city_id": "101230401",
+   "name": "莆田",
+   "province": "福建省",
+   "pinyin": "putian",
+   "coords": [
+    25.431,
+    119.0076
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    25.44,
+    119.0
+   ],
+   "cma_station": "58946",
+   "is_capital": false,
+   "path": "中国, 福建, 莆田"
+  },
+  "101230501": {
+   "city_id": "101230501",
+   "name": "泉州",
+   "province": "福建省",
+   "pinyin": "quanzhou",
+   "coords": [
+    24.9089,
+    118.5894
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    24.9,
+    118.63
+   ],
+   "cma_station": "59132",
+   "is_capital": false,
+   "path": "中国, 福建, 泉州"
+  },
+  "101230601": {
+   "city_id": "101230601",
+   "name": "漳州",
+   "province": "福建省",
+   "pinyin": "zhangzhou",
+   "coords": [
+    24.5109,
+    117.6618
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    24.58,
+    117.63
+   ],
+   "cma_station": "59126",
+   "is_capital": false,
+   "path": "中国, 福建, 漳州"
+  },
+  "101230701": {
+   "city_id": "101230701",
+   "name": "龙岩",
+   "province": "福建省",
+   "pinyin": "longyan",
+   "coords": [
+    25.0916,
+    117.0298
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    25.05,
+    117.02
+   ],
+   "cma_station": "58927",
+   "is_capital": false,
+   "path": "中国, 福建, 龙岩"
+  },
+  "101230801": {
+   "city_id": "101230801",
+   "name": "三明",
+   "province": "福建省",
+   "pinyin": "sanming",
+   "coords": [
+    26.2654,
+    117.635
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    26.27,
+    117.64
+   ],
+   "cma_station": "58828",
+   "is_capital": false,
+   "path": "中国, 福建, 三明"
+  },
+  "101230901": {
+   "city_id": "101230901",
+   "name": "南平",
+   "province": "福建省",
+   "pinyin": "nanping",
+   "coords": [
+    26.6356,
+    118.1785
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": false,
+   "path": ""
+  },
+  "101240101": {
+   "city_id": "101240101",
+   "name": "南昌",
+   "province": "江西省",
+   "pinyin": "nanchang",
+   "coords": [
+    28.6765,
+    115.8922
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    28.59,
+    115.9
+   ],
+   "cma_station": "58606",
+   "is_capital": true,
+   "path": "中国, 江西, 南昌"
+  },
+  "101240201": {
+   "city_id": "101240201",
+   "name": "九江",
+   "province": "江西省",
+   "pinyin": "jiujiang",
+   "coords": [
+    29.712,
+    115.9928
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    29.67,
+    116.02
+   ],
+   "cma_station": "58502",
+   "is_capital": false,
+   "path": "中国, 江西, 九江"
+  },
+  "101240301": {
+   "city_id": "101240301",
+   "name": "上饶",
+   "province": "江西省",
+   "pinyin": "shangrao",
+   "coords": [
+    28.4444,
+    117.9712
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    28.44,
+    117.98
+   ],
+   "cma_station": "58637",
+   "is_capital": false,
+   "path": "中国, 江西, 上饶"
+  },
+  "101240401": {
+   "city_id": "101240401",
+   "name": "抚州",
+   "province": "江西省",
+   "pinyin": "fuzhoujiangxi",
+   "coords": [
+    27.9839,
+    116.3584
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": false,
+   "path": ""
+  },
+  "101240501": {
+   "city_id": "101240501",
+   "name": "宜春",
+   "province": "江西省",
+   "pinyin": "yichun",
+   "coords": [
+    27.8043,
+    114.3911
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    27.79,
+    114.37
+   ],
+   "cma_station": "57793",
+   "is_capital": false,
+   "path": "中国, 江西, 宜春"
+  },
+  "101240601": {
+   "city_id": "101240601",
+   "name": "吉安",
+   "province": "江西省",
+   "pinyin": "jian",
+   "coords": [
+    27.1117,
+    114.9864
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    27.04,
+    114.91
+   ],
+   "cma_station": "57799",
+   "is_capital": false,
+   "path": "中国, 江西, 吉安县"
+  },
+  "101240701": {
+   "city_id": "101240701",
+   "name": "赣州",
+   "province": "江西省",
+   "pinyin": "ganzhou",
+   "coords": [
+    25.851,
+    114.9403
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": false,
+   "path": ""
+  },
+  "101240801": {
+   "city_id": "101240801",
+   "name": "景德镇",
+   "province": "江西省",
+   "pinyin": "jingdezhen",
+   "coords": [
+    29.2926,
+    117.2147
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    29.31,
+    117.17
+   ],
+   "cma_station": "58527",
+   "is_capital": false,
+   "path": "中国, 江西, 景德镇"
+  },
+  "101240901": {
+   "city_id": "101240901",
+   "name": "萍乡",
+   "province": "江西省",
+   "pinyin": "pingxiang",
+   "coords": [
+    27.6229,
+    113.8522
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    27.63,
+    113.86
+   ],
+   "cma_station": "57786",
+   "is_capital": false,
+   "path": "中国, 江西, 萍乡"
+  },
+  "101241001": {
+   "city_id": "101241001",
+   "name": "新余",
+   "province": "江西省",
+   "pinyin": "xinyu",
+   "coords": [
+    27.8108,
+    114.9308
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": false,
+   "path": ""
+  },
+  "101241101": {
+   "city_id": "101241101",
+   "name": "鹰潭",
+   "province": "江西省",
+   "pinyin": "yingtan",
+   "coords": [
+    28.2386,
+    117.0338
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    28.31,
+    117.06
+   ],
+   "cma_station": "58627",
+   "is_capital": false,
+   "path": "中国, 江西, 鹰潭"
+  },
+  "101120101": {
+   "city_id": "101120101",
+   "name": "济南",
+   "province": "山东省",
+   "pinyin": "jinan",
+   "coords": [
+    36.6758,
+    117.0009
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    36.6,
+    117.01
+   ],
+   "cma_station": "54823",
+   "is_capital": true,
+   "path": "中国, 山东, 济南"
+  },
+  "101120201": {
+   "city_id": "101120201",
+   "name": "青岛",
+   "province": "山东省",
+   "pinyin": "qingdao",
+   "coords": [
+    36.083,
+    120.3552
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    36.07,
+    120.33
+   ],
+   "cma_station": "54857",
+   "is_capital": false,
+   "path": "中国, 山东, 青岛"
+  },
+  "101120301": {
+   "city_id": "101120301",
+   "name": "淄博",
+   "province": "山东省",
+   "pinyin": "zibo",
+   "coords": [
+    36.8149,
+    118.0476
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    36.83,
+    117.94
+   ],
+   "cma_station": "54830",
+   "is_capital": false,
+   "path": "中国, 山东, 淄博"
+  },
+  "101120401": {
+   "city_id": "101120401",
+   "name": "德州",
+   "province": "山东省",
+   "pinyin": "dezhou",
+   "coords": [
+    37.454,
+    116.3074
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    37.36,
+    116.34
+   ],
+   "cma_station": "54714",
+   "is_capital": false,
+   "path": "中国, 山东, 德州"
+  },
+  "101120501": {
+   "city_id": "101120501",
+   "name": "烟台",
+   "province": "山东省",
+   "pinyin": "yantai",
+   "coords": [
+    37.5393,
+    121.3914
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    37.48,
+    121.44
+   ],
+   "cma_station": "54765",
+   "is_capital": false,
+   "path": "中国, 山东, 烟台"
+  },
+  "101120601": {
+   "city_id": "101120601",
+   "name": "潍坊",
+   "province": "山东省",
+   "pinyin": "weifang",
+   "coords": [
+    36.7092,
+    119.1071
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    36.76,
+    119.2
+   ],
+   "cma_station": "54843",
+   "is_capital": false,
+   "path": "中国, 山东, 潍坊"
+  },
+  "101120701": {
+   "city_id": "101120701",
+   "name": "济宁",
+   "province": "山东省",
+   "pinyin": "jining",
+   "coords": [
+    35.4154,
+    116.5872
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    35.44,
+    116.6
+   ],
+   "cma_station": "54915",
+   "is_capital": false,
+   "path": "中国, 山东, 济宁"
+  },
+  "101120801": {
+   "city_id": "101120801",
+   "name": "泰安",
+   "province": "山东省",
+   "pinyin": "taian",
+   "coords": [
+    36.195,
+    117.1291
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    36.16,
+    117.15
+   ],
+   "cma_station": "54827",
+   "is_capital": false,
+   "path": "中国, 山东, 泰安"
+  },
+  "101120901": {
+   "city_id": "101120901",
+   "name": "临沂",
+   "province": "山东省",
+   "pinyin": "linyi",
+   "coords": [
+    35.0653,
+    118.3264
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    35.25,
+    118.42
+   ],
+   "cma_station": "54938",
+   "is_capital": false,
+   "path": "中国, 山东, 临沂"
+  },
+  "101121001": {
+   "city_id": "101121001",
+   "name": "菏泽",
+   "province": "山东省",
+   "pinyin": "heze",
+   "coords": [
+    35.2465,
+    115.4694
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    35.31,
+    115.53
+   ],
+   "cma_station": "54906",
+   "is_capital": false,
+   "path": "中国, 山东, 菏泽"
+  },
+  "101121101": {
+   "city_id": "101121101",
+   "name": "滨州",
+   "province": "山东省",
+   "pinyin": "binzhou",
+   "coords": [
+    37.3835,
+    118.017
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    37.35,
+    118.03
+   ],
+   "cma_station": "54734",
+   "is_capital": false,
+   "path": "中国, 山东, 滨州"
+  },
+  "101121201": {
+   "city_id": "101121201",
+   "name": "东营",
+   "province": "山东省",
+   "pinyin": "dongying",
+   "coords": [
+    37.4346,
+    118.6647
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    37.44,
+    118.67
+   ],
+   "cma_station": "54736",
+   "is_capital": false,
+   "path": "中国, 山东, 东营"
+  },
+  "101121301": {
+   "city_id": "101121301",
+   "name": "威海",
+   "province": "山东省",
+   "pinyin": "weihai",
+   "coords": [
+    37.5097,
+    122.1164
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    37.47,
+    122.13
+   ],
+   "cma_station": "54774",
+   "is_capital": false,
+   "path": "中国, 山东, 威海"
+  },
+  "101121401": {
+   "city_id": "101121401",
+   "name": "枣庄",
+   "province": "山东省",
+   "pinyin": "zaozhuang",
+   "coords": [
+    34.8564,
+    117.558
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    34.87,
+    117.58
+   ],
+   "cma_station": "58024",
+   "is_capital": false,
+   "path": "中国, 山东, 枣庄"
+  },
+  "101121501": {
+   "city_id": "101121501",
+   "name": "日照",
+   "province": "山东省",
+   "pinyin": "rizhao",
+   "coords": [
+    35.4286,
+    119.4612
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    35.47,
+    119.56
+   ],
+   "cma_station": "54945",
+   "is_capital": false,
+   "path": "中国, 山东, 日照"
+  },
+  "101121601": {
+   "city_id": "101121601",
+   "name": "莱芜",
+   "province": "山东省",
+   "pinyin": "laiwu",
+   "coords": [
+    36.6758,
+    117.0009
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    36.23,
+    117.68
+   ],
+   "cma_station": "54828",
+   "is_capital": false,
+   "path": "中国, 山东, 莱芜"
+  },
+  "101121701": {
+   "city_id": "101121701",
+   "name": "聊城",
+   "province": "山东省",
+   "pinyin": "liaocheng",
+   "coords": [
+    36.456,
+    115.9804
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    36.35,
+    115.98
+   ],
+   "cma_station": "54806",
+   "is_capital": false,
+   "path": "中国, 山东, 聊城"
+  },
+  "101180101": {
+   "city_id": "101180101",
+   "name": "郑州",
+   "province": "河南省",
+   "pinyin": "zhengzhou",
+   "coords": [
+    34.758,
+    113.6654
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    34.71,
+    113.66
+   ],
+   "cma_station": "57083",
+   "is_capital": true,
+   "path": "中国, 河南, 郑州"
+  },
+  "101180201": {
+   "city_id": "101180201",
+   "name": "安阳",
+   "province": "河南省",
+   "pinyin": "anyang",
+   "coords": [
+    36.1034,
+    114.3525
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    36.05,
+    114.14
+   ],
+   "cma_station": "53898",
+   "is_capital": false,
+   "path": "中国, 河南, 安阳"
+  },
+  "101180301": {
+   "city_id": "101180301",
+   "name": "新乡",
+   "province": "河南省",
+   "pinyin": "xinxiang",
+   "coords": [
+    35.3026,
+    113.884
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    35.22,
+    114.01
+   ],
+   "cma_station": "53986",
+   "is_capital": false,
+   "path": "中国, 河南, 新乡"
+  },
+  "101180401": {
+   "city_id": "101180401",
+   "name": "许昌",
+   "province": "河南省",
+   "pinyin": "xuchang",
+   "coords": [
+    34.023,
+    113.8261
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    34.07,
+    113.93
+   ],
+   "cma_station": "57089",
+   "is_capital": false,
+   "path": "中国, 河南, 许昌"
+  },
+  "101180501": {
+   "city_id": "101180501",
+   "name": "平顶山",
+   "province": "河南省",
+   "pinyin": "pingdingshan",
+   "coords": [
+    33.7352,
+    113.3077
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    33.77,
+    113.12
+   ],
+   "cma_station": "57171",
+   "is_capital": false,
+   "path": "中国, 河南, 平顶山"
+  },
+  "101180601": {
+   "city_id": "101180601",
+   "name": "信阳",
+   "province": "河南省",
+   "pinyin": "xinyang",
+   "coords": [
+    32.1233,
+    114.075
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    32.14,
+    114.04
+   ],
+   "cma_station": "57297",
+   "is_capital": false,
+   "path": "中国, 河南, 信阳"
+  },
+  "101180701": {
+   "city_id": "101180701",
+   "name": "南阳",
+   "province": "河南省",
+   "pinyin": "nanyang",
+   "coords": [
+    32.9991,
+    112.5409
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    33.1,
+    112.49
+   ],
+   "cma_station": "57178",
+   "is_capital": false,
+   "path": "中国, 河南, 南阳"
+  },
+  "101180801": {
+   "city_id": "101180801",
+   "name": "开封",
+   "province": "河南省",
+   "pinyin": "kaifeng",
+   "coords": [
+    34.797,
+    114.3414
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    34.8,
+    114.29
+   ],
+   "cma_station": "57091",
+   "is_capital": false,
+   "path": "中国, 河南, 开封"
+  },
+  "101180901": {
+   "city_id": "101180901",
+   "name": "洛阳",
+   "province": "河南省",
+   "pinyin": "luoyang",
+   "coords": [
+    34.663,
+    112.4345
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    34.8,
+    112.47
+   ],
+   "cma_station": "57071",
+   "is_capital": false,
+   "path": "中国, 河南, 洛阳"
+  },
+  "101181001": {
+   "city_id": "101181001",
+   "name": "商丘",
+   "province": "河南省",
+   "pinyin": "shangqiu",
+   "coords": [
+    34.4371,
+    115.6505
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    34.44,
+    115.54
+   ],
+   "cma_station": "58005",
+   "is_capital": false,
+   "path": "中国, 河南, 商丘"
+  },
+  "101181101": {
+   "city_id": "101181101",
+   "name": "焦作",
+   "province": "河南省",
+   "pinyin": "jiaozuo",
+   "coords": [
+    35.239,
+    113.2383
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    35.27,
+    113.19
+   ],
+   "cma_station": "53982",
+   "is_capital": false,
+   "path": "中国, 河南, 焦作"
+  },
+  "101181201": {
+   "city_id": "101181201",
+   "name": "鹤壁",
+   "province": "河南省",
+   "pinyin": "hebi",
+   "coords": [
+    35.7482,
+    114.2954
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    35.72,
+    114.32
+   ],
+   "cma_station": "53990",
+   "is_capital": false,
+   "path": "中国, 河南, 鹤壁"
+  },
+  "101181301": {
+   "city_id": "101181301",
+   "name": "濮阳",
+   "province": "河南省",
+   "pinyin": "puyang",
+   "coords": [
+    35.7682,
+    115.0413
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    35.7,
+    115.03
+   ],
+   "cma_station": "54900",
+   "is_capital": false,
+   "path": "中国, 河南, 濮阳"
+  },
+  "101181401": {
+   "city_id": "101181401",
+   "name": "周口",
+   "province": "河南省",
+   "pinyin": "zhoukou",
+   "coords": [
+    33.6204,
+    114.6497
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": false,
+   "path": ""
+  },
+  "101181501": {
+   "city_id": "101181501",
+   "name": "漯河",
+   "province": "河南省",
+   "pinyin": "tahe",
+   "coords": [
+    33.5759,
+    114.0264
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    33.6,
+    114.06
+   ],
+   "cma_station": "57186",
+   "is_capital": false,
+   "path": "中国, 河南, 漯河"
+  },
+  "101181601": {
+   "city_id": "101181601",
+   "name": "驻马店",
+   "province": "河南省",
+   "pinyin": "zhumadian",
+   "coords": [
+    32.9802,
+    114.0247
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    32.94,
+    113.91
+   ],
+   "cma_station": "57290",
+   "is_capital": false,
+   "path": "中国, 河南, 驻马店"
+  },
+  "101181701": {
+   "city_id": "101181701",
+   "name": "三门峡",
+   "province": "河南省",
+   "pinyin": "sanmenxia",
+   "coords": [
+    34.7773,
+    111.1941
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    34.72,
+    111.24
+   ],
+   "cma_station": "57051",
+   "is_capital": false,
+   "path": "中国, 河南, 三门峡"
+  },
+  "101181801": {
+   "city_id": "101181801",
+   "name": "济源",
+   "province": "河南省",
+   "pinyin": "jiyuan",
+   "coords": [
+    35.0904,
+    112.59
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    35.09,
+    112.63
+   ],
+   "cma_station": "53978",
+   "is_capital": false,
+   "path": "中国, 河南, 济源"
+  },
+  "101200101": {
+   "city_id": "101200101",
+   "name": "武汉",
+   "province": "湖北省",
+   "pinyin": "wuhan",
+   "coords": [
+    30.5844,
+    114.2986
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    30.6,
+    114.05
+   ],
+   "cma_station": "57494",
+   "is_capital": true,
+   "path": "中国, 湖北, 武汉"
+  },
+  "101200201": {
+   "city_id": "101200201",
+   "name": "襄阳",
+   "province": "湖北省",
+   "pinyin": "xiangyang",
+   "coords": [
+    32.0424,
+    112.1441
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    32.0,
+    112.08
+   ],
+   "cma_station": "57278",
+   "is_capital": false,
+   "path": "中国, 湖北, 襄阳"
+  },
+  "101200301": {
+   "city_id": "101200301",
+   "name": "鄂州",
+   "province": "湖北省",
+   "pinyin": "ezhou",
+   "coords": [
+    30.3965,
+    114.8906
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    30.26,
+    114.61
+   ],
+   "cma_station": "57496",
+   "is_capital": false,
+   "path": "中国, 湖北, 鄂州"
+  },
+  "101200401": {
+   "city_id": "101200401",
+   "name": "孝感",
+   "province": "湖北省",
+   "pinyin": "xiaogan",
+   "coords": [
+    30.9264,
+    113.9267
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    30.9,
+    113.95
+   ],
+   "cma_station": "57482",
+   "is_capital": false,
+   "path": "中国, 湖北, 孝感"
+  },
+  "101200501": {
+   "city_id": "101200501",
+   "name": "黄冈",
+   "province": "湖北省",
+   "pinyin": "huanggang",
+   "coords": [
+    30.4477,
+    114.8794
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    30.52,
+    114.94
+   ],
+   "cma_station": "57498",
+   "is_capital": false,
+   "path": "中国, 湖北, 黄冈"
+  },
+  "101200601": {
+   "city_id": "101200601",
+   "name": "黄石",
+   "province": "湖北省",
+   "pinyin": "huangshi",
+   "coords": [
+    30.2201,
+    115.077
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    30.24,
+    115.03
+   ],
+   "cma_station": "58407",
+   "is_capital": false,
+   "path": "中国, 湖北, 黄石"
+  },
+  "101200701": {
+   "city_id": "101200701",
+   "name": "咸宁",
+   "province": "湖北省",
+   "pinyin": "xianning",
+   "coords": [
+    29.8328,
+    114.329
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    29.85,
+    114.37
+   ],
+   "cma_station": "57590",
+   "is_capital": false,
+   "path": "中国, 湖北, 咸宁"
+  },
+  "101200801": {
+   "city_id": "101200801",
+   "name": "荆州",
+   "province": "湖北省",
+   "pinyin": "jingzhou",
+   "coords": [
+    30.3269,
+    112.2381
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    30.35,
+    112.15
+   ],
+   "cma_station": "57476",
+   "is_capital": false,
+   "path": "中国, 湖北, 荆州"
+  },
+  "101200901": {
+   "city_id": "101200901",
+   "name": "宜昌",
+   "province": "湖北省",
+   "pinyin": "yichang",
+   "coords": [
+    30.7026,
+    111.2908
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    30.71,
+    111.3
+   ],
+   "cma_station": "Q4015",
+   "is_capital": false,
+   "path": "中国, 湖北, 宜昌"
+  },
+  "101201001": {
+   "city_id": "101201001",
+   "name": "恩施土家族苗族",
+   "province": "湖北省",
+   "pinyin": "enshi",
+   "coords": [
+    30.2831,
+    109.487
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    30.29,
+    109.47
+   ],
+   "cma_station": "57447",
+   "is_capital": false,
+   "path": "中国, 湖北, 恩施"
+  },
+  "101201101": {
+   "city_id": "101201101",
+   "name": "十堰",
+   "province": "湖北省",
+   "pinyin": "shiyan",
+   "coords": [
+    32.6469,
+    110.7879
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    32.66,
+    110.77
+   ],
+   "cma_station": "57256",
+   "is_capital": false,
+   "path": "中国, 湖北, 十堰"
+  },
+  "101201201": {
+   "city_id": "101201201",
+   "name": "神农架",
+   "province": "湖北省",
+   "pinyin": "shennongjia",
+   "coords": [
+    31.7444,
+    110.6715
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    31.75,
+    110.66
+   ],
+   "cma_station": "57362",
+   "is_capital": false,
+   "path": "中国, 湖北, 神农架"
+  },
+  "101201301": {
+   "city_id": "101201301",
+   "name": "随州",
+   "province": "湖北省",
+   "pinyin": "suizhou",
+   "coords": [
+    31.7175,
+    113.3738
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    31.62,
+    113.34
+   ],
+   "cma_station": "57381",
+   "is_capital": false,
+   "path": "中国, 湖北, 随州"
+  },
+  "101201401": {
+   "city_id": "101201401",
+   "name": "荆门",
+   "province": "湖北省",
+   "pinyin": "jingmen",
+   "coords": [
+    31.0354,
+    112.2043
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    30.99,
+    112.21
+   ],
+   "cma_station": "57377",
+   "is_capital": false,
+   "path": "中国, 湖北, 荆门"
+  },
+  "101201501": {
+   "city_id": "101201501",
+   "name": "天门",
+   "province": "湖北省",
+   "pinyin": "tianmen",
+   "coords": [
+    30.6531,
+    113.1659
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    30.67,
+    113.13
+   ],
+   "cma_station": "57483",
+   "is_capital": false,
+   "path": "中国, 湖北, 天门"
+  },
+  "101201601": {
+   "city_id": "101201601",
+   "name": "仙桃",
+   "province": "湖北省",
+   "pinyin": "xiantao",
+   "coords": [
+    30.365,
+    113.454
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    30.3,
+    113.48
+   ],
+   "cma_station": "57485",
+   "is_capital": false,
+   "path": "中国, 湖北, 仙桃"
+  },
+  "101201701": {
+   "city_id": "101201701",
+   "name": "潜江",
+   "province": "湖北省",
+   "pinyin": "qianjiang",
+   "coords": [
+    30.4212,
+    112.8969
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    30.38,
+    112.87
+   ],
+   "cma_station": "57475",
+   "is_capital": false,
+   "path": "中国, 湖北, 潜江"
+  },
+  "101250101": {
+   "city_id": "101250101",
+   "name": "长沙",
+   "province": "湖南省",
+   "pinyin": "changsha",
+   "coords": [
+    28.1941,
+    112.9823
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    28.11,
+    112.79
+   ],
+   "cma_station": "57687",
+   "is_capital": true,
+   "path": "中国, 湖南, 长沙市"
+  },
+  "101250201": {
+   "city_id": "101250201",
+   "name": "湘潭",
+   "province": "湖南省",
+   "pinyin": "xiangtan",
+   "coords": [
+    27.8297,
+    112.9441
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    27.88,
+    112.83
+   ],
+   "cma_station": "57773",
+   "is_capital": false,
+   "path": "中国, 湖南, 湘潭"
+  },
+  "101250301": {
+   "city_id": "101250301",
+   "name": "株洲",
+   "province": "湖南省",
+   "pinyin": "zhuzhou",
+   "coords": [
+    27.8358,
+    113.1517
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    27.87,
+    113.17
+   ],
+   "cma_station": "57780",
+   "is_capital": false,
+   "path": "中国, 湖南, 株洲"
+  },
+  "101250401": {
+   "city_id": "101250401",
+   "name": "衡阳",
+   "province": "湖南省",
+   "pinyin": "hengyang",
+   "coords": [
+    26.9004,
+    112.6077
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    26.98,
+    112.59
+   ],
+   "cma_station": "57872",
+   "is_capital": false,
+   "path": "中国, 湖南, 衡阳"
+  },
+  "101250501": {
+   "city_id": "101250501",
+   "name": "郴州",
+   "province": "湖南省",
+   "pinyin": "chenzhou",
+   "coords": [
+    25.7936,
+    113.0321
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    25.74,
+    112.98
+   ],
+   "cma_station": "57972",
+   "is_capital": false,
+   "path": "中国, 湖南, 郴州"
+  },
+  "101250601": {
+   "city_id": "101250601",
+   "name": "常德",
+   "province": "湖南省",
+   "pinyin": "changde",
+   "coords": [
+    29.0402,
+    111.6913
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    29.12,
+    111.68
+   ],
+   "cma_station": "57662",
+   "is_capital": false,
+   "path": "中国, 湖南, 常德"
+  },
+  "101250701": {
+   "city_id": "101250701",
+   "name": "益阳",
+   "province": "湖南省",
+   "pinyin": "yiyang",
+   "coords": [
+    28.5701,
+    112.355
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": false,
+   "path": ""
+  },
+  "101250801": {
+   "city_id": "101250801",
+   "name": "娄底",
+   "province": "湖南省",
+   "pinyin": "loudi",
+   "coords": [
+    27.7281,
+    112.0085
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    27.69,
+    112.0
+   ],
+   "cma_station": "57763",
+   "is_capital": false,
+   "path": "中国, 湖南, 娄底"
+  },
+  "101250901": {
+   "city_id": "101250901",
+   "name": "邵阳",
+   "province": "湖南省",
+   "pinyin": "shaoyang",
+   "coords": [
+    27.2378,
+    111.4692
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    27.19,
+    111.45
+   ],
+   "cma_station": "57766",
+   "is_capital": false,
+   "path": "中国, 湖南, 邵阳"
+  },
+  "101251001": {
+   "city_id": "101251001",
+   "name": "岳阳",
+   "province": "湖南省",
+   "pinyin": "yueyang",
+   "coords": [
+    29.3703,
+    113.1329
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    29.38,
+    113.09
+   ],
+   "cma_station": "57584",
+   "is_capital": false,
+   "path": "中国, 湖南, 岳阳"
+  },
+  "101251101": {
+   "city_id": "101251101",
+   "name": "张家界",
+   "province": "湖南省",
+   "pinyin": "zhangjiajie",
+   "coords": [
+    29.1274,
+    110.4799
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    29.12,
+    110.42
+   ],
+   "cma_station": "57558",
+   "is_capital": false,
+   "path": "中国, 湖南, 张家界"
+  },
+  "101251201": {
+   "city_id": "101251201",
+   "name": "怀化",
+   "province": "湖南省",
+   "pinyin": "huaihua",
+   "coords": [
+    27.5501,
+    109.9782
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    27.61,
+    110.03
+   ],
+   "cma_station": "57749",
+   "is_capital": false,
+   "path": "中国, 湖南, 怀化"
+  },
+  "101251401": {
+   "city_id": "101251401",
+   "name": "永州",
+   "province": "湖南省",
+   "pinyin": "yongzhou",
+   "coords": [
+    26.4345,
+    111.608
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    26.23,
+    111.62
+   ],
+   "cma_station": "57866",
+   "is_capital": false,
+   "path": "中国, 湖南, 永州"
+  },
+  "101251501": {
+   "city_id": "101251501",
+   "name": "湘西",
+   "province": "湖南省",
+   "pinyin": "xiangxi",
+   "coords": [
+    28.3143,
+    109.7397
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    28.24,
+    109.68
+   ],
+   "cma_station": "57649",
+   "is_capital": false,
+   "path": "中国, 湖南, 吉首"
+  },
+  "101280101": {
+   "city_id": "101280101",
+   "name": "广州",
+   "province": "广东省",
+   "pinyin": "guangzhou",
+   "coords": [
+    23.1252,
+    113.2806
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    23.21,
+    113.48
+   ],
+   "cma_station": "59287",
+   "is_capital": true,
+   "path": "中国, 广东, 广州"
+  },
+  "101280201": {
+   "city_id": "101280201",
+   "name": "韶关",
+   "province": "广东省",
+   "pinyin": "shaoguan",
+   "coords": [
+    24.8013,
+    113.5915
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    24.67,
+    113.61
+   ],
+   "cma_station": "59082",
+   "is_capital": false,
+   "path": "中国, 广东, 韶关"
+  },
+  "101280301": {
+   "city_id": "101280301",
+   "name": "惠州",
+   "province": "广东省",
+   "pinyin": "huizhou",
+   "coords": [
+    23.0794,
+    114.4126
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": false,
+   "path": ""
+  },
+  "101280401": {
+   "city_id": "101280401",
+   "name": "梅州",
+   "province": "广东省",
+   "pinyin": "meizhou",
+   "coords": [
+    24.2991,
+    116.1176
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": false,
+   "path": ""
+  },
+  "101280501": {
+   "city_id": "101280501",
+   "name": "汕头",
+   "province": "广东省",
+   "pinyin": "shantou",
+   "coords": [
+    23.371,
+    116.7085
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    23.39,
+    116.68
+   ],
+   "cma_station": "59316",
+   "is_capital": false,
+   "path": "中国, 广东, 汕头"
+  },
+  "101280601": {
+   "city_id": "101280601",
+   "name": "深圳",
+   "province": "广东省",
+   "pinyin": "shenzhen",
+   "coords": [
+    22.547,
+    114.0859
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    22.54,
+    114.0
+   ],
+   "cma_station": "59493",
+   "is_capital": false,
+   "path": "中国, 广东, 深圳"
+  },
+  "101280701": {
+   "city_id": "101280701",
+   "name": "珠海",
+   "province": "广东省",
+   "pinyin": "zhuhai",
+   "coords": [
+    22.225,
+    113.554
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    22.28,
+    113.57
+   ],
+   "cma_station": "59488",
+   "is_capital": false,
+   "path": "中国, 广东, 珠海"
+  },
+  "101280801": {
+   "city_id": "101280801",
+   "name": "佛山",
+   "province": "广东省",
+   "pinyin": "foshan",
+   "coords": [
+    23.0288,
+    113.1227
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": false,
+   "path": ""
+  },
+  "101280901": {
+   "city_id": "101280901",
+   "name": "肇庆",
+   "province": "广东省",
+   "pinyin": "zhaoqing",
+   "coords": [
+    23.0515,
+    112.4725
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": false,
+   "path": ""
+  },
+  "101281001": {
+   "city_id": "101281001",
+   "name": "湛江",
+   "province": "广东省",
+   "pinyin": "zhanjiang",
+   "coords": [
+    21.2749,
+    110.365
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    21.15,
+    110.3
+   ],
+   "cma_station": "59658",
+   "is_capital": false,
+   "path": "中国, 广东, 湛江"
+  },
+  "101281101": {
+   "city_id": "101281101",
+   "name": "江门",
+   "province": "广东省",
+   "pinyin": "jiangmen",
+   "coords": [
+    22.5904,
+    113.0949
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": false,
+   "path": ""
+  },
+  "101281201": {
+   "city_id": "101281201",
+   "name": "河源",
+   "province": "广东省",
+   "pinyin": "heyuan",
+   "coords": [
+    23.7463,
+    114.6978
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    23.78,
+    114.77
+   ],
+   "cma_station": "59293",
+   "is_capital": false,
+   "path": "中国, 广东, 河源"
+  },
+  "101281301": {
+   "city_id": "101281301",
+   "name": "清远",
+   "province": "广东省",
+   "pinyin": "qingyuan",
+   "coords": [
+    23.685,
+    113.0512
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    23.71,
+    113.09
+   ],
+   "cma_station": "59280",
+   "is_capital": false,
+   "path": "中国, 广东, 清远"
+  },
+  "101281401": {
+   "city_id": "101281401",
+   "name": "云浮",
+   "province": "广东省",
+   "pinyin": "yunfu",
+   "coords": [
+    22.9298,
+    112.0444
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    22.94,
+    112.05
+   ],
+   "cma_station": "59471",
+   "is_capital": false,
+   "path": "中国, 广东, 云浮"
+  },
+  "101281501": {
+   "city_id": "101281501",
+   "name": "潮州",
+   "province": "广东省",
+   "pinyin": "chaozhou",
+   "coords": [
+    23.6617,
+    116.6323
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    23.67,
+    116.7
+   ],
+   "cma_station": "59312",
+   "is_capital": false,
+   "path": "中国, 广东, 潮州"
+  },
+  "101281601": {
+   "city_id": "101281601",
+   "name": "东莞",
+   "province": "广东省",
+   "pinyin": "dongguan",
+   "coords": [
+    23.0462,
+    113.7463
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    22.97,
+    113.74
+   ],
+   "cma_station": "59289",
+   "is_capital": false,
+   "path": "中国, 广东, 东莞"
+  },
+  "101281701": {
+   "city_id": "101281701",
+   "name": "中山",
+   "province": "广东省",
+   "pinyin": "zhongshan",
+   "coords": [
+    22.5211,
+    113.3824
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    22.49,
+    113.38
+   ],
+   "cma_station": "59485",
+   "is_capital": false,
+   "path": "中国, 广东, 中山"
+  },
+  "101281801": {
+   "city_id": "101281801",
+   "name": "阳江",
+   "province": "广东省",
+   "pinyin": "yangjiang",
+   "coords": [
+    21.8592,
+    111.9751
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    21.85,
+    111.98
+   ],
+   "cma_station": "59663",
+   "is_capital": false,
+   "path": "中国, 广东, 阳江"
+  },
+  "101281901": {
+   "city_id": "101281901",
+   "name": "揭阳",
+   "province": "广东省",
+   "pinyin": "jieyang",
+   "coords": [
+    23.5438,
+    116.3557
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    23.59,
+    116.4
+   ],
+   "cma_station": "59315",
+   "is_capital": false,
+   "path": "中国, 广东, 揭阳"
+  },
+  "101282001": {
+   "city_id": "101282001",
+   "name": "茂名",
+   "province": "广东省",
+   "pinyin": "maoming",
+   "coords": [
+    21.6598,
+    110.9192
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    21.75,
+    110.91
+   ],
+   "cma_station": "59659",
+   "is_capital": false,
+   "path": "中国, 广东, 茂名"
+  },
+  "101282101": {
+   "city_id": "101282101",
+   "name": "汕尾",
+   "province": "广东省",
+   "pinyin": "shanwei",
+   "coords": [
+    22.7745,
+    115.3642
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    22.79,
+    115.36
+   ],
+   "cma_station": "59501",
+   "is_capital": false,
+   "path": "中国, 广东, 汕尾"
+  },
+  "101300101": {
+   "city_id": "101300101",
+   "name": "南宁",
+   "province": "广西壮族自治区",
+   "pinyin": "nanning",
+   "coords": [
+    22.824,
+    108.32
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    22.78,
+    108.55
+   ],
+   "cma_station": "59431",
+   "is_capital": true,
+   "path": "中国, 广西, 南宁"
+  },
+  "101300201": {
+   "city_id": "101300201",
+   "name": "崇左",
+   "province": "广西壮族自治区",
+   "pinyin": "chongzuo",
+   "coords": [
+    22.4041,
+    107.3539
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    22.37,
+    107.38
+   ],
+   "cma_station": "59425",
+   "is_capital": false,
+   "path": "中国, 广西, 崇左"
+  },
+  "101300301": {
+   "city_id": "101300301",
+   "name": "柳州",
+   "province": "广西壮族自治区",
+   "pinyin": "liuzhou",
+   "coords": [
+    24.3146,
+    109.4117
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    24.34,
+    109.4
+   ],
+   "cma_station": "N2280",
+   "is_capital": false,
+   "path": "中国, 广西, 柳州"
+  },
+  "101300401": {
+   "city_id": "101300401",
+   "name": "来宾",
+   "province": "广西壮族自治区",
+   "pinyin": "laibin",
+   "coords": [
+    23.7338,
+    109.2298
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    23.76,
+    109.15
+   ],
+   "cma_station": "59242",
+   "is_capital": false,
+   "path": "中国, 广西, 来宾"
+  },
+  "101300501": {
+   "city_id": "101300501",
+   "name": "桂林",
+   "province": "广西壮族自治区",
+   "pinyin": "guilin",
+   "coords": [
+    25.2742,
+    110.2991
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    25.32,
+    110.3
+   ],
+   "cma_station": "57957",
+   "is_capital": false,
+   "path": "中国, 广西, 桂林"
+  },
+  "101300601": {
+   "city_id": "101300601",
+   "name": "梧州",
+   "province": "广西壮族自治区",
+   "pinyin": "wuzhou",
+   "coords": [
+    23.4748,
+    111.2976
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    23.48,
+    111.3
+   ],
+   "cma_station": "59265",
+   "is_capital": false,
+   "path": "中国, 广西, 梧州"
+  },
+  "101300701": {
+   "city_id": "101300701",
+   "name": "贺州",
+   "province": "广西壮族自治区",
+   "pinyin": "hezhou",
+   "coords": [
+    24.4141,
+    111.5521
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    24.42,
+    111.51
+   ],
+   "cma_station": "59065",
+   "is_capital": false,
+   "path": "中国, 广西, 贺州"
+  },
+  "101300801": {
+   "city_id": "101300801",
+   "name": "贵港",
+   "province": "广西壮族自治区",
+   "pinyin": "guigang",
+   "coords": [
+    23.0936,
+    109.6021
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    23.05,
+    109.57
+   ],
+   "cma_station": "59249",
+   "is_capital": false,
+   "path": "中国, 广西, 贵港"
+  },
+  "101300901": {
+   "city_id": "101300901",
+   "name": "玉林",
+   "province": "广西壮族自治区",
+   "pinyin": "yulin",
+   "coords": [
+    22.6314,
+    110.1544
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    22.66,
+    110.12
+   ],
+   "cma_station": "59453",
+   "is_capital": false,
+   "path": "中国, 广西, 玉林"
+  },
+  "101301001": {
+   "city_id": "101301001",
+   "name": "百色",
+   "province": "广西壮族自治区",
+   "pinyin": "baise",
+   "coords": [
+    23.8977,
+    106.6163
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    23.9,
+    106.61
+   ],
+   "cma_station": "59211",
+   "is_capital": false,
+   "path": "中国, 广西, 百色"
+  },
+  "101301101": {
+   "city_id": "101301101",
+   "name": "钦州",
+   "province": "广西壮族自治区",
+   "pinyin": "qinzhou",
+   "coords": [
+    21.9671,
+    108.6242
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    21.98,
+    108.6
+   ],
+   "cma_station": "59632",
+   "is_capital": false,
+   "path": "中国, 广西, 钦州"
+  },
+  "101301201": {
+   "city_id": "101301201",
+   "name": "河池",
+   "province": "广西壮族自治区",
+   "pinyin": "hechi",
+   "coords": [
+    24.6959,
+    108.0621
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    24.69,
+    108.04
+   ],
+   "cma_station": "59023",
+   "is_capital": false,
+   "path": "中国, 广西, 河池"
+  },
+  "101301301": {
+   "city_id": "101301301",
+   "name": "北海",
+   "province": "广西壮族自治区",
+   "pinyin": "beihai",
+   "coords": [
+    21.4733,
+    109.1193
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    21.45,
+    109.18
+   ],
+   "cma_station": "59644",
+   "is_capital": false,
+   "path": "中国, 广西, 北海"
+  },
+  "101301401": {
+   "city_id": "101301401",
+   "name": "防城港",
+   "province": "广西壮族自治区",
+   "pinyin": "fangchenggang",
+   "coords": [
+    21.6146,
+    108.3455
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    21.67,
+    108.39
+   ],
+   "cma_station": "59635",
+   "is_capital": false,
+   "path": "中国, 广西, 防城港"
+  },
+  "101310101": {
+   "city_id": "101310101",
+   "name": "海口",
+   "province": "海南省",
+   "pinyin": "haikou",
+   "coords": [
+    20.032,
+    110.3312
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    19.99,
+    110.25
+   ],
+   "cma_station": "59758",
+   "is_capital": true,
+   "path": "中国, 海南, 海口"
+  },
+  "101310201": {
+   "city_id": "101310201",
+   "name": "三亚",
+   "province": "海南省",
+   "pinyin": "sanya",
+   "coords": [
+    18.2479,
+    109.5083
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    18.25,
+    109.51
+   ],
+   "cma_station": "M1068",
+   "is_capital": false,
+   "path": "中国, 海南, 三亚"
+  },
+  "101310205": {
+   "city_id": "101310205",
+   "name": "儋州",
+   "province": "海南省",
+   "pinyin": "danzhou",
+   "coords": [
+    19.5175,
+    109.5768
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    19.51,
+    109.58
+   ],
+   "cma_station": "59845",
+   "is_capital": false,
+   "path": "中国, 海南, 儋州"
+  },
+  "101040100": {
+   "city_id": "101040100",
+   "name": "重庆",
+   "province": "重庆市",
+   "pinyin": "chongqing",
+   "coords": [
+    29.5332,
+    106.505
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    29.58,
+    106.46
+   ],
+   "cma_station": "57516",
+   "is_capital": true,
+   "path": "中国, 重庆, 沙坪坝"
+  },
+  "101270101": {
+   "city_id": "101270101",
+   "name": "成都",
+   "province": "四川省",
+   "pinyin": "chengdu",
+   "coords": [
+    30.6595,
+    104.0657
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    30.59,
+    104.16
+   ],
+   "cma_station": "S1003",
+   "is_capital": true,
+   "path": "中国, 四川, 成都"
+  },
+  "101270201": {
+   "city_id": "101270201",
+   "name": "攀枝花",
+   "province": "四川省",
+   "pinyin": "panzhihua",
+   "coords": [
+    26.5804,
+    101.716
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    26.58,
+    101.72
+   ],
+   "cma_station": "56666",
+   "is_capital": false,
+   "path": "中国, 四川, 攀枝花"
+  },
+  "101270301": {
+   "city_id": "101270301",
+   "name": "自贡",
+   "province": "四川省",
+   "pinyin": "zigong",
+   "coords": [
+    29.3528,
+    104.7734
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    29.36,
+    104.77
+   ],
+   "cma_station": "56396",
+   "is_capital": false,
+   "path": "中国, 四川, 自贡"
+  },
+  "101270401": {
+   "city_id": "101270401",
+   "name": "绵阳",
+   "province": "四川省",
+   "pinyin": "mianyang",
+   "coords": [
+    31.464,
+    104.7417
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    31.44,
+    104.73
+   ],
+   "cma_station": "56196",
+   "is_capital": false,
+   "path": "中国, 四川, 绵阳"
+  },
+  "101270501": {
+   "city_id": "101270501",
+   "name": "南充",
+   "province": "四川省",
+   "pinyin": "nanchong",
+   "coords": [
+    30.7953,
+    106.083
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    30.75,
+    106.13
+   ],
+   "cma_station": "57411",
+   "is_capital": false,
+   "path": "中国, 四川, 南充"
+  },
+  "101270601": {
+   "city_id": "101270601",
+   "name": "达州",
+   "province": "四川省",
+   "pinyin": "dazhou",
+   "coords": [
+    31.2095,
+    107.5023
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": false,
+   "path": ""
+  },
+  "101270701": {
+   "city_id": "101270701",
+   "name": "遂宁",
+   "province": "四川省",
+   "pinyin": "suining",
+   "coords": [
+    30.5133,
+    105.5713
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    30.51,
+    105.56
+   ],
+   "cma_station": "57405",
+   "is_capital": false,
+   "path": "中国, 四川, 遂宁"
+  },
+  "101270801": {
+   "city_id": "101270801",
+   "name": "广安",
+   "province": "四川省",
+   "pinyin": "guangan",
+   "coords": [
+    30.4564,
+    106.6334
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    30.52,
+    106.64
+   ],
+   "cma_station": "57415",
+   "is_capital": false,
+   "path": "中国, 四川, 广安区"
+  },
+  "101270901": {
+   "city_id": "101270901",
+   "name": "巴中",
+   "province": "四川省",
+   "pinyin": "bazhong",
+   "coords": [
+    31.8588,
+    106.7537
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    31.89,
+    106.79
+   ],
+   "cma_station": "57313",
+   "is_capital": false,
+   "path": "中国, 四川, 巴中"
+  },
+  "101271001": {
+   "city_id": "101271001",
+   "name": "泸州",
+   "province": "四川省",
+   "pinyin": "luzhou",
+   "coords": [
+    28.8891,
+    105.4433
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    28.88,
+    105.44
+   ],
+   "cma_station": "S5031",
+   "is_capital": false,
+   "path": "中国, 四川, 泸州"
+  },
+  "101271101": {
+   "city_id": "101271101",
+   "name": "宜宾",
+   "province": "四川省",
+   "pinyin": "yibin",
+   "coords": [
+    28.7602,
+    104.6308
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    28.8,
+    104.6
+   ],
+   "cma_station": "S5702",
+   "is_capital": false,
+   "path": "中国, 四川, 宜宾"
+  },
+  "101271201": {
+   "city_id": "101271201",
+   "name": "内江",
+   "province": "四川省",
+   "pinyin": "neijiang",
+   "coords": [
+    29.5871,
+    105.0661
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    29.62,
+    105.12
+   ],
+   "cma_station": "57503",
+   "is_capital": false,
+   "path": "中国, 四川, 内江"
+  },
+  "101271301": {
+   "city_id": "101271301",
+   "name": "资阳",
+   "province": "四川省",
+   "pinyin": "ziyang",
+   "coords": [
+    30.1222,
+    104.6419
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    30.07,
+    104.66
+   ],
+   "cma_station": "56298",
+   "is_capital": false,
+   "path": "中国, 四川, 资阳"
+  },
+  "101271401": {
+   "city_id": "101271401",
+   "name": "乐山",
+   "province": "四川省",
+   "pinyin": "leshan",
+   "coords": [
+    29.582,
+    103.7613
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    29.56,
+    103.76
+   ],
+   "cma_station": "56386",
+   "is_capital": false,
+   "path": "中国, 四川, 乐山"
+  },
+  "101271501": {
+   "city_id": "101271501",
+   "name": "眉山",
+   "province": "四川省",
+   "pinyin": "meishan",
+   "coords": [
+    30.0483,
+    103.8318
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    30.06,
+    103.88
+   ],
+   "cma_station": "56391",
+   "is_capital": false,
+   "path": "中国, 四川, 眉山"
+  },
+  "101271601": {
+   "city_id": "101271601",
+   "name": "凉山",
+   "province": "四川省",
+   "pinyin": "liangshan",
+   "coords": [
+    27.8868,
+    102.2587
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    27.9,
+    102.27
+   ],
+   "cma_station": "56571",
+   "is_capital": false,
+   "path": "中国, 四川, 西昌"
+  },
+  "101271701": {
+   "city_id": "101271701",
+   "name": "雅安",
+   "province": "四川省",
+   "pinyin": "yaan",
+   "coords": [
+    29.9877,
+    103.001
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    29.98,
+    103.0
+   ],
+   "cma_station": "56287",
+   "is_capital": false,
+   "path": "中国, 四川, 雅安"
+  },
+  "101271801": {
+   "city_id": "101271801",
+   "name": "甘孜藏族",
+   "province": "四川省",
+   "pinyin": "garze",
+   "coords": [
+    30.0507,
+    101.9638
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    31.62,
+    100.0
+   ],
+   "cma_station": "56146",
+   "is_capital": false,
+   "path": "中国, 四川, 甘孜"
+  },
+  "101271901": {
+   "city_id": "101271901",
+   "name": "阿坝藏族羌族",
+   "province": "四川省",
+   "pinyin": "aba",
+   "coords": [
+    31.8998,
+    102.2214
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    32.9,
+    101.71
+   ],
+   "cma_station": "56171",
+   "is_capital": false,
+   "path": "中国, 四川, 阿坝"
+  },
+  "101272001": {
+   "city_id": "101272001",
+   "name": "德阳",
+   "province": "四川省",
+   "pinyin": "deyang",
+   "coords": [
+    31.128,
+    104.3987
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    31.18,
+    104.28
+   ],
+   "cma_station": "S1933",
+   "is_capital": false,
+   "path": "中国, 四川, 德阳"
+  },
+  "101272101": {
+   "city_id": "101272101",
+   "name": "广元",
+   "province": "四川省",
+   "pinyin": "guangyuan",
+   "coords": [
+    32.4337,
+    105.8298
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    32.42,
+    105.9
+   ],
+   "cma_station": "57206",
+   "is_capital": false,
+   "path": "中国, 四川, 广元"
+  },
+  "101260101": {
+   "city_id": "101260101",
+   "name": "贵阳",
+   "province": "贵州省",
+   "pinyin": "guiyang",
+   "coords": [
+    26.5783,
+    106.7135
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    26.59,
+    106.73
+   ],
+   "cma_station": "57816",
+   "is_capital": true,
+   "path": "中国, 贵州, 贵阳"
+  },
+  "101260201": {
+   "city_id": "101260201",
+   "name": "遵义",
+   "province": "贵州省",
+   "pinyin": "zunyi",
+   "coords": [
+    27.7066,
+    106.9373
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    27.7,
+    106.88
+   ],
+   "cma_station": "57713",
+   "is_capital": false,
+   "path": "中国, 贵州, 遵义"
+  },
+  "101260301": {
+   "city_id": "101260301",
+   "name": "安顺",
+   "province": "贵州省",
+   "pinyin": "anshun",
+   "coords": [
+    26.2455,
+    105.9322
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    26.26,
+    105.97
+   ],
+   "cma_station": "R3117",
+   "is_capital": false,
+   "path": "中国, 贵州, 安顺"
+  },
+  "101260401": {
+   "city_id": "101260401",
+   "name": "黔南",
+   "province": "贵州省",
+   "pinyin": "qiannan",
+   "coords": [
+    26.2582,
+    107.5172
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    26.32,
+    107.51
+   ],
+   "cma_station": "57827",
+   "is_capital": false,
+   "path": "中国, 贵州, 都匀"
+  },
+  "101260501": {
+   "city_id": "101260501",
+   "name": "黔东南",
+   "province": "贵州省",
+   "pinyin": "qiandongnan",
+   "coords": [
+    26.5834,
+    107.9775
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    26.6,
+    107.98
+   ],
+   "cma_station": "57825",
+   "is_capital": false,
+   "path": "中国, 贵州, 凯里"
+  },
+  "101260601": {
+   "city_id": "101260601",
+   "name": "铜仁",
+   "province": "贵州省",
+   "pinyin": "tongren",
+   "coords": [
+    27.7183,
+    109.1916
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    27.73,
+    109.18
+   ],
+   "cma_station": "57741",
+   "is_capital": false,
+   "path": "中国, 贵州, 铜仁"
+  },
+  "101260701": {
+   "city_id": "101260701",
+   "name": "毕节",
+   "province": "贵州省",
+   "pinyin": "bijie",
+   "coords": [
+    27.3017,
+    105.285
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    27.3,
+    105.29
+   ],
+   "cma_station": "57707",
+   "is_capital": false,
+   "path": "中国, 贵州, 毕节"
+  },
+  "101260801": {
+   "city_id": "101260801",
+   "name": "六盘水",
+   "province": "贵州省",
+   "pinyin": "liupanshui",
+   "coords": [
+    26.5846,
+    104.8467
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": false,
+   "path": ""
+  },
+  "101260901": {
+   "city_id": "101260901",
+   "name": "黔西南",
+   "province": "贵州省",
+   "pinyin": "qianxinan",
+   "coords": [
+    25.0881,
+    104.898
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    25.09,
+    104.9
+   ],
+   "cma_station": "57907",
+   "is_capital": false,
+   "path": "中国, 贵州, 兴义"
+  },
+  "101290101": {
+   "city_id": "101290101",
+   "name": "昆明",
+   "province": "云南省",
+   "pinyin": "kunming",
+   "coords": [
+    25.0406,
+    102.7123
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    25.01,
+    102.65
+   ],
+   "cma_station": "56778",
+   "is_capital": true,
+   "path": "中国, 云南, 昆明"
+  },
+  "101290201": {
+   "city_id": "101290201",
+   "name": "大理白族",
+   "province": "云南省",
+   "pinyin": "dali",
+   "coords": [
+    25.5894,
+    100.2257
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    25.71,
+    100.18
+   ],
+   "cma_station": "56751",
+   "is_capital": false,
+   "path": "中国, 云南, 大理"
+  },
+  "101290301": {
+   "city_id": "101290301",
+   "name": "红河哈尼族彝族",
+   "province": "云南省",
+   "pinyin": "honghe",
+   "coords": [
+    23.3668,
+    103.3842
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    23.37,
+    102.42
+   ],
+   "cma_station": "56975",
+   "is_capital": false,
+   "path": "中国, 云南, 红河"
+  },
+  "101290401": {
+   "city_id": "101290401",
+   "name": "曲靖",
+   "province": "云南省",
+   "pinyin": "qujing",
+   "coords": [
+    25.5016,
+    103.7979
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    25.5,
+    103.8
+   ],
+   "cma_station": "56783",
+   "is_capital": false,
+   "path": "中国, 云南, 曲靖"
+  },
+  "101290501": {
+   "city_id": "101290501",
+   "name": "保山",
+   "province": "云南省",
+   "pinyin": "baoshan",
+   "coords": [
+    25.1118,
+    99.1671
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    25.04,
+    99.16
+   ],
+   "cma_station": "56748",
+   "is_capital": false,
+   "path": "中国, 云南, 保山"
+  },
+  "101290601": {
+   "city_id": "101290601",
+   "name": "文山壮族苗族",
+   "province": "云南省",
+   "pinyin": "wenshan",
+   "coords": [
+    23.3695,
+    104.244
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    23.33,
+    104.28
+   ],
+   "cma_station": "56994",
+   "is_capital": false,
+   "path": "中国, 云南, 文山"
+  },
+  "101290701": {
+   "city_id": "101290701",
+   "name": "玉溪",
+   "province": "云南省",
+   "pinyin": "yuxi",
+   "coords": [
+    24.3505,
+    102.5439
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    24.34,
+    102.55
+   ],
+   "cma_station": "56875",
+   "is_capital": false,
+   "path": "中国, 云南, 玉溪"
+  },
+  "101290801": {
+   "city_id": "101290801",
+   "name": "楚雄彝族",
+   "province": "云南省",
+   "pinyin": "chuxiong",
+   "coords": [
+    25.042,
+    101.546
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    25.03,
+    101.55
+   ],
+   "cma_station": "56768",
+   "is_capital": false,
+   "path": "中国, 云南, 楚雄"
+  },
+  "101290901": {
+   "city_id": "101290901",
+   "name": "普洱",
+   "province": "云南省",
+   "pinyin": "puer",
+   "coords": [
+    22.7773,
+    100.9723
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": false,
+   "path": ""
+  },
+  "101291001": {
+   "city_id": "101291001",
+   "name": "昭通",
+   "province": "云南省",
+   "pinyin": "zhaotong",
+   "coords": [
+    27.337,
+    103.7172
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    27.35,
+    103.72
+   ],
+   "cma_station": "56586",
+   "is_capital": false,
+   "path": "中国, 云南, 昭通"
+  },
+  "101291101": {
+   "city_id": "101291101",
+   "name": "临沧",
+   "province": "云南省",
+   "pinyin": "lincang",
+   "coords": [
+    23.8866,
+    100.087
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    23.88,
+    100.12
+   ],
+   "cma_station": "56951",
+   "is_capital": false,
+   "path": "中国, 云南, 临沧"
+  },
+  "101291201": {
+   "city_id": "101291201",
+   "name": "怒江",
+   "province": "云南省",
+   "pinyin": "nujiang",
+   "coords": [
+    25.8509,
+    98.8543
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": false,
+   "path": ""
+  },
+  "101291301": {
+   "city_id": "101291301",
+   "name": "迪庆",
+   "province": "云南省",
+   "pinyin": "diqing",
+   "coords": [
+    27.8269,
+    99.7065
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    27.85,
+    99.74
+   ],
+   "cma_station": "56543",
+   "is_capital": false,
+   "path": "中国, 云南, 香格里拉"
+  },
+  "101291401": {
+   "city_id": "101291401",
+   "name": "丽江",
+   "province": "云南省",
+   "pinyin": "lijiang",
+   "coords": [
+    26.8721,
+    100.233
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    26.85,
+    100.22
+   ],
+   "cma_station": "56651",
+   "is_capital": false,
+   "path": "中国, 云南, 丽江"
+  },
+  "101291501": {
+   "city_id": "101291501",
+   "name": "德宏",
+   "province": "云南省",
+   "pinyin": "dehong",
+   "coords": [
+    24.4367,
+    98.5784
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": false,
+   "path": ""
+  },
+  "101291601": {
+   "city_id": "101291601",
+   "name": "西双版纳",
+   "province": "云南省",
+   "pinyin": "xishuangbanna",
+   "coords": [
+    22.0017,
+    100.7979
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    22.01,
+    100.78
+   ],
+   "cma_station": "56959",
+   "is_capital": false,
+   "path": "中国, 云南, 景洪"
+  },
+  "101140101": {
+   "city_id": "101140101",
+   "name": "拉萨",
+   "province": "西藏自治区",
+   "pinyin": "lhasa",
+   "coords": [
+    29.6604,
+    91.1322
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    29.66,
+    91.14
+   ],
+   "cma_station": "55591",
+   "is_capital": true,
+   "path": "中国, 西藏, 拉萨"
+  },
+  "101140201": {
+   "city_id": "101140201",
+   "name": "日喀则",
+   "province": "西藏自治区",
+   "pinyin": "rikaze",
+   "coords": [
+    29.2675,
+    88.8851
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    29.25,
+    88.89
+   ],
+   "cma_station": "55578",
+   "is_capital": false,
+   "path": "中国, 西藏, 日喀则"
+  },
+  "101140301": {
+   "city_id": "101140301",
+   "name": "山南",
+   "province": "西藏自治区",
+   "pinyin": "shannan",
+   "coords": [
+    29.236,
+    91.7665
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": false,
+   "path": ""
+  },
+  "101140401": {
+   "city_id": "101140401",
+   "name": "林芝",
+   "province": "西藏自治区",
+   "pinyin": "linzhi",
+   "coords": [
+    29.6547,
+    94.3623
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    29.65,
+    94.36
+   ],
+   "cma_station": "56312",
+   "is_capital": false,
+   "path": "中国, 西藏, 林芝"
+  },
+  "101140501": {
+   "city_id": "101140501",
+   "name": "昌都",
+   "province": "西藏自治区",
+   "pinyin": "changdou",
+   "coords": [
+    31.1369,
+    97.1785
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    31.15,
+    97.18
+   ],
+   "cma_station": "56137",
+   "is_capital": false,
+   "path": "中国, 西藏, 昌都"
+  },
+  "101140601": {
+   "city_id": "101140601",
+   "name": "那曲",
+   "province": "西藏自治区",
+   "pinyin": "naqu",
+   "coords": [
+    31.476,
+    92.0602
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    31.48,
+    92.06
+   ],
+   "cma_station": "55299",
+   "is_capital": false,
+   "path": "中国, 西藏, 那曲"
+  },
+  "101140701": {
+   "city_id": "101140701",
+   "name": "阿里",
+   "province": "西藏自治区",
+   "pinyin": "ali",
+   "coords": [
+    32.5032,
+    80.1055
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": false,
+   "path": ""
+  },
+  "101110101": {
+   "city_id": "101110101",
+   "name": "西安",
+   "province": "陕西省",
+   "pinyin": "xian",
+   "coords": [
+    34.2632,
+    108.948
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    34.31,
+    108.94
+   ],
+   "cma_station": "V8870",
+   "is_capital": true,
+   "path": "中国, 陕西, 西安"
+  },
+  "101110201": {
+   "city_id": "101110201",
+   "name": "咸阳",
+   "province": "陕西省",
+   "pinyin": "xianyang",
+   "coords": [
+    34.3334,
+    108.7051
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": false,
+   "path": ""
+  },
+  "101110300": {
+   "city_id": "101110300",
+   "name": "延安",
+   "province": "陕西省",
+   "pinyin": "yanan",
+   "coords": [
+    36.5965,
+    109.4908
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    36.58,
+    109.45
+   ],
+   "cma_station": "53845",
+   "is_capital": false,
+   "path": "中国, 陕西, 延安"
+  },
+  "101110401": {
+   "city_id": "101110401",
+   "name": "榆林",
+   "province": "陕西省",
+   "pinyin": "yulin",
+   "coords": [
+    38.2902,
+    109.7412
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    38.27,
+    109.78
+   ],
+   "cma_station": "53646",
+   "is_capital": false,
+   "path": "中国, 陕西, 榆林"
+  },
+  "101110501": {
+   "city_id": "101110501",
+   "name": "渭南",
+   "province": "陕西省",
+   "pinyin": "weinan",
+   "coords": [
+    34.4994,
+    109.5029
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    34.52,
+    109.49
+   ],
+   "cma_station": "V3006",
+   "is_capital": false,
+   "path": "中国, 陕西, 渭南"
+  },
+  "101110601": {
+   "city_id": "101110601",
+   "name": "商洛",
+   "province": "陕西省",
+   "pinyin": "shangluo",
+   "coords": [
+    33.8683,
+    109.9398
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": false,
+   "path": ""
+  },
+  "101110701": {
+   "city_id": "101110701",
+   "name": "安康",
+   "province": "陕西省",
+   "pinyin": "ankang",
+   "coords": [
+    32.6903,
+    109.0293
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    32.69,
+    109.04
+   ],
+   "cma_station": "57245",
+   "is_capital": false,
+   "path": "中国, 陕西, 安康"
+  },
+  "101110801": {
+   "city_id": "101110801",
+   "name": "汉中",
+   "province": "陕西省",
+   "pinyin": "hanzhong",
+   "coords": [
+    33.0777,
+    107.0286
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    33.07,
+    107.04
+   ],
+   "cma_station": "57127",
+   "is_capital": false,
+   "path": "中国, 陕西, 汉中"
+  },
+  "101110901": {
+   "city_id": "101110901",
+   "name": "宝鸡",
+   "province": "陕西省",
+   "pinyin": "baoji",
+   "coords": [
+    34.3693,
+    107.1449
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    34.35,
+    107.13
+   ],
+   "cma_station": "57016",
+   "is_capital": false,
+   "path": "中国, 陕西, 宝鸡"
+  },
+  "101111001": {
+   "city_id": "101111001",
+   "name": "铜川",
+   "province": "陕西省",
+   "pinyin": "tongchuan",
+   "coords": [
+    34.9166,
+    108.9796
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    35.06,
+    109.08
+   ],
+   "cma_station": "53947",
+   "is_capital": false,
+   "path": "中国, 陕西, 铜川"
+  },
+  "101111101": {
+   "city_id": "101111101",
+   "name": "杨凌",
+   "province": "陕西省",
+   "pinyin": "yangling",
+   "coords": [
+    34.2632,
+    108.948
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    34.29,
+    108.07
+   ],
+   "cma_station": "57123",
+   "is_capital": false,
+   "path": "中国, 陕西, 杨凌"
+  },
+  "101160101": {
+   "city_id": "101160101",
+   "name": "兰州",
+   "province": "甘肃省",
+   "pinyin": "lanzhou",
+   "coords": [
+    36.058,
+    103.8236
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    36.04,
+    103.88
+   ],
+   "cma_station": "52889",
+   "is_capital": true,
+   "path": "中国, 甘肃, 兰州"
+  },
+  "101160201": {
+   "city_id": "101160201",
+   "name": "定西",
+   "province": "甘肃省",
+   "pinyin": "dingxi",
+   "coords": [
+    35.5796,
+    104.6263
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": false,
+   "path": ""
+  },
+  "101160301": {
+   "city_id": "101160301",
+   "name": "平凉",
+   "province": "甘肃省",
+   "pinyin": "pingliang",
+   "coords": [
+    35.5428,
+    106.6847
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": false,
+   "path": ""
+  },
+  "101160401": {
+   "city_id": "101160401",
+   "name": "庆阳",
+   "province": "甘肃省",
+   "pinyin": "qingyang",
+   "coords": [
+    35.7342,
+    107.6384
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": false,
+   "path": ""
+  },
+  "101160501": {
+   "city_id": "101160501",
+   "name": "武威",
+   "province": "甘肃省",
+   "pinyin": "wuwei",
+   "coords": [
+    37.93,
+    102.6347
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    37.92,
+    102.67
+   ],
+   "cma_station": "W2631",
+   "is_capital": false,
+   "path": "中国, 甘肃, 武威"
+  },
+  "101160601": {
+   "city_id": "101160601",
+   "name": "金昌",
+   "province": "甘肃省",
+   "pinyin": "jinchang",
+   "coords": [
+    38.5142,
+    102.1879
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    38.53,
+    102.19
+   ],
+   "cma_station": "52675",
+   "is_capital": false,
+   "path": "中国, 甘肃, 金昌"
+  },
+  "101160701": {
+   "city_id": "101160701",
+   "name": "张掖",
+   "province": "甘肃省",
+   "pinyin": "zhangye",
+   "coords": [
+    38.9329,
+    100.4555
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    38.95,
+    100.44
+   ],
+   "cma_station": "W2085",
+   "is_capital": false,
+   "path": "中国, 甘肃, 张掖"
+  },
+  "101160801": {
+   "city_id": "101160801",
+   "name": "酒泉",
+   "province": "甘肃省",
+   "pinyin": "jiuquan",
+   "coords": [
+    39.744,
+    98.5108
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    39.77,
+    98.49
+   ],
+   "cma_station": "52533",
+   "is_capital": false,
+   "path": "中国, 甘肃, 酒泉"
+  },
+  "101160901": {
+   "city_id": "101160901",
+   "name": "天水",
+   "province": "甘肃省",
+   "pinyin": "tianshui",
+   "coords": [
+    34.5785,
+    105.725
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    34.57,
+    105.74
+   ],
+   "cma_station": "57006",
+   "is_capital": false,
+   "path": "中国, 甘肃, 天水"
+  },
+  "101161001": {
+   "city_id": "101161001",
+   "name": "陇南",
+   "province": "甘肃省",
+   "pinyin": "longnan",
+   "coords": [
+    33.3886,
+    104.9294
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": false,
+   "path": ""
+  },
+  "101161101": {
+   "city_id": "101161101",
+   "name": "临夏回族",
+   "province": "甘肃省",
+   "pinyin": "linxia",
+   "coords": [
+    35.5994,
+    103.212
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    35.58,
+    103.18
+   ],
+   "cma_station": "52984",
+   "is_capital": false,
+   "path": "中国, 甘肃, 临夏"
+  },
+  "101161201": {
+   "city_id": "101161201",
+   "name": "甘南",
+   "province": "甘肃省",
+   "pinyin": "gannan",
+   "coords": [
+    34.9864,
+    102.911
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    34.99,
+    102.9
+   ],
+   "cma_station": "56080",
+   "is_capital": false,
+   "path": "中国, 甘肃, 合作"
+  },
+  "101161301": {
+   "city_id": "101161301",
+   "name": "白银",
+   "province": "甘肃省",
+   "pinyin": "baiyin",
+   "coords": [
+    36.5457,
+    104.1736
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    36.55,
+    104.14
+   ],
+   "cma_station": "52896",
+   "is_capital": false,
+   "path": "中国, 甘肃, 白银"
+  },
+  "101161401": {
+   "city_id": "101161401",
+   "name": "嘉峪关",
+   "province": "甘肃省",
+   "pinyin": "jiayuguan",
+   "coords": [
+    39.7865,
+    98.2773
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    39.78,
+    98.33
+   ],
+   "cma_station": "52532",
+   "is_capital": false,
+   "path": "中国, 甘肃, 嘉峪关"
+  },
+  "101150101": {
+   "city_id": "101150101",
+   "name": "西宁",
+   "province": "青海省",
+   "pinyin": "xining",
+   "coords": [
+    36.6232,
+    101.7789
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    36.66,
+    101.73
+   ],
+   "cma_station": "52866",
+   "is_capital": true,
+   "path": "中国, 青海, 西宁"
+  },
+  "101150201": {
+   "city_id": "101150201",
+   "name": "海东",
+   "province": "青海省",
+   "pinyin": "haidong",
+   "coords": [
+    36.5029,
+    102.1033
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    36.49,
+    102.4
+   ],
+   "cma_station": "52874",
+   "is_capital": false,
+   "path": "中国, 青海, 乐都"
+  },
+  "101150301": {
+   "city_id": "101150301",
+   "name": "黄南",
+   "province": "青海省",
+   "pinyin": "huangnan",
+   "coords": [
+    35.5177,
+    102.02
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    35.55,
+    102.03
+   ],
+   "cma_station": "52974",
+   "is_capital": false,
+   "path": "中国, 青海, 同仁"
+  },
+  "101150401": {
+   "city_id": "101150401",
+   "name": "海南",
+   "province": "青海省",
+   "pinyin": "hainan",
+   "coords": [
+    36.2804,
+    100.6195
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    36.27,
+    100.62
+   ],
+   "cma_station": "52856",
+   "is_capital": false,
+   "path": "中国, 青海, 共和"
+  },
+  "101150501": {
+   "city_id": "101150501",
+   "name": "果洛",
+   "province": "青海省",
+   "pinyin": "golog",
+   "coords": [
+    34.4736,
+    100.2421
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    34.48,
+    100.24
+   ],
+   "cma_station": "56043",
+   "is_capital": false,
+   "path": "中国, 青海, 玛沁"
+  },
+  "101150601": {
+   "city_id": "101150601",
+   "name": "玉树藏族",
+   "province": "青海省",
+   "pinyin": "yushu",
+   "coords": [
+    33.004,
+    97.0085
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    33.0,
+    96.96
+   ],
+   "cma_station": "56029",
+   "is_capital": false,
+   "path": "中国, 青海, 玉树"
+  },
+  "101150701": {
+   "city_id": "101150701",
+   "name": "海西",
+   "province": "青海省",
+   "pinyin": "haixi",
+   "coords": [
+    37.3747,
+    97.3708
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    37.37,
+    97.38
+   ],
+   "cma_station": "52737",
+   "is_capital": false,
+   "path": "中国, 青海, 德令哈"
+  },
+  "101150801": {
+   "city_id": "101150801",
+   "name": "海北",
+   "province": "青海省",
+   "pinyin": "haibei",
+   "coords": [
+    36.9594,
+    100.9011
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    36.9,
+    101.01
+   ],
+   "cma_station": "52853",
+   "is_capital": false,
+   "path": "中国, 青海, 海晏"
+  },
+  "101150901": {
+   "city_id": "101150901",
+   "name": "格尔木",
+   "province": "青海省",
+   "pinyin": "golmud",
+   "coords": [
+    36.6232,
+    101.7789
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    36.42,
+    94.91
+   ],
+   "cma_station": "52818",
+   "is_capital": false,
+   "path": "中国, 青海, 格尔木"
+  },
+  "101170101": {
+   "city_id": "101170101",
+   "name": "银川",
+   "province": "宁夏回族自治区",
+   "pinyin": "yinchuan",
+   "coords": [
+    38.4664,
+    106.2782
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    38.47,
+    106.21
+   ],
+   "cma_station": "53614",
+   "is_capital": true,
+   "path": "中国, 宁夏, 银川"
+  },
+  "101170201": {
+   "city_id": "101170201",
+   "name": "石嘴山",
+   "province": "宁夏回族自治区",
+   "pinyin": "shizuishan",
+   "coords": [
+    39.0133,
+    106.3762
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    39.04,
+    106.35
+   ],
+   "cma_station": "53518",
+   "is_capital": false,
+   "path": "中国, 宁夏, 石嘴山"
+  },
+  "101170301": {
+   "city_id": "101170301",
+   "name": "吴忠",
+   "province": "宁夏回族自治区",
+   "pinyin": "wuzhong",
+   "coords": [
+    37.9862,
+    106.1994
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    37.77,
+    106.16
+   ],
+   "cma_station": "53612",
+   "is_capital": false,
+   "path": "中国, 宁夏, 吴忠"
+  },
+  "101170401": {
+   "city_id": "101170401",
+   "name": "固原",
+   "province": "宁夏回族自治区",
+   "pinyin": "guyuan",
+   "coords": [
+    36.0046,
+    106.2852
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    36.03,
+    106.24
+   ],
+   "cma_station": "53817",
+   "is_capital": false,
+   "path": "中国, 宁夏, 固原"
+  },
+  "101170501": {
+   "city_id": "101170501",
+   "name": "中卫",
+   "province": "宁夏回族自治区",
+   "pinyin": "zhongwei",
+   "coords": [
+    37.515,
+    105.1896
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    37.53,
+    105.18
+   ],
+   "cma_station": "53704",
+   "is_capital": false,
+   "path": "中国, 宁夏, 中卫"
+  },
+  "101130101": {
+   "city_id": "101130101",
+   "name": "乌鲁木齐",
+   "province": "新疆维吾尔自治区",
+   "pinyin": "urumqi",
+   "coords": [
+    43.7928,
+    87.6177
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    43.79,
+    87.65
+   ],
+   "cma_station": "51463",
+   "is_capital": true,
+   "path": "中国, 新疆, 乌鲁木齐"
+  },
+  "101130201": {
+   "city_id": "101130201",
+   "name": "克拉玛依",
+   "province": "新疆维吾尔自治区",
+   "pinyin": "kelamayi",
+   "coords": [
+    45.5959,
+    84.8739
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    45.61,
+    84.85
+   ],
+   "cma_station": "51243",
+   "is_capital": false,
+   "path": "中国, 新疆, 克拉玛依"
+  },
+  "101130301": {
+   "city_id": "101130301",
+   "name": "石河子",
+   "province": "新疆维吾尔自治区",
+   "pinyin": "shihezi",
+   "coords": [
+    44.3059,
+    86.0411
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    44.31,
+    86.0
+   ],
+   "cma_station": "51356",
+   "is_capital": false,
+   "path": "中国, 新疆, 石河子"
+  },
+  "101130401": {
+   "city_id": "101130401",
+   "name": "昌吉回族",
+   "province": "新疆维吾尔自治区",
+   "pinyin": "changji",
+   "coords": [
+    44.0146,
+    87.304
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    44.01,
+    87.3
+   ],
+   "cma_station": "Y5522",
+   "is_capital": false,
+   "path": "中国, 新疆, 昌吉"
+  },
+  "101130501": {
+   "city_id": "101130501",
+   "name": "吐鲁番",
+   "province": "新疆维吾尔自治区",
+   "pinyin": "tulufan",
+   "coords": [
+    42.9476,
+    89.1841
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    42.95,
+    89.23
+   ],
+   "cma_station": "51573",
+   "is_capital": false,
+   "path": "中国, 新疆, 吐鲁番"
+  },
+  "101130601": {
+   "city_id": "101130601",
+   "name": "巴州",
+   "province": "新疆维吾尔自治区",
+   "pinyin": "bayingolin",
+   "coords": [
+    43.7928,
+    87.6177
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": false,
+   "path": ""
+  },
+  "101130701": {
+   "city_id": "101130701",
+   "name": "阿拉尔",
+   "province": "新疆维吾尔自治区",
+   "pinyin": "aral",
+   "coords": [
+    40.5419,
+    81.2859
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    40.61,
+    81.26
+   ],
+   "cma_station": "51730",
+   "is_capital": false,
+   "path": "中国, 新疆, 阿拉尔"
+  },
+  "101130801": {
+   "city_id": "101130801",
+   "name": "阿克苏",
+   "province": "新疆维吾尔自治区",
+   "pinyin": "akesu",
+   "coords": [
+    41.1707,
+    80.2651
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    41.16,
+    80.24
+   ],
+   "cma_station": "Y8677",
+   "is_capital": false,
+   "path": "中国, 新疆, 阿克苏"
+  },
+  "101130901": {
+   "city_id": "101130901",
+   "name": "喀什",
+   "province": "新疆维吾尔自治区",
+   "pinyin": "kashi",
+   "coords": [
+    39.4677,
+    75.9891
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    39.46,
+    75.97
+   ],
+   "cma_station": "Y9199",
+   "is_capital": false,
+   "path": "中国, 新疆, 喀什"
+  },
+  "101131001": {
+   "city_id": "101131001",
+   "name": "伊犁",
+   "province": "新疆维吾尔自治区",
+   "pinyin": "ili",
+   "coords": [
+    43.9219,
+    81.3179
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    43.94,
+    81.33
+   ],
+   "cma_station": "51431",
+   "is_capital": false,
+   "path": "中国, 新疆, 伊宁"
+  },
+  "101131101": {
+   "city_id": "101131101",
+   "name": "塔城",
+   "province": "新疆维吾尔自治区",
+   "pinyin": "tacheng",
+   "coords": [
+    46.7463,
+    82.9857
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    46.73,
+    82.98
+   ],
+   "cma_station": "51133",
+   "is_capital": false,
+   "path": "中国, 新疆, 塔城"
+  },
+  "101131201": {
+   "city_id": "101131201",
+   "name": "哈密",
+   "province": "新疆维吾尔自治区",
+   "pinyin": "hami",
+   "coords": [
+    42.8332,
+    93.5132
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    42.81,
+    93.52
+   ],
+   "cma_station": "52203",
+   "is_capital": false,
+   "path": "中国, 新疆, 哈密"
+  },
+  "101131301": {
+   "city_id": "101131301",
+   "name": "和田",
+   "province": "新疆维吾尔自治区",
+   "pinyin": "hetian",
+   "coords": [
+    37.1107,
+    79.9253
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    37.12,
+    79.93
+   ],
+   "cma_station": "51828",
+   "is_capital": false,
+   "path": "中国, 新疆, 和田"
+  },
+  "101131401": {
+   "city_id": "101131401",
+   "name": "阿勒泰",
+   "province": "新疆维吾尔自治区",
+   "pinyin": "aleitai",
+   "coords": [
+    47.8484,
+    88.1396
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    47.74,
+    88.07
+   ],
+   "cma_station": "51076",
+   "is_capital": false,
+   "path": "中国, 新疆, 阿勒泰"
+  },
+  "101131501": {
+   "city_id": "101131501",
+   "name": "克州",
+   "province": "新疆维吾尔自治区",
+   "pinyin": "kizilsu",
+   "coords": [
+    43.7928,
+    87.6177
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": false,
+   "path": ""
+  },
+  "101131601": {
+   "city_id": "101131601",
+   "name": "博州",
+   "province": "新疆维吾尔自治区",
+   "pinyin": "bortala",
+   "coords": [
+    43.7928,
+    87.6177
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": false,
+   "path": ""
+  },
+  "101320101": {
+   "city_id": "101320101",
+   "name": "香港",
+   "province": "香港特别行政区",
+   "pinyin": "hong kong",
+   "coords": [
+    22.32,
+    114.1734
+   ],
+   "coords_source": "places.json",
+   "station_coords": null,
+   "cma_station": "",
+   "is_capital": true,
+   "path": ""
+  },
+  "101330101": {
+   "city_id": "101330101",
+   "name": "澳门",
+   "province": "澳门特别行政区",
+   "pinyin": "macau",
+   "coords": [
+    22.199,
+    113.5491
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    22.16,
+    113.57
+   ],
+   "cma_station": "45011B",
+   "is_capital": true,
+   "path": "中国, 澳门, 澳门"
+  },
+  "101340101": {
+   "city_id": "101340101",
+   "name": "台北",
+   "province": "台湾省",
+   "pinyin": "taipei",
+   "coords": [
+    25.0443,
+    121.5091
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    25.03,
+    121.53
+   ],
+   "cma_station": "58968",
+   "is_capital": true,
+   "path": "中国, 台湾, 台北"
+  },
+  "101340201": {
+   "city_id": "101340201",
+   "name": "高雄",
+   "province": "台湾省",
+   "pinyin": "kaohsiung",
+   "coords": [
+    25.0443,
+    121.5091
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    22.62,
+    120.27
+   ],
+   "cma_station": "59554",
+   "is_capital": false,
+   "path": "中国, 台湾, 高雄"
+  },
+  "101340401": {
+   "city_id": "101340401",
+   "name": "台中",
+   "province": "台湾省",
+   "pinyin": "taichung",
+   "coords": [
+    25.0443,
+    121.5091
+   ],
+   "coords_source": "places.json",
+   "station_coords": [
+    24.15,
+    120.68
+   ],
+   "cma_station": "59158",
+   "is_capital": false,
+   "path": "中国, 台湾, 台中"
+  }
+ }
+}
