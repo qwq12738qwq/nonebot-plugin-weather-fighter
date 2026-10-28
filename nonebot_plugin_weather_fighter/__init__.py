@@ -40,7 +40,7 @@ from . import consts  # noqa: E402
 from . import matcher as matcher  # noqa: E402
 from .config import Config  # noqa: E402
 from .game.engine import get_engine  # noqa: E402
-from .services.http import close_http  # noqa: E402
+from .services.http import close_http, configure_http  # noqa: E402
 from .services.openmeteo import OpenMeteoConfig, configure_client  # noqa: E402
 from .services.provinces import resolve_province  # noqa: E402
 from .services.store import close_store, init_store  # noqa: E402
@@ -59,6 +59,7 @@ __plugin_meta__ = PluginMetadata(
 @_driver.on_startup
 async def _startup() -> None:
     config = get_plugin_config(Config)
+    configure_http(config.weather_fighter_retry_count)
     configure_client(
         OpenMeteoConfig(
             bucket_seconds=config.weather_fighter_bucket_bars,
