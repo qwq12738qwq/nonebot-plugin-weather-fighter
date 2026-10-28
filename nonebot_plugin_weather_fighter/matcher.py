@@ -193,13 +193,6 @@ async def _(event: MessageEvent, args: Message = CommandArg()) -> None:
             f"可用省份：{_province_list()}"
         )
 
-    weather_text = ""
-    try:
-        series = (await get_client().fetch_minutely_15(province)).value
-        weather_text = format_weather_report(build_weather_report(series, province))
-    except Exception as exc:  # noqa: BLE001 - 天气取数失败时仍尝试出图
-        logger.opt(exception=exc).warning("天气取数失败，仅发送主图")
-
     quote_text = ""
     png: bytes | None = None
     try:
@@ -211,15 +204,20 @@ async def _(event: MessageEvent, args: Message = CommandArg()) -> None:
     except Exception as exc:  # noqa: BLE001 - 渲染失败时退回纯文字
         logger.opt(exception=exc).warning("主图渲染失败，改为纯文字")
 
+    if png is not None:
+        await weather_cmd.finish(MessageSegment.image(png))
+
+    weather_text = ""
+    try:
+        series = (await get_client().fetch_minutely_15(province)).value
+        weather_text = format_weather_report(build_weather_report(series, province))
+    except Exception as exc:  # noqa: BLE001 - 取数失败时仅能使用行情文字
+        logger.opt(exception=exc).warning("天气取数失败")
+
     text = "\n\n".join(part for part in (quote_text, weather_text) if part)
-    if png is None:
-        if not text:
-            await weather_cmd.finish("天气取数失败，请稍后再试")
-        await weather_cmd.finish(text)
-    content: Message = MessageSegment.image(png) + Message("")
-    if text:
-        content += Message("\n" + text)
-    await weather_cmd.finish(content)
+    if not text:
+        await weather_cmd.finish("天气取数失败，请稍后再试")
+    await weather_cmd.finish(text)
 
 
 async def _render_chart(engine: GameEngine, state: GameState) -> bytes:
