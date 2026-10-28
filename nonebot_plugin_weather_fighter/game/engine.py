@@ -371,12 +371,6 @@ class GameEngine:
     async def open_board(self, province: Province) -> Season:
         return await self._ensure_board(province)
 
-    async def default_province(self) -> Province | None:
-        board = await self.store.get_running_season_for_owner(BOARD_OWNER)
-        if board is None:
-            return None
-        return resolve_province(board.province)
-
     async def last_province(self, user_id: str, group_id: str | None) -> Province | None:
         board = await self.store.get_running_season_for_owner(BOARD_OWNER)
         if board is None:

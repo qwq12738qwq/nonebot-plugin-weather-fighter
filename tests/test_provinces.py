@@ -8,7 +8,10 @@ from nonebot_plugin_weather_fighter.services.provinces import (
     province_names,
     resolve_province,
 )
-from nonebot_plugin_weather_fighter.services.regions import region_cities
+from nonebot_plugin_weather_fighter.services.regions import (
+    region_cities,
+    resolve_province_or_city,
+)
 
 
 def test_all_provinces() -> None:
@@ -44,6 +47,14 @@ def test_province_names() -> None:
     assert "河北" in names
     assert "新疆" in names
     assert "台湾" in names
+
+
+def test_resolve_city_to_province() -> None:
+    assert resolve_province_or_city("苏州").name == "江苏省"  # type: ignore[union-attr]
+    assert resolve_province_or_city("杭州").name == "浙江省"  # type: ignore[union-attr]
+    assert resolve_province_or_city("雄安新区").name == "河北省"  # type: ignore[union-attr]
+    assert resolve_province_or_city("北京").name == "北京市"  # type: ignore[union-attr]
+    assert resolve_province_or_city("不存在的地方") is None
 
 
 def test_region_selection() -> None:

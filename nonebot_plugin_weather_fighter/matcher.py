@@ -13,6 +13,7 @@ from .game.engine import GameEngine, GameError, GameState, QuoteStats, get_engin
 from .models import Order, OrderKind, OrderStatus, Side
 from .services.openmeteo import get_client
 from .services.provinces import Province, province_names, resolve_province
+from .services.regions import resolve_province_or_city
 from .services.weather import build_weather_report, format_weather_report
 
 help_cmd = on_command(consts.CMD_HELP, aliases={"help", "?"}, priority=10, block=True)
@@ -69,7 +70,7 @@ def _split_province(text: str) -> tuple[Province | None, list[str]]:
     province: Province | None = None
     rest: list[str] = []
     for part in text.split():
-        found = resolve_province(part)
+        found = resolve_province_or_city(part)
         if found is not None and province is None:
             province = found
         else:
@@ -185,8 +186,6 @@ async def _(event: MessageEvent, args: Message = CommandArg()) -> None:
     engine = get_engine()
     if province is None:
         province = await engine.last_province(user_id, group_id)
-    if province is None:
-        province = await engine.default_province()
     if province is None:
         await weather_cmd.finish(
             f"用法：{consts.CMD_WEATHER} 河北（也可以发城市名，如 石家庄）\n"
