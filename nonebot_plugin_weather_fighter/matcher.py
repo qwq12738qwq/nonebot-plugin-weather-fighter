@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+import asyncio
 import re
 
 from nonebot import logger, on_command
 from nonebot.adapters.onebot.v11 import Message, MessageEvent, MessageSegment
+from nonebot.adapters.onebot.v11.exception import ApiNotAvailable, NetworkError
 from nonebot.matcher import Matcher
 from nonebot.params import CommandArg
 
@@ -15,6 +17,16 @@ from .services.openmeteo import get_client
 from .services.provinces import Province, province_names, resolve_province
 from .services.regions import resolve_province_or_city
 from .services.weather import build_weather_report, format_weather_report
+
+CHART_SEND_ATTEMPTS = 2
+CHART_SEND_RETRY_DELAY = 0.8
+_RETRYABLE_SEND_ERRORS: tuple[type[BaseException], ...] = (
+    NetworkError,
+    ApiNotAvailable,
+    asyncio.TimeoutError,
+    TimeoutError,
+    ConnectionError,
+)
 
 help_cmd = on_command(consts.CMD_HELP, aliases={"help", "?"}, priority=10, block=True)
 weather_cmd = on_command(
@@ -203,8 +215,8 @@ async def _(event: MessageEvent, args: Message = CommandArg()) -> None:
     except Exception as exc:  # noqa: BLE001 - 渲染失败时退回纯文字
         logger.opt(exception=exc).warning("主图渲染失败，改为纯文字")
 
-    if png is not None:
-        await weather_cmd.finish(MessageSegment.image(png))
+    if png and await _send_chart(weather_cmd, png):
+        await weather_cmd.finish()
 
     weather_text = ""
     try:
@@ -217,6 +229,29 @@ async def _(event: MessageEvent, args: Message = CommandArg()) -> None:
     if not text:
         await weather_cmd.finish("天气取数失败，请稍后再试")
     await weather_cmd.finish(text)
+
+
+async def _send_chart(matcher: Matcher | type[Matcher], png: bytes) -> bool:
+    """发送主图：连接类错误重试一次，任何失败都返回 False 交给文字兜底。"""
+    if not png:
+        logger.warning("主图为空，跳过发送，改为纯文字")
+        return False
+    for attempt in range(1, CHART_SEND_ATTEMPTS + 1):
+        try:
+            # 必须包成 Message：部分第三方插件（如 nonebot-plugin-emotionimg）
+            # 会魔改 Bot.send 并直接 for seg in message，裸 MessageSegment 不可迭代会 TypeError。
+            await matcher.send(Message(MessageSegment.image(png)))
+            return True
+        except Exception as exc:  # noqa: BLE001 - 发送失败不能影响文字回复
+            retry = attempt < CHART_SEND_ATTEMPTS and isinstance(exc, _RETRYABLE_SEND_ERRORS)
+            logger.opt(exception=exc).warning(
+                f"主图发送失败（{type(exc).__name__}，{len(png)} 字节，第 {attempt} 次）"
+                + ("，重试一次" if retry else "，改为纯文字")
+            )
+            if not retry:
+                return False
+            await asyncio.sleep(CHART_SEND_RETRY_DELAY)
+    return False
 
 
 async def _render_chart(engine: GameEngine, state: GameState) -> bytes:

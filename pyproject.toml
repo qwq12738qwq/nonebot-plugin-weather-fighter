@@ -1,6 +1,6 @@
 [project]
 name = "nonebot-plugin-weather-fighter"
-version = "0.5.8"
+version = "0.5.9"
 description = "老实看天气,很枯燥吧"
 readme = "README.md"
 license = "MIT"
