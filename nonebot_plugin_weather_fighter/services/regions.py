@@ -126,6 +126,17 @@ def cities_by_province() -> dict[str, tuple[City, ...]]:
     }
 
 
+@lru_cache(maxsize=1)
+def cities_by_id() -> dict[str, City]:
+    return {city.city_id: city for city in all_cities()}
+
+
+def city_weight(city_id: str) -> float:
+    """主省代表站点的权重；城市数据缺失时按普通省会 2.2 处理。"""
+    city = cities_by_id().get(city_id)
+    return city.weight if city is not None else 2.2
+
+
 def region_cities(province: Province, limit: int = 8) -> RegionSelection:
     """同省最多 8 城；直辖市/城市太少时退化为最近的几个城市。"""
     local = list(cities_by_province().get(province.name, ()))

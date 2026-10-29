@@ -3,6 +3,8 @@ from __future__ import annotations
 import math
 from datetime import datetime, timedelta
 
+import pytest
+
 from nonebot_plugin_weather_fighter.game.wxi import (
     BARS_PER_DAY,
     TRADE_DAYS,
@@ -91,6 +93,10 @@ def test_wxi_series_shape_and_regional_line() -> None:
         assert 0 < bar.comfort <= 100
         assert bar.activity > 0
         assert 500 < bar.close < 2000
+        # 区域线就是区域均温本身（测试数据 = 本地气温 + 0.8），不再是合成指数
+        assert bar.regional is not None
+        assert 5 < bar.regional < 45
+        assert bar.regional == pytest.approx(bar.temp + 0.8)
 
 
 def test_forecast_deviation_enters_wxi() -> None:

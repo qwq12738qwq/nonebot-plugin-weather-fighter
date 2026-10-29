@@ -141,7 +141,8 @@ def _quote_text(state: GameState, stats: QuoteStats) -> str:
     ]
     if state.wxi.region_cities:
         cities = "、".join(state.wxi.region_cities[:8])
-        lines.append(f"区域 {_fmt(stats.regional)}（{_pct(stats.regional_change_pct)}）· {cities}")
+        change = "—" if stats.regional_change is None else f"{_signed(stats.regional_change)}℃"
+        lines.append(f"区域 {_fmt(stats.regional)}℃（{change}）· {cities}")
     if state.positions:
         parts = []
         for position in state.positions:

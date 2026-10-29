@@ -6,9 +6,10 @@ from dataclasses import dataclass
 from datetime import datetime
 from statistics import median
 
+from ..consts import weather_score
 from ..services.market_time import BARS_PER_DAY, TZ
 from ..services.openmeteo import ForecastDeviation, MinutelySeries, RegionSeries
-from ..services.regions import city_amp, dish_scale
+from ..services.regions import city_amp, city_weight, dish_scale
 
 BASE = 1000.0
 WARM_DAYS = 7
@@ -132,42 +133,6 @@ def _ramp(x: float | None, points: list[tuple[float, float]]) -> float:
     return points[-1][1]
 
 
-def _weather_score(code: int) -> float:
-    if code == 0:
-        return 100.0
-    if code == 1:
-        return 95.0
-    if code == 2:
-        return 85.0
-    if code == 3:
-        return 78.0
-    if code in (45, 48):
-        return 55.0
-    if code in (51, 53, 55):
-        return 65.0
-    if code in (56, 57):
-        return 45.0
-    if code in (61, 63):
-        return 35.0
-    if code == 65:
-        return 10.0
-    if code in (66, 67):
-        return 8.0
-    if code in (71, 73, 75, 77):
-        return 25.0
-    if code in (80, 81):
-        return 40.0
-    if code == 82:
-        return 12.0
-    if code in (85, 86):
-        return 20.0
-    if code == 95:
-        return 6.0
-    if code in (96, 99):
-        return 0.0
-    return 60.0
-
-
 COMFORT_WEIGHTS: dict[str, float] = {
     "temp": 0.34,
     "dew": 0.15,
@@ -214,7 +179,7 @@ def bar_scores(
             precip_value,
             [(0, 100), (0.05, 90), (0.3, 65), (0.8, 40), (2, 15), (5, 0), (20, 0)],
         ),
-        "code": _weather_score(code_value),
+        "code": weather_score(code_value),
         "gust": _ramp(
             gust_value,
             [(0, 100), (15, 98), (25, 88), (40, 62), (60, 28), (80, 10), (110, 0)],
@@ -341,12 +306,6 @@ def pick_window_start(
     return rng.randint(0, available_end - need - 1)
 
 
-def _city_weight(province_name: str) -> float:
-    if province_name in {"北京市", "上海市", "天津市", "重庆市"}:
-        return 3.0
-    return 2.2
-
-
 def forecast_series(
     local_time: tuple[str, ...], forecast: ForecastDeviation | None
 ) -> tuple[list[float | None], list[float] | None]:
@@ -421,7 +380,7 @@ def build_wxi_series(
         dew_median = 0.0
         dew_scale = 1.0
 
-    weight = _city_weight(province_name)
+    weight = city_weight(city_id)
     amp = city_amp(weight)
     dscale = dish_scale(weight) * P["DISH_K"]
     rng = random.Random(seed ^ 0x5EED)
@@ -512,14 +471,14 @@ def build_wxi_series(
             0.4,
             1 + precip * 10 + max(0.0, gust - 6) * 2 + cape / 60 + abs(dish) * 0.5,
         )
-        regional_value = BASE + region_fast * 3 + dish * 0.2 if region_sev is not None else None
-        seeds.append((cape, gust, precip, code, temp, dew, activity, regional_value))
-        region_line.append(regional_value)
+        regional_temp = region_window.temp[relative] if region_window is not None else None
+        seeds.append((cape, gust, precip, code, temp, dew, activity, regional_temp))
+        region_line.append(regional_temp)
 
     bars: list[WxiBar] = []
     for relative, close in enumerate(closes):
         open_price = closes[relative - 1] if relative > 0 else close
-        cape, gust, precip, code, temp, dew, activity, regional_value = seeds[relative]
+        cape, gust, precip, code, temp, dew, activity, regional_temp = seeds[relative]
         body = abs(close - open_price)
         wick = body * P["WICK_K"]
         activation = min(3.0, activity / 4)
@@ -543,7 +502,7 @@ def build_wxi_series(
                 temp=temp,
                 dew=dew,
                 comfort=comfort[window_start + relative],
-                regional=regional_value,
+                regional=regional_temp,
                 forecast_dev=fcst_raw[window_start + relative],
             )
         )
