@@ -19,19 +19,20 @@ class HttpClient:
         )
         self.retries = max(1, retries)
 
-    async def get_json(
+    async def request(
         self,
         url: str,
         *,
         params: dict[str, str] | None = None,
         timeout: float | None = None,
-    ) -> Any:
+    ) -> httpx.Response:
+        """带重试的请求；每次调用都从第 1 次开始，5xx 与传输错误才重试。"""
         last_exc: Exception | None = None
         for attempt in range(1, self.retries + 1):
             try:
                 response = await self._client.get(url, params=params, timeout=timeout)
                 response.raise_for_status()
-                return response.json()
+                return response
             except httpx.HTTPStatusError as exc:
                 if exc.response.status_code < 500 and exc.response.status_code != 429:
                     raise
@@ -43,6 +44,16 @@ class HttpClient:
         if last_exc is not None:
             raise last_exc
         raise RuntimeError("请求未执行")
+
+    async def get_json(
+        self,
+        url: str,
+        *,
+        params: dict[str, str] | None = None,
+        timeout: float | None = None,
+    ) -> Any:
+        response = await self.request(url, params=params, timeout=timeout)
+        return response.json()
 
     async def aclose(self) -> None:
         await self._client.aclose()

@@ -1422,6 +1422,7 @@ def get_engine() -> GameEngine:
         from nonebot import get_plugin_config
 
         from ..config import Config
+        from ..services.clock import get_clock
         from ..services.openmeteo import get_client
         from ..services.store import get_store
 
@@ -1436,5 +1437,6 @@ def get_engine() -> GameEngine:
             safety_target_ratio=config.weather_fighter_safety_target_pct / 100.0,
             chart_bars=config.weather_fighter_chart_bars,
             region_enabled=config.weather_fighter_enable_region,
+            clock=get_clock().now,
         )
     return _engine
