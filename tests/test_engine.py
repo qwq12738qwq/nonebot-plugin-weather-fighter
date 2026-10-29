@@ -435,3 +435,20 @@ async def test_pressure_air_never_dominant_on_perfect_weather(tmp_path: Path) ->
     assert air["text"].startswith("固定 ")
     assert "85" not in air["text"]
     await store.close()
+
+
+async def test_quote_head_high_low_have_units_and_colors(tmp_path: Path) -> None:
+    now = {"value": at(27, 10, 0)}
+    engine, store, _ = await make_engine(tmp_path, now)
+    hebei = resolve_province("河北")
+    assert hebei is not None
+    state = await engine.ensure_game("u1", "g1", hebei)
+    head = engine.quote_head(state, engine.quote_stats(state))
+    first = {item[0]: item for item in head["groups"][0]}
+    assert first["今日最高"][1].endswith("℃")
+    assert first["今日最高"][2] == "up"
+    assert first["今日最低"][1].endswith("℃")
+    assert first["今日最低"][2] == "down"
+    # 其余分组仍保持二元组，模板向后兼容
+    assert any(len(item) == 2 for group in head["groups"][1:] for item in group)
+    await store.close()

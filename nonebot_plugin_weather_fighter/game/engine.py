@@ -1276,10 +1276,13 @@ class GameEngine:
         def num(value: float | None, digits: int = 1) -> str:
             return "—" if value is None else f"{value:,.{digits}f}"
 
+        def temp(value: float | None) -> str:
+            return "—" if value is None else f"{value:.1f}℃"
+
         groups = (
             (
-                ("今日最高", num(stats.temp_high)),
-                ("今日最低", num(stats.temp_low)),
+                ("今日最高", temp(stats.temp_high), "up"),
+                ("今日最低", temp(stats.temp_low), "down"),
                 (
                     "体感",
                     "—" if stats.feels_like is None else f"{stats.feels_like:.1f}℃",
