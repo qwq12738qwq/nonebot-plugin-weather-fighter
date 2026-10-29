@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import replace
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -13,6 +14,7 @@ from nonebot_plugin_weather_fighter.game.engine import (
     _bet_value,
     _wipe_price,
 )
+from nonebot_plugin_weather_fighter.game.wxi import WxiBar
 from nonebot_plugin_weather_fighter.models import Account, OrderKind, Position, Side
 from nonebot_plugin_weather_fighter.services.cache import CacheValue
 from nonebot_plugin_weather_fighter.services.openmeteo import ForecastDeviation, MinutelySeries
@@ -379,3 +381,57 @@ def test_bet_value_and_wipe_price_are_simple() -> None:
     assert _bet_value(short_position, 1100, 10) == 0
     assert _wipe_price(long_position, 10) == pytest.approx(900)
     assert _wipe_price(short_position, 10) == pytest.approx(1100)
+
+
+async def test_quote_head_pressure_table(tmp_path: Path) -> None:
+    now = {"value": at(27, 10, 0)}
+    engine, store, _ = await make_engine(tmp_path, now)
+    hebei = resolve_province("河北")
+    assert hebei is not None
+    state = await engine.ensure_game("u1", "g1", hebei)
+    head = engine.quote_head(state, engine.quote_stats(state))
+    pressure = head["pressure"]
+    assert {row["label"] for row in pressure} == {"气温", "降水", "天气", "露点", "阵风", "空气"}
+    total = sum(float(row["contribution"]) for row in pressure)
+    assert total == pytest.approx(state.current.comfort - 100.0, abs=1e-6)
+    # 主导只有一个，且不能是恒定的空气项
+    dominant = [row for row in pressure if row["dominant"]]
+    assert len(dominant) == 1
+    assert dominant[0]["key"] != "air"
+    # 压力组走模板单独渲染，不再塞进 groups（否则图头会多出一列/换行）
+    assert len(head["groups"]) == 5
+    await store.close()
+
+
+async def test_pressure_air_never_dominant_on_perfect_weather(tmp_path: Path) -> None:
+    now = {"value": at(27, 10, 0)}
+    engine, store, _ = await make_engine(tmp_path, now)
+    hebei = resolve_province("河北")
+    assert hebei is not None
+    state = await engine.ensure_game("u1", "g1", hebei)
+    relative = state.relative_bar
+    ideal = WxiBar(
+        time=state.wxi.bars[relative].time,
+        open=1000.0,
+        high=1001.0,
+        low=999.0,
+        close=1000.0,
+        activity=1.0,
+        cape=0,
+        gust=0.0,
+        precip=0.0,
+        wcode=0,
+        temp=22.0,
+        dew=10.0,
+        comfort=100.0,
+        regional=None,
+    )
+    bars = list(state.wxi.bars)
+    bars[relative] = ideal
+    fake = replace(state, wxi=replace(state.wxi, bars=tuple(bars)))
+    pressure = engine.comfort_pressure(fake)
+    air = next(row for row in pressure if row["key"] == "air")
+    assert air["dominant"] is False
+    assert air["text"].startswith("固定 ")
+    assert "85" not in air["text"]
+    await store.close()

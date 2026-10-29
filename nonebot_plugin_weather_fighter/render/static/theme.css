@@ -97,7 +97,7 @@ body.wf-ready {
 .qh-stats {
   flex: 1;
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 0 12px;
 }
 
@@ -127,6 +127,10 @@ body.wf-ready {
 .qs span {
   color: #e6edf3;
   font-weight: 600;
+}
+
+.qs-worst span {
+  color: #ffa940;
 }
 
 #main-chart {
