@@ -18,8 +18,6 @@ from nonebot_plugin_weather_fighter.services.openmeteo import (
     ForecastDeviation,
     MinutelySeries,
     RegionSeries,
-    filter_trading,
-    filter_trading_region,
 )
 
 
@@ -69,8 +67,8 @@ def make_region(local: MinutelySeries) -> RegionSeries:
 
 def test_wxi_series_shape_and_regional_line() -> None:
     raw = make_local()
-    local = filter_trading(raw)
-    region = filter_trading_region(make_region(raw))
+    local = raw
+    region = make_region(raw)
     seed = 123456789
     window_start = pick_window_start(local.time, seed)
     wxi = build_wxi_series(
@@ -97,8 +95,8 @@ def test_wxi_series_shape_and_regional_line() -> None:
 
 def test_forecast_deviation_enters_wxi() -> None:
     raw = make_local()
-    local = filter_trading(raw)
-    region = filter_trading_region(make_region(raw))
+    local = raw
+    region = make_region(raw)
     seed = 123456789
     window_start = pick_window_start(local.time, seed)
     deviation = tuple(1.8 * math.sin(index / 17) for index in range(len(local.time)))
@@ -131,8 +129,8 @@ def test_forecast_deviation_enters_wxi() -> None:
 
 def test_wxi_is_deterministic() -> None:
     raw = make_local()
-    local = filter_trading(raw)
-    region = filter_trading_region(make_region(raw))
+    local = raw
+    region = make_region(raw)
     kwargs = dict(
         province_name="河北省",
         province_short="河北",
