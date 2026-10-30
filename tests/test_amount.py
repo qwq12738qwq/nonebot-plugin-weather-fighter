@@ -23,3 +23,7 @@ def test_parse_amount_rejects_bad_values() -> None:
         parse_amount("abc", 100_000)
     with pytest.raises(AmountError):
         parse_amount("0", 100_000)
+    with pytest.raises(AmountError):
+        parse_amount("nan", 100_000)
+    with pytest.raises(AmountError):
+        parse_amount("inf", 100_000)

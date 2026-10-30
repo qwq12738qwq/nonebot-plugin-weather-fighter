@@ -9,7 +9,8 @@ from collections import OrderedDict
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass, replace
 from datetime import date, datetime
-from typing import Any
+from functools import wraps
+from typing import Any, Concatenate, ParamSpec, TypeVar
 
 from nonebot import logger
 
@@ -256,6 +257,29 @@ def _stable_seed(*parts: str) -> int:
     return int.from_bytes(hashlib.sha256(payload).digest()[:8], "big") & 0x7FFFFFFFFFFF_FFFF
 
 
+_P = ParamSpec("_P")
+_R = TypeVar("_R")
+
+
+def _player_locked(
+    method: Callable[Concatenate[GameEngine, str, str | None, _P], Awaitable[_R]],
+) -> Callable[Concatenate[GameEngine, str, str | None, _P], Awaitable[_R]]:
+    """串行化同一玩家在同一群的引擎动作，避免并发重复成交/丢更新。"""
+
+    @wraps(method)
+    async def wrapper(
+        self: GameEngine,
+        user_id: str,
+        group_id: str | None,
+        *args: _P.args,
+        **kwargs: _P.kwargs,
+    ) -> _R:
+        async with self._lock_for_player(user_id, group_id):
+            return await method(self, user_id, group_id, *args, **kwargs)
+
+    return wrapper
+
+
 class GameEngine:
     def __init__(
         self,
@@ -288,7 +312,16 @@ class GameEngine:
     # ------------------------------------------------------------------
     # 开盘：所有群共用一个盘；玩家只是这个盘里的一个账户
     # ------------------------------------------------------------------
+    @_player_locked
     async def ensure_game(
+        self,
+        user_id: str,
+        group_id: str | None,
+        province: Province | None = None,
+    ) -> GameState:
+        return await self._ensure_game_locked(user_id, group_id, province)
+
+    async def _ensure_game_locked(
         self,
         user_id: str,
         group_id: str | None,
@@ -342,19 +375,24 @@ class GameEngine:
             return None
         return resolve_province(session.province)
 
+    @_player_locked
     async def set_leverage(self, user_id: str, group_id: str | None, leverage: float) -> GameState:
         if leverage < 1 or leverage > self.max_leverage:
             raise GameError(f"倍数需在 1~{self.max_leverage:g} 之间")
-        state = await self.ensure_game(user_id, group_id, None)
+        state = await self._ensure_game_locked(user_id, group_id, None)
         if state.ended:
             raise GameError("本局已经结束")
-        if state.positions:
-            raise GameError("有持仓时不能改倍数，先平仓")
+        if state.positions or state.orders:
+            raise GameError("有持仓或到价单时不能改倍数，先平仓/撤单")
         await self.store.set_session_leverage(state.session.id, leverage, int(self._clock()))
-        return await self.ensure_game(user_id, group_id, None)
+        return await self._ensure_game_locked(user_id, group_id, None)
 
     def _lock_for(self, key: str) -> asyncio.Lock:
         return self._board_locks.setdefault(key, asyncio.Lock())
+
+    def _lock_for_player(self, user_id: str, group_id: str | None) -> asyncio.Lock:
+        key = f"{user_id}:{group_id or ''}"
+        return self._user_locks.setdefault(key, asyncio.Lock())
 
     async def _ensure_board(self, province: Province) -> Season:
         lock = self._lock_for(BOARD_OWNER)
@@ -565,7 +603,12 @@ class GameEngine:
                 trade_days = max(1, (len(local.time) - window_start) // BARS_PER_DAY - WARM_DAYS)
                 if window_start + (WARM_DAYS + trade_days) * BARS_PER_DAY > len(local.time):
                     continue
-            region = await self._market_region(board, province)
+            region = await self._market_region(
+                board,
+                province,
+                local.time[window_start][:10],
+                local.time[end_idx][:10],
+            )
             series_map[name] = build_wxi_series(
                 local,
                 region,
@@ -635,21 +678,22 @@ class GameEngine:
                     )
                     positions[order.province] = position
                     opened_this_bar.add(order.province)
-                    await self.store.add_trade(
-                        Trade(
-                            id=uuid.uuid4().hex,
-                            session_id=session.id,
-                            bar_index=relative,
-                            side=order.side,
-                            stake=order.stake,
-                            price=order.price,
-                            pnl=0.0,
-                            created_at=now,
-                            province=order.province,
-                        )
+                    trade = Trade(
+                        id=uuid.uuid4().hex,
+                        session_id=session.id,
+                        bar_index=relative,
+                        side=order.side,
+                        stake=order.stake,
+                        price=order.price,
+                        pnl=0.0,
+                        created_at=now,
+                        province=order.province,
                     )
-                    await self.store.save_position(position)
-                    await self.store.save_account(account)
+                    async with self.store.transaction() as txn:
+                        await txn.save_account(account)
+                        await txn.save_position(position)
+                        await txn.add_trade(trade)
+                        await txn.set_order_status(order.id, OrderStatus.FILLED)
                 else:
                     existing = positions.get(order.province)
                     if existing is None:
@@ -663,8 +707,8 @@ class GameEngine:
                         board,
                         relative,
                         now,
+                        order_id=order.id,
                     )
-                await self.store.set_order_status(order.id, OrderStatus.FILLED)
                 orders[index] = replace(order, status=OrderStatus.FILLED)
 
             for province, position in list(positions.items()):
@@ -677,27 +721,28 @@ class GameEngine:
                 hit = bar.low <= wipe if position.side is Side.LONG else bar.high >= wipe
                 if not hit:
                     continue
-                await self.store.add_trade(
-                    Trade(
-                        id=uuid.uuid4().hex,
-                        session_id=session.id,
-                        bar_index=relative,
-                        side=position.side,
-                        stake=position.stake,
-                        price=wipe,
-                        pnl=-position.stake,
-                        created_at=now,
-                        province=position.province,
-                    )
+                trade = Trade(
+                    id=uuid.uuid4().hex,
+                    session_id=session.id,
+                    bar_index=relative,
+                    side=position.side,
+                    stake=position.stake,
+                    price=wipe,
+                    pnl=-position.stake,
+                    created_at=now,
+                    province=position.province,
                 )
-                await self.store.delete_position(session.id, position.province)
-                positions.pop(province, None)
+                remaining = {key: item for key, item in positions.items() if key != province}
                 account = replace(
                     account,
-                    stake=sum(item.stake for item in positions.values()),
+                    stake=sum(item.stake for item in remaining.values()),
                     equity=account.cash,
                 )
-                await self.store.save_account(account)
+                async with self.store.transaction() as txn:
+                    await txn.add_trade(trade)
+                    await txn.delete_position(session.id, position.province)
+                    await txn.save_account(account)
+                positions.pop(province, None)
 
             account = replace(
                 account,
@@ -727,26 +772,31 @@ class GameEngine:
         await self.store.save_market_series(board.id, province.name, pruned)
         return pruned
 
-    async def _market_region(self, board: Season, province: Province):
-        region = await self.store.load_market_region(board.id, province.name)
-        if region is not None:
-            return region
+    async def _market_region(
+        self,
+        board: Season,
+        province: Province,
+        start_date: str,
+        end_date: str,
+    ):
+        if not self.region_enabled:
+            return None
+        # 区域序列按当前窗口日期拉取；store 旧值只在取数失败时兜底
         selection = region_cities(province)
         try:
             raw = (
                 await self.client.fetch_region(
                     province,
                     selection,
-                    board.start_time[:10],
-                    board.end_time[:10],
+                    start_date,
+                    end_date,
                 )
             ).value
-            region = raw
-            await self.store.save_market_region(board.id, province.name, region)
-            return region
+            await self.store.save_market_region(board.id, province.name, raw)
+            return raw
         except Exception as exc:  # noqa: BLE001 - 区域失败退化为本地行情
             logger.warning(f"区域指数取数失败，退化为本地行情：{exc}")
-            return None
+            return await self.store.load_market_region(board.id, province.name)
 
     async def _load_wxi_for_name(self, board: Season, province_name: str) -> WxiSeries | None:
         province = resolve_province(province_name)
@@ -771,7 +821,12 @@ class GameEngine:
         if cached is not None:
             self._wxi_cache.move_to_end(key)
             return cached
-        region = await self._market_region(board, province)
+        region = await self._market_region(
+            board,
+            province,
+            local.time[start][:10],
+            local.time[end][:10],
+        )
         forecast = None
         try:
             forecast = (await self.client.fetch_forecast_deviation(province)).value
@@ -860,6 +915,7 @@ class GameEngine:
     # ------------------------------------------------------------------
     # 玩家操作
     # ------------------------------------------------------------------
+    @_player_locked
     async def open_position(
         self,
         user_id: str,
@@ -870,7 +926,7 @@ class GameEngine:
         *,
         stake: float | None = None,
     ) -> TradeOutcome:
-        state = await self.ensure_game(user_id, group_id, province)
+        state = await self._ensure_game_locked(user_id, group_id, province)
         if state.ended:
             raise GameError("本局已经结束")
         selected = state.wxi.province_name
@@ -884,12 +940,16 @@ class GameEngine:
             ratio = 30.0 if percent is None else max(1.0, min(100.0, float(percent)))
             stake = cash * ratio / 100.0
         stake = float(stake)
+        if not math.isfinite(stake):
+            raise GameError("金额格式不对")
         if stake < MIN_STAKE:
             raise GameError(f"最少投入 {MIN_STAKE:.0f}")
         if stake > cash + 1e-6:
             raise GameError(f"余额只有 {cash:,.0f}")
         stake = min(stake, cash)
         price = state.current.close
+        if not math.isfinite(price) or price <= 0:
+            raise GameError("行情异常，稍后再试")
         account = replace(
             state.account,
             cash=cash - stake,
@@ -914,14 +974,16 @@ class GameEngine:
             created_at=int(self._clock()),
             province=selected,
         )
-        await self.store.save_account(account)
-        await self.store.save_position(position)
-        await self.store.add_trade(trade)
+        async with self.store.transaction() as txn:
+            await txn.save_account(account)
+            await txn.save_position(position)
+            await txn.add_trade(trade)
         return TradeOutcome(
             state=replace(state, account=account, positions=state.positions + (position,)),
             trade=trade,
         )
 
+    @_player_locked
     async def close_position(
         self,
         user_id: str,
@@ -962,6 +1024,7 @@ class GameEngine:
             total_pnl=sum(trade.pnl for trade in trades),
         )
 
+    @_player_locked
     async def place_order(
         self,
         user_id: str,
@@ -975,7 +1038,7 @@ class GameEngine:
         stake: float | None = None,
     ) -> OrderOutcome:
         if kind is OrderKind.BET:
-            state = await self.ensure_game(user_id, group_id, province)
+            state = await self._ensure_game_locked(user_id, group_id, province)
         else:
             existing = await self._existing_state(user_id, group_id, province)
             if existing is None:
@@ -984,7 +1047,7 @@ class GameEngine:
         if state.ended:
             raise GameError("本局已经结束")
         price = float(price)
-        if price <= 0:
+        if not math.isfinite(price) or price <= 0:
             raise GameError("到价价格必须大于 0")
         now = int(self._clock())
         if kind is OrderKind.BET:
@@ -1002,6 +1065,8 @@ class GameEngine:
                 ratio = max(1.0, min(100.0, float(percent)))
                 stake = cash * ratio / 100.0
             stake = float(stake)
+            if not math.isfinite(stake):
+                raise GameError("金额格式不对")
             if stake < MIN_STAKE:
                 raise GameError(f"最少投入 {MIN_STAKE:.0f}")
             if stake > cash + 1e-6:
@@ -1050,6 +1115,7 @@ class GameEngine:
         await self.store.add_order(order)
         return OrderOutcome(state=replace(state, orders=state.orders + (order,)), order=order)
 
+    @_player_locked
     async def cancel_orders(self, user_id: str, group_id: str | None) -> int:
         state = await self._existing_state(user_id, group_id)
         if state is None:
@@ -1069,6 +1135,8 @@ class GameEngine:
         board: Season,
         relative: int,
         now: int,
+        *,
+        order_id: str | None = None,
     ) -> tuple[Account, Trade]:
         value = _bet_value(position, price, session.leverage)
         trade = Trade(
@@ -1082,14 +1150,18 @@ class GameEngine:
             created_at=now,
             province=position.province,
         )
-        await self.store.add_trade(trade)
-        await self.store.delete_position(session.id, position.province)
-        positions.pop(position.province, None)
+        remaining = {key: item for key, item in positions.items() if key != position.province}
         cash = account.cash + value
-        stake = sum(item.stake for item in positions.values())
-        equity = await self._equity_at(board, positions, cash, relative, session.leverage)
+        stake = sum(item.stake for item in remaining.values())
+        equity = await self._equity_at(board, remaining, cash, relative, session.leverage)
         next_account = replace(account, cash=cash, equity=equity, stake=stake)
-        await self.store.save_account(next_account)
+        async with self.store.transaction() as txn:
+            await txn.add_trade(trade)
+            await txn.delete_position(session.id, position.province)
+            await txn.save_account(next_account)
+            if order_id is not None:
+                await txn.set_order_status(order_id, OrderStatus.FILLED)
+        positions.pop(position.province, None)
         return next_account, trade
 
     # ------------------------------------------------------------------

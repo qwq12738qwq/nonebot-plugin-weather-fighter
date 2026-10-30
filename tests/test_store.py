@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+from dataclasses import replace
 from pathlib import Path
+
+import pytest
 
 from nonebot_plugin_weather_fighter.models import (
     Account,
@@ -219,4 +222,55 @@ async def test_migrates_m0_sessions_table(tmp_path: Path) -> None:
     await store.initialize()
     columns = {str(row["name"]) for row in await store.fetchall("PRAGMA table_info(sessions)")}
     assert {"speed", "return_pct"} <= columns
+    await store.close()
+
+
+async def test_transaction_rolls_back_on_error(tmp_path: Path) -> None:
+    import sqlite3
+
+    store = Store(tmp_path / "game.db")
+    await store.initialize()
+    season = Season(
+        id="s1",
+        province="河北省",
+        city="石家庄",
+        seed=1,
+        start_bar=0,
+        end_bar=1,
+        status=SeasonStatus.RUNNING,
+        created_at=0,
+    )
+    await store.add_season(season)
+    session = Session(
+        id="sess",
+        user_id="u1",
+        group_id="g1",
+        season_id="s1",
+        principal=10_000,
+        leverage=10,
+        current_bar=0,
+        status=SessionStatus.RUNNING,
+        created_at=0,
+        updated_at=0,
+    )
+    await store.add_session(session)
+    valid = Trade(
+        id="t1",
+        session_id="sess",
+        bar_index=0,
+        side=Side.LONG,
+        stake=100,
+        price=1,
+        pnl=0,
+        created_at=0,
+        province="河北省",
+    )
+    invalid = replace(valid, id="t2", session_id="missing")
+
+    with pytest.raises(sqlite3.IntegrityError):
+        async with store.transaction() as txn:
+            await txn.add_trade(valid)
+            await txn.add_trade(invalid)
+
+    assert await store.list_trades("sess") == []
     await store.close()

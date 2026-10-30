@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import math
+
 UNITS: tuple[tuple[str, float], ...] = (
     ("亿", 100_000_000.0),
     ("万", 10_000.0),
@@ -40,6 +42,8 @@ def parse_amount(text: str | None, cash: float, *, default_pct: float = 20.0) ->
             amount = float(raw) * scale
         except ValueError as exc:
             raise AmountError("金额格式不对，例如：1000 / 1万 / 30% / 全") from exc
+    if not math.isfinite(amount):
+        raise AmountError("金额格式不对，例如：1000 / 1万 / 30% / 全")
     if amount <= 0:
         raise AmountError("还有反向消费?")
     if amount > cash + 1e-6:

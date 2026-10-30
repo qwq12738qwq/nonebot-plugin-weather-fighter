@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 from dataclasses import replace
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -36,11 +37,13 @@ class FakeClient:
     def __init__(self) -> None:
         self.local = make_local()
         self.region = make_region(self.local)
+        self.region_calls: list[tuple[str, str]] = []
 
     async def fetch_minutely_15(self, province) -> CacheValue[MinutelySeries]:
         return CacheValue(self.local)
 
     async def fetch_region(self, province, selection, start_date, end_date):
+        self.region_calls.append((start_date, end_date))
         return CacheValue(self.region)
 
     async def fetch_forecast_deviation(self, province):
@@ -452,4 +455,119 @@ async def test_quote_head_high_low_have_units_and_colors(tmp_path: Path) -> None
     assert first["今日最低"][2] == "down"
     # 其余分组仍保持二元组，模板向后兼容
     assert any(len(item) == 2 for group in head["groups"][1:] for item in group)
+    await store.close()
+
+
+async def test_concurrent_quotes_fill_order_once(tmp_path: Path) -> None:
+    now = {"value": at(27, 10, 0)}
+    engine, store, _ = await make_engine(tmp_path, now)
+    hebei = resolve_province("河北")
+    assert hebei is not None
+    state = await engine.ensure_game("u1", "g1", hebei)
+    target = state.current.close
+    await engine.place_order("u1", "g1", hebei, OrderKind.BET, Side.LONG, target, stake=6000)
+
+    now["value"] = at(27, 10, 15)
+    await asyncio.gather(
+        engine.quote("u1", "g1", hebei),
+        engine.quote("u1", "g1", hebei),
+    )
+
+    trades = await store.list_trades(state.session.id)
+    assert len(trades) == 1
+    assert len(await store.get_positions(state.session.id)) == 1
+    account = await store.get_account(state.session.id)
+    assert account is not None
+    assert account.cash == pytest.approx(10_000 - trades[0].stake)
+    await store.close()
+
+
+async def test_concurrent_buys_cannot_overdraw(tmp_path: Path) -> None:
+    now = {"value": at(27, 10, 0)}
+    engine, store, _ = await make_engine(tmp_path, now)
+    hebei = resolve_province("河北")
+    shandong = resolve_province("山东")
+    assert hebei is not None and shandong is not None
+    await engine.ensure_game("u1", "g1", hebei)
+
+    results = await asyncio.gather(
+        engine.open_position("u1", "g1", hebei, Side.LONG, stake=6000),
+        engine.open_position("u1", "g1", shandong, Side.LONG, stake=6000),
+        return_exceptions=True,
+    )
+    errors = [result for result in results if isinstance(result, Exception)]
+    successes = [result for result in results if not isinstance(result, Exception)]
+    assert len(successes) == 1
+    assert len(errors) == 1
+    assert isinstance(errors[0], GameError)
+    state = await engine.ensure_game("u1", "g1", hebei)
+    assert len(await store.get_positions(state.session.id)) == 1
+    account = await store.get_account(state.session.id)
+    assert account is not None
+    assert account.cash >= 0
+    await store.close()
+
+
+async def test_leverage_cannot_change_with_open_order(tmp_path: Path) -> None:
+    now = {"value": at(27, 10, 0)}
+    engine, store, _ = await make_engine(tmp_path, now)
+    hebei = resolve_province("河北")
+    assert hebei is not None
+    state = await engine.ensure_game("u1", "g1", hebei)
+    await engine.place_order(
+        "u1", "g1", hebei, OrderKind.BET, Side.LONG, state.current.close, stake=1000
+    )
+
+    with pytest.raises(GameError, match="到价单"):
+        await engine.set_leverage("u1", "g1", 5)
+
+    await engine.cancel_orders("u1", "g1")
+    changed = await engine.set_leverage("u1", "g1", 5)
+    assert changed.session.leverage == pytest.approx(5)
+    await store.close()
+
+
+async def test_region_can_be_disabled(tmp_path: Path) -> None:
+    now = {"value": at(27, 10, 0)}
+    engine, store, _ = await make_engine(tmp_path, now)
+    engine.region_enabled = False
+    hebei = resolve_province("河北")
+    assert hebei is not None
+    state = await engine.ensure_game("u1", "g1", hebei)
+    assert state.wxi.regional_line
+    assert all(value is None for value in state.wxi.regional_line)
+    assert all(bar.regional is None for bar in state.wxi.bars)
+    await store.close()
+
+
+async def test_region_refreshes_with_sliding_window(tmp_path: Path) -> None:
+    now = {"value": at(27, 10, 0)}
+    engine, store, client = await make_engine(tmp_path, now)
+    hebei = resolve_province("河北")
+    assert hebei is not None
+
+    first = await engine.ensure_game("u1", "g1", hebei)
+    assert any(bar.regional is not None for bar in first.wxi.bars)
+    first_start = client.region_calls[-1][0]
+
+    now["value"] = at(31, 10, 0)
+    later = await engine.ensure_game("u1", "g1", hebei)
+    assert client.region_calls[-1][0] > first_start
+    assert any(bar.regional is not None for bar in later.wxi.bars)
+    await store.close()
+
+
+async def test_nonfinite_inputs_are_rejected(tmp_path: Path) -> None:
+    now = {"value": at(27, 10, 0)}
+    engine, store, _ = await make_engine(tmp_path, now)
+    hebei = resolve_province("河北")
+    assert hebei is not None
+    await engine.ensure_game("u1", "g1", hebei)
+
+    with pytest.raises(GameError, match="价格"):
+        await engine.place_order(
+            "u1", "g1", hebei, OrderKind.BET, Side.LONG, float("nan"), stake=100
+        )
+    with pytest.raises(GameError, match="金额"):
+        await engine.open_position("u1", "g1", hebei, Side.LONG, stake=float("nan"))
     await store.close()
