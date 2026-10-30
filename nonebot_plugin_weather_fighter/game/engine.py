@@ -382,8 +382,8 @@ class GameEngine:
         state = await self._ensure_game_locked(user_id, group_id, None)
         if state.ended:
             raise GameError("本局已经结束")
-        if state.positions:
-            raise GameError("有持仓时不能改倍数，先平仓")
+        if state.positions or state.orders:
+            raise GameError("有持仓或到价单时不能改倍数，先平仓/撤单")
         await self.store.set_session_leverage(state.session.id, leverage, int(self._clock()))
         return await self._ensure_game_locked(user_id, group_id, None)
 
