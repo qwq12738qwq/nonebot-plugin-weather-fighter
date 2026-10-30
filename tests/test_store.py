@@ -110,6 +110,8 @@ async def test_tables_and_roundtrip(tmp_path: Path) -> None:
         stake=30_000.0,
         entry_price=1010.0,
         province="河北省",
+        qty=29,
+        margin=30_000.0,
     )
     await store.save_position(position)
     assert await store.get_positions("g1") == [position]
@@ -121,6 +123,8 @@ async def test_tables_and_roundtrip(tmp_path: Path) -> None:
         stake=10_000.0,
         entry_price=1020.0,
         province="山东省",
+        qty=9,
+        margin=10_000.0,
     )
     await store.save_position(second_position)
     assert len(await store.get_positions("g1")) == 2
@@ -137,6 +141,8 @@ async def test_tables_and_roundtrip(tmp_path: Path) -> None:
         status=OrderStatus.OPEN,
         created_at=1000,
         province="河北省",
+        qty=176,
+        margin=30_000.0,
     )
     await store.add_order(order)
     assert await store.list_open_orders("g1") == [order]
@@ -153,6 +159,8 @@ async def test_tables_and_roundtrip(tmp_path: Path) -> None:
         pnl=1_200.0,
         created_at=1000,
         province="河北省",
+        qty=29,
+        margin=30_000.0,
     )
     await store.add_trade(trade)
     assert await store.list_trades("g1") == [trade]
@@ -187,7 +195,7 @@ async def test_initialize_is_idempotent(tmp_path: Path) -> None:
     await store.initialize()
     assert set(await store.table_names()) == TABLES
     row = await store.fetchone("PRAGMA user_version")
-    assert row is not None and int(row["user_version"]) == 6
+    assert row is not None and int(row["user_version"]) == 7
     await store.close()
 
 

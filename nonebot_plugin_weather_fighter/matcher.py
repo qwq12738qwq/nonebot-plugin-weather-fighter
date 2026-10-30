@@ -10,7 +10,7 @@ from nonebot.matcher import Matcher
 from nonebot.params import CommandArg
 
 from . import consts
-from .game.amount import AmountError, parse_amount
+from .game.amount import AmountError, parse_amount, parse_shares
 from .game.engine import GameEngine, GameError, GameState, QuoteStats, get_engine
 from .models import Order, OrderKind, OrderStatus, Side
 from .services.openmeteo import get_client
@@ -118,7 +118,10 @@ def _province_short(name: str) -> str:
 def _order_label(order: Order) -> str:
     short = _province_short(order.province)
     if order.kind is OrderKind.BET:
-        return f"{short} 到价 {order.price:.1f} {_side_label(order.side)} {_money(order.stake)}"
+        return (
+            f"{short} 到价 {order.price:.1f} {_side_label(order.side)} "
+            f"{order.qty} 份（保证金 {_money(order.stake)}）"
+        )
     return f"{short} 到价 {order.price:.1f} 平仓"
 
 
@@ -148,7 +151,8 @@ def _quote_text(state: GameState, stats: QuoteStats) -> str:
         for position in state.positions:
             short = _province_short(position.province)
             parts.append(
-                f"{short} {_side_label(position.side)} {_money(position.stake)}"
+                f"{short} {_side_label(position.side)} {position.qty} 份"
+                f"（保证金 {_money(position.stake)}）"
                 f" @ {position.entry_price:.1f}℃（{state.pnl_for(position):+,.0f}）"
             )
         lines.append("持仓：" + "；".join(parts))
@@ -347,16 +351,18 @@ async def _trade(event: MessageEvent, side: Side, matcher: type[Matcher], args: 
         except GameError as exc:
             await matcher.finish(str(exc))
     try:
-        amount = parse_amount(amount_text, state.account.cash)
-    except AmountError as exc:
-        await matcher.finish(str(exc))
-    try:
-        outcome = await engine.open_position(user_id, group_id, province, side, stake=amount)
-    except GameError as exc:
+        qty = parse_shares(amount_text)
+        if qty is not None:
+            outcome = await engine.open_position(user_id, group_id, province, side, qty=qty)
+        else:
+            amount = parse_amount(amount_text, state.account.cash)
+            outcome = await engine.open_position(user_id, group_id, province, side, stake=amount)
+    except (AmountError, GameError) as exc:
         await matcher.finish(str(exc))
     market = outcome.state.wxi
     await matcher.finish(
-        f"已{_side_label(side)} {_money(outcome.trade.stake)} · "
+        f"已{_side_label(side)} {outcome.trade.qty} 份 · "
+        f"保证金 {_money(outcome.trade.stake)} · "
         f"{market.province_short}/{market.city_name} · "
         f"{outcome.state.session.leverage:g} 倍 · 成交 {outcome.trade.price:.1f}℃"
     )
@@ -384,8 +390,8 @@ async def _(event: MessageEvent, args: Message = CommandArg()) -> None:
     user_id, group_id = _event_ids(event)
     province, rest = _split_province(str(args).strip())
     usage = (
-        f"用法：{consts.CMD_ORDER} 河北 16.5 买入 1000 / "
-        f"{consts.CMD_ORDER} 河北 16.5 卖出 1000 / {consts.CMD_ORDER} 河北 18.0 平"
+        f"用法：{consts.CMD_ORDER} 河北 16.5 买入 500份 / "
+        f"{consts.CMD_ORDER} 河北 16.5 卖出 500份 / {consts.CMD_ORDER} 河北 18.0 平"
     )
     if len(rest) < 2:
         await order_cmd.finish(usage)
@@ -412,19 +418,23 @@ async def _(event: MessageEvent, args: Message = CommandArg()) -> None:
     except GameError as exc:
         await order_cmd.finish(f"{exc}\n可用省份：{_province_list()}")
     try:
-        amount = parse_amount(amount_text, state.account.cash)
-    except AmountError as exc:
-        await order_cmd.finish(str(exc))
-    try:
-        outcome = await engine.place_order(
-            user_id, group_id, province, OrderKind.BET, side, price, stake=amount
-        )
-    except GameError as exc:
+        qty = parse_shares(amount_text)
+        if qty is not None:
+            outcome = await engine.place_order(
+                user_id, group_id, province, OrderKind.BET, side, price, qty=qty
+            )
+        else:
+            amount = parse_amount(amount_text, state.account.cash)
+            outcome = await engine.place_order(
+                user_id, group_id, province, OrderKind.BET, side, price, stake=amount
+            )
+    except (AmountError, GameError) as exc:
         await order_cmd.finish(str(exc))
     market = outcome.state.wxi
     await order_cmd.finish(
-        f"已挂：到价 {price:.1f}℃ {_side_label(side)} {_money(outcome.order.stake)} · "
-        f"{market.province_short}/{market.city_name}。碰到这个价自动买入。"
+        f"已挂：到价 {price:.1f}℃ {_side_label(side)} {outcome.order.qty} 份"
+        f"（保证金 {_money(outcome.order.stake)}）· "
+        f"{market.province_short}/{market.city_name}。碰到这个价自动成交。"
     )
 
 

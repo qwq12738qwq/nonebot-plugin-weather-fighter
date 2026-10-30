@@ -21,7 +21,7 @@ from ..models import (
 )
 from .openmeteo import MinutelySeries, RegionSeries
 
-SCHEMA_VERSION = 6
+SCHEMA_VERSION = 7
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS seasons (
@@ -90,6 +90,7 @@ CREATE TABLE IF NOT EXISTS orders (
   status TEXT NOT NULL,
   province TEXT NOT NULL DEFAULT '',
   qty INTEGER NOT NULL DEFAULT 0,
+  margin REAL NOT NULL DEFAULT 0,
   created_at INTEGER NOT NULL DEFAULT 0
 );
 
@@ -103,6 +104,7 @@ CREATE TABLE IF NOT EXISTS trades (
   pnl REAL NOT NULL DEFAULT 0,
   province TEXT NOT NULL DEFAULT '',
   qty INTEGER NOT NULL DEFAULT 0,
+  margin REAL NOT NULL DEFAULT 0,
   fee REAL NOT NULL DEFAULT 0,
   created_at INTEGER NOT NULL
 );
@@ -207,9 +209,11 @@ class Store:
             ("orders", "stake", "REAL NOT NULL DEFAULT 0"),
             ("orders", "created_at", "INTEGER NOT NULL DEFAULT 0"),
             ("orders", "province", "TEXT NOT NULL DEFAULT ''"),
+            ("orders", "margin", "REAL NOT NULL DEFAULT 0"),
             ("trades", "stake", "REAL NOT NULL DEFAULT 0"),
             ("trades", "pnl", "REAL NOT NULL DEFAULT 0"),
             ("trades", "province", "TEXT NOT NULL DEFAULT ''"),
+            ("trades", "margin", "REAL NOT NULL DEFAULT 0"),
         ):
             existing = {
                 str(row[1]) for row in await self._fetchall_raw(f"PRAGMA table_info({table})")
@@ -243,6 +247,24 @@ class Store:
                 """
             )
             await db.execute("DROP TABLE positions_old")
+        for table, price_col in (
+            ("positions", "entry_price"),
+            ("orders", "price"),
+            ("trades", "price"),
+        ):
+            await db.execute(
+                f"""
+                UPDATE {table}
+                   SET margin = stake,
+                       qty = CAST(ROUND(
+                           stake * COALESCE((
+                               SELECT leverage FROM sessions s
+                               WHERE s.id = {table}.session_id
+                           ), 1.0) / NULLIF({price_col}, 0)
+                       ) AS INTEGER)
+                 WHERE qty = 0 AND stake > 0 AND {price_col} > 0
+                """
+            )
         await db.execute(f"PRAGMA user_version = {SCHEMA_VERSION}")
         await db.commit()
 
@@ -530,6 +552,8 @@ class Store:
                 stake=float(row["stake"]),
                 entry_price=float(row["entry_price"]),
                 province=str(row["province"]),
+                qty=int(row["qty"]),
+                margin=float(row["margin"]),
             )
             for row in rows
         ]
@@ -547,6 +571,8 @@ class Store:
             stake=float(row["stake"]),
             entry_price=float(row["entry_price"]),
             province=str(row["province"]),
+            qty=int(row["qty"]),
+            margin=float(row["margin"]),
         )
 
     async def save_position(self, position: Position) -> None:
@@ -554,13 +580,13 @@ class Store:
             """
             INSERT INTO positions
               (session_id, province, side, stake, entry_price, qty, margin)
-            VALUES (?, ?, ?, ?, ?, 0, 0)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT(session_id, province) DO UPDATE SET
               side = excluded.side,
               stake = excluded.stake,
               entry_price = excluded.entry_price,
-              qty = 0,
-              margin = 0
+              qty = excluded.qty,
+              margin = excluded.margin
             """,
             (
                 position.session_id,
@@ -568,6 +594,8 @@ class Store:
                 position.side.value,
                 position.stake,
                 position.entry_price,
+                position.qty,
+                position.margin,
             ),
         )
 
@@ -584,8 +612,8 @@ class Store:
         await self.execute(
             """
             INSERT INTO orders
-              (id, session_id, kind, side, stake, price, status, province, qty, created_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, ?)
+              (id, session_id, kind, side, stake, price, status, province, qty, margin, created_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 order.id,
@@ -596,6 +624,8 @@ class Store:
                 order.price,
                 order.status.value,
                 order.province,
+                order.qty,
+                order.margin,
                 order.created_at,
             ),
         )
@@ -620,6 +650,8 @@ class Store:
                 status=OrderStatus(str(row["status"])),
                 created_at=int(row["created_at"]),
                 province=str(row["province"]),
+                qty=int(row["qty"]),
+                margin=float(row["margin"]),
             )
             for row in rows
         ]
@@ -646,8 +678,8 @@ class Store:
             """
             INSERT INTO trades
               (id, session_id, bar_index, side, stake, price, pnl, province,
-               qty, fee, created_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, 0, ?)
+               qty, margin, fee, created_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?)
             """,
             (
                 trade.id,
@@ -658,6 +690,8 @@ class Store:
                 trade.price,
                 trade.pnl,
                 trade.province,
+                trade.qty,
+                trade.margin,
                 trade.created_at,
             ),
         )
@@ -682,6 +716,8 @@ class Store:
                 pnl=float(row["pnl"]),
                 created_at=int(row["created_at"]),
                 province=str(row["province"]),
+                qty=int(row["qty"]),
+                margin=float(row["margin"]),
             )
             for row in rows
         ]
