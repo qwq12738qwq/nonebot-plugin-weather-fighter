@@ -8,7 +8,7 @@ import uuid
 from collections import OrderedDict
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass, replace
-from datetime import date, datetime, timedelta
+from datetime import date, datetime
 from typing import Any
 
 from nonebot import logger
@@ -31,14 +31,11 @@ from ..models import (
 from ..services.market_time import (
     BARS_PER_DAY,
     TZ,
-    is_trading_day,
+    elapsed_bars,
     market_status,
-    trading_bar_of_day,
 )
 from ..services.openmeteo import (
     OpenMeteoClient,
-    filter_trading,
-    filter_trading_region,
     merge_minutely,
     prune_minutely,
 )
@@ -64,7 +61,7 @@ DEFAULT_SAFETY_GRANT = 0.05
 DEFAULT_SAFETY_TARGET = 0.35
 DISPLAY_WICK_FACTOR = 0.8
 DISPLAY_REGIONAL_FACTOR = 0.02
-CHART_BARS = 64
+CHART_BARS = 96
 TOTAL_BARS = (WARM_DAYS + TRADE_DAYS) * BARS_PER_DAY
 REFRESH_SECONDS = 30 * 60
 
@@ -262,41 +259,6 @@ def _stable_seed(*parts: str) -> int:
     return int.from_bytes(hashlib.sha256(payload).digest()[:8], "big") & 0x7FFFFFFFFFFF_FFFF
 
 
-def _first_trade_day(created_at: float) -> date:
-    day = datetime.fromtimestamp(created_at, TZ).date()
-    while not is_trading_day(day):
-        day += timedelta(days=1)
-    return day
-
-
-def _trading_day_count(start: date, end: date) -> int:
-    if end < start:
-        return 0
-    count = 0
-    day = start
-    while day <= end:
-        if is_trading_day(day):
-            count += 1
-        day += timedelta(days=1)
-    return count
-
-
-def _elapsed_trading_bars(start: float, end: float) -> int:
-    """start→end 之间经过的 15 分钟交易 bar 数（非交易时段为 0）。"""
-    if end <= start:
-        return 0
-    first = _first_trade_day(start)
-
-    def relative(epoch: float) -> int:
-        today = datetime.fromtimestamp(epoch, TZ).date()
-        if today < first:
-            return 0
-        offset = max(0, _trading_day_count(first, today) - 1)
-        return offset * BARS_PER_DAY + trading_bar_of_day(epoch)
-
-    return max(0, relative(end) - relative(start))
-
-
 class GameEngine:
     def __init__(
         self,
@@ -405,7 +367,7 @@ class GameEngine:
                 return existing
 
             raw_local = (await self.client.fetch_minutely_15(province)).value
-            local = filter_trading(raw_local)
+            local = raw_local
             now = int(self._clock())
             now_key = datetime.fromtimestamp(now, TZ).strftime("%Y-%m-%dT%H:%M")
             local = prune_minutely(local, TOTAL_BARS, now_key)
@@ -583,7 +545,7 @@ class GameEngine:
             if province is None:
                 continue
             raw = (await self.client.fetch_minutely_15(province)).value
-            local = filter_trading(raw)
+            local = raw
             begin_idx = 0
             for index, stamp in enumerate(local.time):
                 if stamp > begin_key:
@@ -623,7 +585,7 @@ class GameEngine:
 
     async def _advance_player(self, session: Session, board: Season) -> Session:
         now = int(self._clock())
-        elapsed = _elapsed_trading_bars(session.updated_at, now)
+        elapsed = elapsed_bars(session.updated_at, now)
         if session.status is not SessionStatus.RUNNING or elapsed <= 0:
             return session
         account = await self.store.get_account(session.id)
@@ -761,7 +723,7 @@ class GameEngine:
         if local is not None and now - int(local.fetched_at) < REFRESH_SECONDS:
             return local
         raw = (await self.client.fetch_minutely_15(province)).value
-        fresh = filter_trading(raw)
+        fresh = raw
         merged = merge_minutely(local, fresh) if local is not None else fresh
         now_key = datetime.fromtimestamp(now, TZ).strftime("%Y-%m-%dT%H:%M")
         pruned = prune_minutely(merged, TOTAL_BARS, now_key)
@@ -782,7 +744,7 @@ class GameEngine:
                     board.end_time[:10],
                 )
             ).value
-            region = filter_trading_region(raw)
+            region = raw
             await self.store.save_market_region(board.id, province.name, region)
             return region
         except Exception as exc:  # noqa: BLE001 - 区域失败退化为本地行情
@@ -1176,7 +1138,7 @@ class GameEngine:
         moment = datetime.fromisoformat(bar.time)
         time_label = f"{moment:%m-%d} {moment:%H:%M}"
         session_label = "早盘" if moment.hour < 12 else "午盘"
-        status, is_open = market_status(self._clock())
+        status, is_open = market_status()
         return QuoteStats(
             price=bar.temp,
             change=change,
@@ -1355,7 +1317,7 @@ class GameEngine:
         except Exception as exc:  # noqa: BLE001 - 预测尾段失败时只画历史
             logger.warning(f"主图预测尾段取数失败：{exc}")
             return ()
-        local = filter_trading(raw)
+        local = raw
         now_key = datetime.fromtimestamp(self._clock(), TZ).strftime("%Y-%m-%dT%H:%M")
         count = max(1, round(self.chart_bars * 0.15))
         points: list[tuple[str, float]] = []

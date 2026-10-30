@@ -9,7 +9,6 @@ from typing import Any
 from .cache import BucketCache, CacheValue
 from .coords import coords_query
 from .http import HttpClient, get_http
-from .market_time import trading_mask
 from .provinces import Province
 from .regions import RegionSelection
 
@@ -232,54 +231,6 @@ class ForecastDeviation:
     actual: tuple[float | None, ...]
     forecast: tuple[float | None, ...]
     source: str = ""
-
-
-def filter_trading(series: MinutelySeries) -> MinutelySeries:
-    """只保留 A 股交易时段内的 15 分钟 bar（09:30-11:30、13:00-15:00）。"""
-    indices = trading_mask(series.time)
-    if len(indices) == len(series.time):
-        return series
-
-    def pick(values: tuple[Any, ...]) -> tuple[Any, ...]:
-        return tuple(values[index] for index in indices)
-
-    return MinutelySeries(
-        city_id=series.city_id,
-        city_name=series.city_name,
-        time=pick(series.time),
-        temp=pick(series.temp),
-        gust=pick(series.gust),
-        precip=pick(series.precip),
-        wcode=pick(series.wcode),
-        cape=pick(series.cape),
-        dew=pick(series.dew),
-        fetched_at=series.fetched_at,
-        source=series.source,
-    )
-
-
-def filter_trading_region(series: RegionSeries) -> RegionSeries:
-    indices = trading_mask(series.time)
-    if len(indices) == len(series.time):
-        return series
-
-    def pick(values: tuple[Any, ...]) -> tuple[Any, ...]:
-        return tuple(values[index] for index in indices)
-
-    return RegionSeries(
-        province=series.province,
-        scope=series.scope,
-        cities=series.cities,
-        time=pick(series.time),
-        temp=pick(series.temp),
-        gust=pick(series.gust),
-        precip=pick(series.precip),
-        wcode=pick(series.wcode),
-        cape=pick(series.cape),
-        dew=pick(series.dew),
-        fetched_at=series.fetched_at,
-        source=series.source,
-    )
 
 
 def _int_or_none(value: Any) -> int | None:

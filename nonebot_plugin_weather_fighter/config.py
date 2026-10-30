@@ -21,5 +21,5 @@ class Config(BaseModel):
     weather_fighter_safety_entry_pct: float = Field(default=20.0, ge=1, le=100)
     weather_fighter_safety_grant_pct: float = Field(default=5.0, gt=0, le=100)
     weather_fighter_safety_target_pct: float = Field(default=35.0, gt=0, le=100)
-    weather_fighter_chart_bars: int = Field(default=64, ge=8, le=1000)
+    weather_fighter_chart_bars: int = Field(default=96, ge=8, le=1000)
     weather_fighter_enable_region: bool = True
