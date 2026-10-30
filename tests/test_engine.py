@@ -84,10 +84,14 @@ async def test_shared_board_and_independent_players(tmp_path: Path) -> None:
     assert len(engine.chart_data(first).bars) == 120
 
     outcome = await engine.open_position("u1", "g1", hebei, Side.LONG, stake=1000)
-    assert outcome.trade.stake == pytest.approx(1000)
+    trade = outcome.trade
+    assert trade.qty >= 1
+    assert trade.stake <= 1000
+    assert trade.margin == pytest.approx(trade.stake)
     assert len(outcome.state.positions) == 1
     assert outcome.state.positions[0].province == "河北省"
-    assert outcome.state.account.cash == pytest.approx(9_000)
+    assert outcome.state.positions[0].qty == trade.qty
+    assert outcome.state.account.cash == pytest.approx(10_000 - trade.stake)
 
     other = await engine.ensure_game("u2", "g1", hebei)
     assert other.positions == ()
@@ -186,11 +190,12 @@ async def test_same_player_can_hold_multiple_provinces(tmp_path: Path) -> None:
     assert hb.wxi.province_name == "河北省"
     assert sd.wxi.province_name == "山东省"
 
-    await engine.open_position("u1", "g1", hebei, Side.LONG, stake=1000)
+    hb_trade = await engine.open_position("u1", "g1", hebei, Side.LONG, stake=1000)
     both = await engine.open_position("u1", "g1", shandong, Side.SHORT, stake=2000)
     assert {position.province for position in both.state.positions} == {"河北省", "山东省"}
-    assert both.state.total_stake == pytest.approx(3000)
-    assert both.state.account.cash == pytest.approx(7_000)
+    spent = hb_trade.trade.stake + both.trade.stake
+    assert both.state.total_stake == pytest.approx(spent)
+    assert both.state.account.cash == pytest.approx(10_000 - spent)
     assert both.state.position_value > 0
 
     with pytest.raises(GameError):
@@ -199,7 +204,7 @@ async def test_same_player_can_hold_multiple_provinces(tmp_path: Path) -> None:
     hb_closed = await engine.close_position("u1", "g1", hebei)
     assert len(hb_closed.trades) == 1
     assert {position.province for position in hb_closed.state.positions} == {"山东省"}
-    assert hb_closed.state.total_stake == pytest.approx(2000)
+    assert hb_closed.state.total_stake == pytest.approx(both.trade.stake)
 
     all_closed = await engine.close_position("u1", "g1")
     assert all_closed.state.positions == ()
@@ -452,4 +457,34 @@ async def test_quote_head_high_low_have_units_and_colors(tmp_path: Path) -> None
     assert first["今日最低"][2] == "down"
     # 其余分组仍保持二元组，模板向后兼容
     assert any(len(item) == 2 for group in head["groups"][1:] for item in group)
+    await store.close()
+
+
+async def test_buy_by_shares_and_amount_conversion(tmp_path: Path) -> None:
+    now = {"value": at(27, 10, 0)}
+    engine, store, _ = await make_engine(tmp_path, now)
+    hebei = resolve_province("河北")
+    assert hebei is not None
+    state = await engine.ensure_game("u1", "g1", hebei)
+    price = state.current.close
+    leverage = state.session.leverage
+
+    exact = await engine.open_position("u1", "g1", hebei, Side.LONG, qty=100)
+    assert exact.trade.qty == 100
+    assert exact.trade.stake == pytest.approx(100 * price / leverage)
+    assert exact.state.positions[0].qty == 100
+    assert exact.state.positions[0].margin == pytest.approx(exact.trade.stake)
+
+    with pytest.raises(GameError, match="最少"):
+        await engine.open_position("u2", "g1", hebei, Side.LONG, qty=1)
+
+    # 金额路径：floor 成份数，保证金随之回落
+    other = await engine.open_position("u3", "g1", hebei, Side.LONG, stake=1000)
+    assert other.trade.qty == int(1000 * leverage / price)
+    assert other.trade.stake <= 1000
+    assert other.trade.margin == pytest.approx(other.trade.stake)
+
+    closed = await engine.close_position("u3", "g1", hebei)
+    assert closed.trades[0].qty == other.trade.qty
+    assert closed.trades[0].margin == pytest.approx(other.trade.stake)
     await store.close()

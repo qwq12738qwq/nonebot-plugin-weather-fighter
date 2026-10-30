@@ -626,12 +626,17 @@ class GameEngine:
                         cash=account.cash - order.stake,
                         stake=account.stake + order.stake,
                     )
+                    fill_qty = order.qty or int(
+                        order.stake * session.leverage / max(order.price, 1e-9)
+                    )
                     position = Position(
                         session_id=session.id,
                         side=order.side,
                         stake=order.stake,
                         entry_price=order.price,
                         province=order.province,
+                        qty=fill_qty,
+                        margin=order.stake,
                     )
                     positions[order.province] = position
                     opened_this_bar.add(order.province)
@@ -646,6 +651,8 @@ class GameEngine:
                             pnl=0.0,
                             created_at=now,
                             province=order.province,
+                            qty=fill_qty,
+                            margin=order.stake,
                         )
                     )
                     await self.store.save_position(position)
@@ -688,6 +695,8 @@ class GameEngine:
                         pnl=-position.stake,
                         created_at=now,
                         province=position.province,
+                        qty=position.qty,
+                        margin=position.stake,
                     )
                 )
                 await self.store.delete_position(session.id, position.province)
@@ -869,6 +878,7 @@ class GameEngine:
         percent: float | None = None,
         *,
         stake: float | None = None,
+        qty: int | None = None,
     ) -> TradeOutcome:
         state = await self.ensure_game(user_id, group_id, province)
         if state.ended:
@@ -880,16 +890,35 @@ class GameEngine:
         cash = state.account.cash
         if cash < MIN_STAKE:
             raise GameError(f"余额不足 {MIN_STAKE:.0f}，不能买入")
-        if stake is None:
-            ratio = 30.0 if percent is None else max(1.0, min(100.0, float(percent)))
-            stake = cash * ratio / 100.0
-        stake = float(stake)
-        if stake < MIN_STAKE:
-            raise GameError(f"最少投入 {MIN_STAKE:.0f}")
+        price = state.current.close
+        if price <= 0:
+            raise GameError("行情异常，稍后再试")
+        leverage = max(1e-9, float(state.session.leverage))
+        need = max(1, math.ceil(MIN_STAKE * leverage / price))
+        if qty is not None:
+            qty = int(qty)
+            if qty < 1:
+                raise GameError("至少 1 份")
+            stake = qty * price / leverage
+            if stake < MIN_STAKE:
+                raise GameError(f"最少 {need} 份（保证金 {MIN_STAKE:.0f}）")
+        else:
+            if stake is None:
+                ratio = 30.0 if percent is None else max(1.0, min(100.0, float(percent)))
+                stake = cash * ratio / 100.0
+            stake = float(stake)
+            if stake < MIN_STAKE:
+                raise GameError(f"最少投入 {MIN_STAKE:.0f}（约 {need} 份）")
+            if stake > cash + 1e-6:
+                raise GameError(f"余额只有 {cash:,.0f}")
+            qty = int(stake * leverage / price)
+            if qty < 1:
+                raise GameError("金额太小，至少 1 份")
+            stake = qty * price / leverage
+            if stake < MIN_STAKE:
+                raise GameError(f"最少 {need} 份（保证金 {MIN_STAKE:.0f}）")
         if stake > cash + 1e-6:
             raise GameError(f"余额只有 {cash:,.0f}")
-        stake = min(stake, cash)
-        price = state.current.close
         account = replace(
             state.account,
             cash=cash - stake,
@@ -902,6 +931,8 @@ class GameEngine:
             stake=stake,
             entry_price=price,
             province=selected,
+            qty=qty,
+            margin=stake,
         )
         trade = Trade(
             id=uuid.uuid4().hex,
@@ -913,6 +944,8 @@ class GameEngine:
             pnl=0.0,
             created_at=int(self._clock()),
             province=selected,
+            qty=qty,
+            margin=stake,
         )
         await self.store.save_account(account)
         await self.store.save_position(position)
@@ -973,6 +1006,7 @@ class GameEngine:
         percent: float = 30.0,
         *,
         stake: float | None = None,
+        qty: int | None = None,
     ) -> OrderOutcome:
         if kind is OrderKind.BET:
             state = await self.ensure_game(user_id, group_id, province)
@@ -998,12 +1032,28 @@ class GameEngine:
             if any(position.province == selected for position in state.positions):
                 raise GameError("这个省已经有持仓，先平仓再挂到价买入")
             cash = state.account.cash
-            if stake is None:
-                ratio = max(1.0, min(100.0, float(percent)))
-                stake = cash * ratio / 100.0
-            stake = float(stake)
-            if stake < MIN_STAKE:
-                raise GameError(f"最少投入 {MIN_STAKE:.0f}")
+            leverage = max(1e-9, float(state.session.leverage))
+            need = max(1, math.ceil(MIN_STAKE * leverage / price))
+            if qty is not None:
+                qty = int(qty)
+                if qty < 1:
+                    raise GameError("至少 1 份")
+                stake = qty * price / leverage
+                if stake < MIN_STAKE:
+                    raise GameError(f"最少 {need} 份（保证金 {MIN_STAKE:.0f}）")
+            else:
+                if stake is None:
+                    ratio = max(1.0, min(100.0, float(percent)))
+                    stake = cash * ratio / 100.0
+                stake = float(stake)
+                if stake < MIN_STAKE:
+                    raise GameError(f"最少投入 {MIN_STAKE:.0f}（约 {need} 份）")
+                qty = int(stake * leverage / price)
+                if qty < 1:
+                    raise GameError("金额太小，至少 1 份")
+                stake = qty * price / leverage
+                if stake < MIN_STAKE:
+                    raise GameError(f"最少 {need} 份（保证金 {MIN_STAKE:.0f}）")
             if stake > cash + 1e-6:
                 raise GameError(f"余额只有 {cash:,.0f}")
             order = Order(
@@ -1016,6 +1066,8 @@ class GameEngine:
                 status=OrderStatus.OPEN,
                 created_at=now,
                 province=selected,
+                qty=qty,
+                margin=stake,
             )
         else:
             if province is not None:
@@ -1081,6 +1133,8 @@ class GameEngine:
             pnl=value - position.stake,
             created_at=now,
             province=position.province,
+            qty=position.qty,
+            margin=position.stake,
         )
         await self.store.add_trade(trade)
         await self.store.delete_position(session.id, position.province)

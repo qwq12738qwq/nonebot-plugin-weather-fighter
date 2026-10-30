@@ -2,7 +2,11 @@ from __future__ import annotations
 
 import pytest
 
-from nonebot_plugin_weather_fighter.game.amount import AmountError, parse_amount
+from nonebot_plugin_weather_fighter.game.amount import (
+    AmountError,
+    parse_amount,
+    parse_shares,
+)
 
 
 def test_parse_amount_units_and_percent() -> None:
@@ -23,3 +27,16 @@ def test_parse_amount_rejects_bad_values() -> None:
         parse_amount("abc", 100_000)
     with pytest.raises(AmountError):
         parse_amount("0", 100_000)
+
+
+def test_parse_shares() -> None:
+    assert parse_shares("500份") == 500
+    assert parse_shares("1,000份") == 1000
+    assert parse_shares(" 12 份 ") == 12
+    assert parse_shares("1000") is None
+    assert parse_shares("30%") is None
+    assert parse_shares("") is None
+    with pytest.raises(AmountError):
+        parse_shares("0份")
+    with pytest.raises(AmountError):
+        parse_shares("abc份")

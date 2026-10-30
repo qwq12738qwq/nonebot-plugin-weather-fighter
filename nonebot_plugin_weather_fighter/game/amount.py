@@ -45,3 +45,17 @@ def parse_amount(text: str | None, cash: float, *, default_pct: float = 20.0) ->
     if amount > cash + 1e-6:
         raise AmountError(f"穷了,只有 {cash:,.0f}")
     return amount
+
+
+def parse_shares(text: str | None) -> int | None:
+    """识别「N份」；不是份数表达时返回 None，交给 parse_amount 按金额处理。"""
+    raw = (text or "").strip().replace(",", "").replace("，", "").replace("元", "")
+    if not raw.endswith("份"):
+        return None
+    try:
+        qty = int(float(raw[:-1].strip()))
+    except ValueError as exc:
+        raise AmountError("份数格式不对，例如：500份 / 1000 / 30% / 全") from exc
+    if qty < 1:
+        raise AmountError("至少 1 份")
+    return qty

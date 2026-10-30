@@ -143,8 +143,13 @@ async def test_buy_defaults_to_twenty_percent(
         ctx.should_finished(matcher.long_cmd)
 
     state = await engine.ensure_game("123456", None, None)
-    assert state.positions[0].stake == pytest.approx(2_000)
-    assert state.account.cash == pytest.approx(8_000)
+    position = state.positions[0]
+    expected_qty = int(2_000 * state.session.leverage / position.entry_price)
+    assert position.qty == expected_qty
+    assert position.stake == pytest.approx(
+        expected_qty * position.entry_price / state.session.leverage
+    )
+    assert state.account.cash == pytest.approx(10_000 - position.stake)
     await engine.store.close()
 
 
@@ -170,7 +175,10 @@ async def test_buy_with_inline_leverage(
 
     state = await engine.ensure_game("123456", None, None)
     assert state.session.leverage == pytest.approx(5.0)
-    assert state.positions[0].stake == pytest.approx(1_000)
+    position = state.positions[0]
+    expected_qty = int(1_000 * 5 / position.entry_price)
+    assert position.qty == expected_qty
+    assert position.stake == pytest.approx(expected_qty * position.entry_price / 5)
     await engine.store.close()
 
 
@@ -271,4 +279,30 @@ async def test_cancel_without_board(
         ctx.receive_event(bot, event)
         ctx.should_call_send(event, ANY, bot=bot)
         ctx.should_finished(matcher.cancel_cmd)
+    await engine.store.close()
+
+
+@pytest.mark.asyncio
+async def test_buy_by_shares(app: App, monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    from nonebot_plugin_weather_fighter import matcher
+
+    engine = await make_engine(tmp_path)
+    hebei = resolve_province("河北")
+    assert hebei is not None
+    await engine.open_board(hebei)
+    monkeypatch.setattr(matcher, "get_engine", lambda: engine)
+
+    async with app.test_matcher(matcher.long_cmd) as ctx:
+        adapter = ctx.create_adapter(base=Adapter)
+        bot = ctx.create_bot(base=Bot, adapter=adapter)
+        event = private_event("/买入 河北 100份")
+        ctx.receive_event(bot, event)
+        ctx.should_call_send(event, ANY, bot=bot)
+        ctx.should_finished(matcher.long_cmd)
+
+    state = await engine.ensure_game("123456", None, None)
+    assert state.positions[0].qty == 100
+    assert state.positions[0].stake == pytest.approx(
+        100 * state.positions[0].entry_price / state.session.leverage
+    )
     await engine.store.close()

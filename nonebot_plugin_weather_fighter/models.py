@@ -94,6 +94,8 @@ class Position:
     stake: float
     entry_price: float
     province: str = ""
+    qty: int = 0
+    margin: float = 0.0
 
 
 @dataclass(frozen=True, slots=True)
@@ -107,6 +109,8 @@ class Order:
     status: OrderStatus
     created_at: int
     province: str = ""
+    qty: int = 0
+    margin: float = 0.0
 
 
 @dataclass(frozen=True, slots=True)
@@ -120,6 +124,8 @@ class Trade:
     pnl: float
     created_at: int
     province: str = ""
+    qty: int = 0
+    margin: float = 0.0
 
 
 @dataclass(frozen=True, slots=True)
