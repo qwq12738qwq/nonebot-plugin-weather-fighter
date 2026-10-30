@@ -8,7 +8,7 @@ from nonebot.adapters.onebot.v11 import Adapter, Bot, Message, PrivateMessageEve
 from nonebug import App
 
 from nonebot_plugin_weather_fighter.game.engine import GameEngine
-from nonebot_plugin_weather_fighter.models import Side
+from nonebot_plugin_weather_fighter.models import Side, Trade
 from nonebot_plugin_weather_fighter.services.provinces import resolve_province
 from nonebot_plugin_weather_fighter.services.store import Store
 
@@ -306,3 +306,25 @@ async def test_buy_by_shares(app: App, monkeypatch: pytest.MonkeyPatch, tmp_path
         100 * state.positions[0].entry_price / state.session.leverage
     )
     await engine.store.close()
+
+
+def test_close_line_shows_qty_and_margin() -> None:
+    from nonebot_plugin_weather_fighter import matcher
+
+    trade = Trade(
+        id="t1",
+        session_id="s1",
+        bar_index=0,
+        side=Side.LONG,
+        stake=2310.0,
+        price=23.1,
+        pnl=120.0,
+        created_at=0,
+        province="河北省",
+        qty=100,
+        margin=2310.0,
+    )
+    line = matcher._close_line(trade)
+    assert "100 份" in line
+    assert "保证金" in line
+    assert "赚 +120" in line
