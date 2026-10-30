@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from datetime import datetime
 
 from .. import consts
+from .clock import get_clock
 from .market_time import TZ
 from .openmeteo import MinutelySeries
 from .provinces import Province
@@ -45,7 +46,7 @@ def build_weather_report(
 ) -> WeatherReport:
     if not series.time:
         raise ValueError("天气序列为空")
-    moment = now or datetime.now(TZ)
+    moment = now or datetime.fromtimestamp(get_clock().now(), TZ)
     index = _current_index(series, moment)
     observed = series.time[index]
     day = observed[:10]

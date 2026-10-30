@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import asyncio
+import contextlib
 import os
 
 from nonebot import get_driver, get_plugin_config, require
@@ -8,6 +10,7 @@ from nonebot.plugin import PluginMetadata
 require("nonebot_plugin_localstore")
 
 _driver = get_driver()
+_clock_task: asyncio.Task[None] | None = None
 
 
 def _playwright_cache_dir() -> str:
@@ -39,6 +42,7 @@ require("nonebot_plugin_htmlrender")
 from . import consts  # noqa: E402
 from . import matcher as matcher  # noqa: E402
 from .config import Config  # noqa: E402
+from .services.clock import configure_clock, get_clock  # noqa: E402
 from .services.http import close_http, configure_http  # noqa: E402
 from .services.openmeteo import OpenMeteoConfig, configure_client  # noqa: E402
 from .services.store import close_store, init_store  # noqa: E402
@@ -66,9 +70,18 @@ async def _startup() -> None:
         )
     )
     await init_store()
+    configure_clock(config.weather_fighter_http_timeout)
+    global _clock_task
+    _clock_task = asyncio.create_task(get_clock().refresh_loop())
 
 
 @_driver.on_shutdown
 async def _shutdown() -> None:
+    global _clock_task
+    if _clock_task is not None:
+        _clock_task.cancel()
+        with contextlib.suppress(asyncio.CancelledError):
+            await _clock_task
+        _clock_task = None
     await close_store()
     await close_http()
