@@ -775,6 +775,8 @@ class GameEngine:
         return pruned
 
     async def _market_region(self, board: Season, province: Province):
+        if not self.region_enabled:
+            return None
         region = await self.store.load_market_region(board.id, province.name)
         if region is not None:
             return region
