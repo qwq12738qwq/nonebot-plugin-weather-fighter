@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import math
+
 UNITS: tuple[tuple[str, float], ...] = (
     ("亿", 100_000_000.0),
     ("万", 10_000.0),
@@ -40,6 +42,8 @@ def parse_amount(text: str | None, cash: float, *, default_pct: float = 20.0) ->
             amount = float(raw) * scale
         except ValueError as exc:
             raise AmountError("金额格式不对，例如：1000 / 1万 / 30% / 全") from exc
+    if not math.isfinite(amount):
+        raise AmountError("金额格式不对，例如：1000 / 1万 / 30% / 全")
     if amount <= 0:
         raise AmountError("还有反向消费?")
     if amount > cash + 1e-6:
@@ -53,9 +57,14 @@ def parse_shares(text: str | None) -> int | None:
     if not raw.endswith("份"):
         return None
     try:
-        qty = int(float(raw[:-1].strip()))
+        value = float(raw[:-1].strip())
     except ValueError as exc:
         raise AmountError("份数格式不对，例如：500份 / 1000 / 30% / 全") from exc
+    if not math.isfinite(value):
+        raise AmountError("份数格式不对，例如：500份 / 1000 / 30% / 全")
+    qty = int(value)
+    if value != qty:
+        raise AmountError("份数必须是整数，例如：500份")
     if qty < 1:
         raise AmountError("至少 1 份")
     return qty
