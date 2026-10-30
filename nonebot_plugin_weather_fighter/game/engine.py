@@ -603,7 +603,12 @@ class GameEngine:
                 trade_days = max(1, (len(local.time) - window_start) // BARS_PER_DAY - WARM_DAYS)
                 if window_start + (WARM_DAYS + trade_days) * BARS_PER_DAY > len(local.time):
                     continue
-            region = await self._market_region(board, province)
+            region = await self._market_region(
+                board,
+                province,
+                local.time[window_start][:10],
+                local.time[end_idx][:10],
+            )
             series_map[name] = build_wxi_series(
                 local,
                 region,
@@ -774,28 +779,31 @@ class GameEngine:
         await self.store.save_market_series(board.id, province.name, pruned)
         return pruned
 
-    async def _market_region(self, board: Season, province: Province):
+    async def _market_region(
+        self,
+        board: Season,
+        province: Province,
+        start_date: str,
+        end_date: str,
+    ):
         if not self.region_enabled:
             return None
-        region = await self.store.load_market_region(board.id, province.name)
-        if region is not None:
-            return region
+        # 区域序列按当前窗口日期拉取；store 旧值只在取数失败时兜底
         selection = region_cities(province)
         try:
             raw = (
                 await self.client.fetch_region(
                     province,
                     selection,
-                    board.start_time[:10],
-                    board.end_time[:10],
+                    start_date,
+                    end_date,
                 )
             ).value
-            region = raw
-            await self.store.save_market_region(board.id, province.name, region)
-            return region
+            await self.store.save_market_region(board.id, province.name, raw)
+            return raw
         except Exception as exc:  # noqa: BLE001 - 区域失败退化为本地行情
             logger.warning(f"区域指数取数失败，退化为本地行情：{exc}")
-            return None
+            return await self.store.load_market_region(board.id, province.name)
 
     async def _load_wxi_for_name(self, board: Season, province_name: str) -> WxiSeries | None:
         province = resolve_province(province_name)
@@ -820,7 +828,12 @@ class GameEngine:
         if cached is not None:
             self._wxi_cache.move_to_end(key)
             return cached
-        region = await self._market_region(board, province)
+        region = await self._market_region(
+            board,
+            province,
+            local.time[start][:10],
+            local.time[end][:10],
+        )
         forecast = None
         try:
             forecast = (await self.client.fetch_forecast_deviation(province)).value

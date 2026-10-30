@@ -37,11 +37,13 @@ class FakeClient:
     def __init__(self) -> None:
         self.local = make_local()
         self.region = make_region(self.local)
+        self.region_calls: list[tuple[str, str]] = []
 
     async def fetch_minutely_15(self, province) -> CacheValue[MinutelySeries]:
         return CacheValue(self.local)
 
     async def fetch_region(self, province, selection, start_date, end_date):
+        self.region_calls.append((start_date, end_date))
         return CacheValue(self.region)
 
     async def fetch_forecast_deviation(self, province):
@@ -570,4 +572,21 @@ async def test_region_can_be_disabled(tmp_path: Path) -> None:
     assert state.wxi.regional_line
     assert all(value is None for value in state.wxi.regional_line)
     assert all(bar.regional is None for bar in state.wxi.bars)
+    await store.close()
+
+
+async def test_region_refreshes_with_sliding_window(tmp_path: Path) -> None:
+    now = {"value": at(27, 10, 0)}
+    engine, store, client = await make_engine(tmp_path, now)
+    hebei = resolve_province("河北")
+    assert hebei is not None
+
+    first = await engine.ensure_game("u1", "g1", hebei)
+    assert any(bar.regional is not None for bar in first.wxi.bars)
+    first_start = client.region_calls[-1][0]
+
+    now["value"] = at(31, 10, 0)
+    later = await engine.ensure_game("u1", "g1", hebei)
+    assert client.region_calls[-1][0] > first_start
+    assert any(bar.regional is not None for bar in later.wxi.bars)
     await store.close()
