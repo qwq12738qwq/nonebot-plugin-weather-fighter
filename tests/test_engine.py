@@ -149,25 +149,26 @@ async def test_board_is_shared_across_groups(tmp_path: Path) -> None:
     await store.close()
 
 
-async def test_board_clock_lunch_and_afternoon(tmp_path: Path) -> None:
+async def test_board_clock_advances_continuously(tmp_path: Path) -> None:
     now = {"value": at(27, 10, 0)}
     engine, store, _ = await make_engine(tmp_path, now)
     hebei = resolve_province("河北")
     assert hebei is not None
     state = await engine.ensure_game("u1", "g1", hebei)
 
+    # 原午休时段也照常出下一根
     now["value"] = at(27, 12, 0)
-    lunch = await engine.quote("u1", "g1", hebei)
-    assert lunch.current.time != state.current.time
-    assert "午休" in engine.quote_stats(lunch).market_status
+    noon = await engine.quote("u1", "g1", hebei)
+    assert noon.current.time != state.current.time
+    assert engine.quote_stats(noon).market_status == "交易中"
 
     now["value"] = at(27, 12, 45)
-    still = await engine.quote("u1", "g1", hebei)
-    assert still.current.time == lunch.current.time
+    later = await engine.quote("u1", "g1", hebei)
+    assert later.current.time.endswith("12:45")
 
     now["value"] = at(27, 13, 15)
     afternoon = await engine.quote("u1", "g1", hebei)
-    assert afternoon.current.time != lunch.current.time
+    assert afternoon.current.time.endswith("13:15")
     await store.close()
 
 
@@ -434,4 +435,21 @@ async def test_pressure_air_never_dominant_on_perfect_weather(tmp_path: Path) ->
     assert air["dominant"] is False
     assert air["text"].startswith("固定 ")
     assert "85" not in air["text"]
+    await store.close()
+
+
+async def test_quote_head_high_low_have_units_and_colors(tmp_path: Path) -> None:
+    now = {"value": at(27, 10, 0)}
+    engine, store, _ = await make_engine(tmp_path, now)
+    hebei = resolve_province("河北")
+    assert hebei is not None
+    state = await engine.ensure_game("u1", "g1", hebei)
+    head = engine.quote_head(state, engine.quote_stats(state))
+    first = {item[0]: item for item in head["groups"][0]}
+    assert first["今日最高"][1].endswith("℃")
+    assert first["今日最高"][2] == "up"
+    assert first["今日最低"][1].endswith("℃")
+    assert first["今日最低"][2] == "down"
+    # 其余分组仍保持二元组，模板向后兼容
+    assert any(len(item) == 2 for group in head["groups"][1:] for item in group)
     await store.close()

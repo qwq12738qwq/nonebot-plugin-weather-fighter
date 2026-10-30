@@ -44,6 +44,24 @@ P = {
     "WICK_K": 0.30,
 }
 
+# 上面这套系数按「每天 16 根」标定；改成全天 96 根后要按时间等价换算：
+# 概率类 /6，衰减类开 6 次方，EMA 走等效 alpha，AR(1) 噪声幅度 /√6。
+_LEGACY_BARS_PER_DAY = 16
+_PERIOD_SCALE = BARS_PER_DAY / _LEGACY_BARS_PER_DAY
+_WARM_UP_ALPHA = 1 - (1 - 0.06) ** (1 / _PERIOD_SCALE)
+P["FLOW_RATE"] /= _PERIOD_SCALE
+P["SPIKE_P"] /= _PERIOD_SCALE
+P["CHAOS_P"] /= _PERIOD_SCALE
+for _decay_key in ("DISH_DECAY", "JUMP_DECAY", "INERTIA", "FLOW_DECAY"):
+    P[_decay_key] **= 1 / _PERIOD_SCALE
+P["NOISE_A"] = 1 - (1 - P["NOISE_A"]) ** (1 / _PERIOD_SCALE)
+P["EMA_A"] = 1 - (1 - P["EMA_A"]) ** (1 / _PERIOD_SCALE)
+P["MICRO_K"] /= math.sqrt(_PERIOD_SCALE)
+P["DISH_K"] /= math.sqrt(_PERIOD_SCALE)
+# 一天从 4 小时变成 24 小时，天气锚定的日摆动更大；实测 ×0.75 能把日波幅拉回
+# 16 根/天 的水平（14.0/13.4 → 15.1/13.5，见 commit 说明）
+P["COMFORT_K"] *= 0.75
+
 
 @dataclass(frozen=True, slots=True)
 class WeatherArrays:
@@ -447,7 +465,7 @@ def build_wxi_series(
 
         flow_ret = impact / BASE
         flow = flow * P["FLOW_DECAY"] + abs(flow_ret) * 60
-        arrival = P["FLOW_RATE"] * (1 + min(6.0, flow)) * (1 + calm / 30)
+        arrival = P["FLOW_RATE"] * (1 + min(6.0, flow)) * (1 + calm / (30 * _PERIOD_SCALE))
         n_events = (
             int(arrival) + (1 if rng.random() < (arrival % 1) else 0)
             if arrival > 3
@@ -473,9 +491,9 @@ def build_wxi_series(
             event_sum += (1 if bias >= 0 else -1) * magnitude + bias * 0.35
 
         heat = 0.0 if len(closes) < 2 else abs(closes[-1] - closes[-2]) / BASE
-        heat_ema = heat_ema * 0.94 + heat * 0.06
-        calm = min(60.0, calm + 1) if heat < 0.0008 else 0.0
-        if rng.random() < P["CHAOS_P"] * (1 + calm / 25) * (1 + heat_ema * 400):
+        heat_ema = heat_ema * (1 - _WARM_UP_ALPHA) + heat * _WARM_UP_ALPHA
+        calm = min(60.0 * _PERIOD_SCALE, calm + 1) if heat < 0.0008 else 0.0
+        if rng.random() < P["CHAOS_P"] * (1 + calm / (25 * _PERIOD_SCALE)) * (1 + heat_ema * 400):
             tail = rng.random() ** 3 * 5.5 + 0.08
             event_sum += (1 if rng.random() < 0.5 else -1) * BASE * P["CHAOS_K"] * tail * amp
             calm = 0.0
