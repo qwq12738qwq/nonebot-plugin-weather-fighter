@@ -9,7 +9,8 @@ from collections import OrderedDict
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass, replace
 from datetime import date, datetime
-from typing import Any
+from functools import wraps
+from typing import Any, Concatenate, ParamSpec, TypeVar
 
 from nonebot import logger
 
@@ -256,6 +257,29 @@ def _stable_seed(*parts: str) -> int:
     return int.from_bytes(hashlib.sha256(payload).digest()[:8], "big") & 0x7FFFFFFFFFFF_FFFF
 
 
+_P = ParamSpec("_P")
+_R = TypeVar("_R")
+
+
+def _player_locked(
+    method: Callable[Concatenate[GameEngine, str, str | None, _P], Awaitable[_R]],
+) -> Callable[Concatenate[GameEngine, str, str | None, _P], Awaitable[_R]]:
+    """串行化同一玩家在同一群的引擎动作，避免并发重复成交/丢更新。"""
+
+    @wraps(method)
+    async def wrapper(
+        self: GameEngine,
+        user_id: str,
+        group_id: str | None,
+        *args: _P.args,
+        **kwargs: _P.kwargs,
+    ) -> _R:
+        async with self._lock_for_player(user_id, group_id):
+            return await method(self, user_id, group_id, *args, **kwargs)
+
+    return wrapper
+
+
 class GameEngine:
     def __init__(
         self,
@@ -288,7 +312,16 @@ class GameEngine:
     # ------------------------------------------------------------------
     # 开盘：所有群共用一个盘；玩家只是这个盘里的一个账户
     # ------------------------------------------------------------------
+    @_player_locked
     async def ensure_game(
+        self,
+        user_id: str,
+        group_id: str | None,
+        province: Province | None = None,
+    ) -> GameState:
+        return await self._ensure_game_locked(user_id, group_id, province)
+
+    async def _ensure_game_locked(
         self,
         user_id: str,
         group_id: str | None,
@@ -342,19 +375,24 @@ class GameEngine:
             return None
         return resolve_province(session.province)
 
+    @_player_locked
     async def set_leverage(self, user_id: str, group_id: str | None, leverage: float) -> GameState:
         if leverage < 1 or leverage > self.max_leverage:
             raise GameError(f"倍数需在 1~{self.max_leverage:g} 之间")
-        state = await self.ensure_game(user_id, group_id, None)
+        state = await self._ensure_game_locked(user_id, group_id, None)
         if state.ended:
             raise GameError("本局已经结束")
         if state.positions:
             raise GameError("有持仓时不能改倍数，先平仓")
         await self.store.set_session_leverage(state.session.id, leverage, int(self._clock()))
-        return await self.ensure_game(user_id, group_id, None)
+        return await self._ensure_game_locked(user_id, group_id, None)
 
     def _lock_for(self, key: str) -> asyncio.Lock:
         return self._board_locks.setdefault(key, asyncio.Lock())
+
+    def _lock_for_player(self, user_id: str, group_id: str | None) -> asyncio.Lock:
+        key = f"{user_id}:{group_id or ''}"
+        return self._user_locks.setdefault(key, asyncio.Lock())
 
     async def _ensure_board(self, province: Province) -> Season:
         lock = self._lock_for(BOARD_OWNER)
@@ -869,6 +907,7 @@ class GameEngine:
     # ------------------------------------------------------------------
     # 玩家操作
     # ------------------------------------------------------------------
+    @_player_locked
     async def open_position(
         self,
         user_id: str,
@@ -880,7 +919,7 @@ class GameEngine:
         stake: float | None = None,
         qty: int | None = None,
     ) -> TradeOutcome:
-        state = await self.ensure_game(user_id, group_id, province)
+        state = await self._ensure_game_locked(user_id, group_id, province)
         if state.ended:
             raise GameError("本局已经结束")
         selected = state.wxi.province_name
@@ -955,6 +994,7 @@ class GameEngine:
             trade=trade,
         )
 
+    @_player_locked
     async def close_position(
         self,
         user_id: str,
@@ -995,6 +1035,7 @@ class GameEngine:
             total_pnl=sum(trade.pnl for trade in trades),
         )
 
+    @_player_locked
     async def place_order(
         self,
         user_id: str,
@@ -1009,7 +1050,7 @@ class GameEngine:
         qty: int | None = None,
     ) -> OrderOutcome:
         if kind is OrderKind.BET:
-            state = await self.ensure_game(user_id, group_id, province)
+            state = await self._ensure_game_locked(user_id, group_id, province)
         else:
             existing = await self._existing_state(user_id, group_id, province)
             if existing is None:
@@ -1102,6 +1143,7 @@ class GameEngine:
         await self.store.add_order(order)
         return OrderOutcome(state=replace(state, orders=state.orders + (order,)), order=order)
 
+    @_player_locked
     async def cancel_orders(self, user_id: str, group_id: str | None) -> int:
         state = await self._existing_state(user_id, group_id)
         if state is None:
