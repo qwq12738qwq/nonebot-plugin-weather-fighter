@@ -129,6 +129,14 @@ body.wf-ready {
   font-weight: 600;
 }
 
+.qs span.up {
+  color: #ff4d4f;
+}
+
+.qs span.down {
+  color: #00b578;
+}
+
 .qs-worst span {
   color: #ffa940;
 }

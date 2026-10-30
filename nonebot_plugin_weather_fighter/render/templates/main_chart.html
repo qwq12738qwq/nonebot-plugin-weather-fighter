@@ -27,8 +27,8 @@
     <div class="qh-stats">
       {% for group in header.groups %}
       <div class="qg">
-        {% for label, value in group %}
-        <div class="qs"><b>{{ label }}</b><span>{{ value }}</span></div>
+        {% for item in group %}
+        <div class="qs"><b>{{ item[0] }}</b><span{% if item|length > 2 and item[2] %} class="{{ item[2] }}"{% endif %}>{{ item[1] }}</span></div>
         {% endfor %}
       </div>
       {% endfor %}
