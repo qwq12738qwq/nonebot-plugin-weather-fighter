@@ -12,7 +12,7 @@ from nonebot.params import CommandArg
 from . import consts
 from .game.amount import AmountError, parse_amount, parse_shares
 from .game.engine import GameEngine, GameError, GameState, QuoteStats, get_engine
-from .models import Order, OrderKind, OrderStatus, Side
+from .models import Order, OrderKind, OrderStatus, Side, Trade
 from .services.openmeteo import get_client
 from .services.provinces import Province, province_names, resolve_province
 from .services.regions import resolve_province_or_city
@@ -303,6 +303,12 @@ async def _(event: MessageEvent, args: Message = CommandArg()) -> None:
     )
 
 
+def _close_line(trade: Trade) -> str:
+    short = _province_short(trade.province)
+    word = "赚" if trade.pnl >= 0 else "亏"
+    return f"{short} {trade.qty} 份（保证金 {_money(trade.margin)}） {word} {trade.pnl:+,.0f}"
+
+
 async def _close_and_reply(
     engine: GameEngine,
     user_id: str,
@@ -316,11 +322,7 @@ async def _close_and_reply(
         await matcher.finish(str(exc))
     if not outcome.trades or outcome.state is None:
         await matcher.finish("当前没有持仓")
-    parts = []
-    for trade in outcome.trades:
-        short = _province_short(trade.province)
-        word = "赚" if trade.pnl >= 0 else "亏"
-        parts.append(f"{short} {word} {trade.pnl:+,.0f}")
+    parts = [_close_line(trade) for trade in outcome.trades]
     await matcher.finish(
         f"已平仓：{'；'.join(parts)} · 合计 {outcome.total_pnl:+,.0f} · "
         f"余额 {_money(outcome.state.account.cash)}"
