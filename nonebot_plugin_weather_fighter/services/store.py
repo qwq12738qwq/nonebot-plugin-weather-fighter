@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Any
 
@@ -165,6 +167,97 @@ CREATE INDEX IF NOT EXISTS idx_leaderboard_season ON leaderboard(season_id);
 """
 
 
+class StoreTxn:
+    """交易写入事务；使用独立连接，避免与主连接的自动提交交错。"""
+
+    def __init__(self, db: aiosqlite.Connection) -> None:
+        self._db = db
+
+    async def _execute(self, sql: str, params: tuple[Any, ...] = ()) -> None:
+        await self._db.execute(sql, params)
+
+    async def save_account(self, account: Account) -> None:
+        await self._execute(
+            """
+            INSERT INTO accounts
+              (session_id, cash, equity, stake, margin_used, margin_frozen)
+            VALUES (?, ?, ?, ?, ?, 0)
+            ON CONFLICT(session_id) DO UPDATE SET
+              cash = excluded.cash,
+              equity = excluded.equity,
+              stake = excluded.stake,
+              margin_used = excluded.margin_used,
+              margin_frozen = 0
+            """,
+            (
+                account.session_id,
+                account.cash,
+                account.equity,
+                account.stake,
+                account.stake,
+            ),
+        )
+
+    async def save_position(self, position: Position) -> None:
+        await self._execute(
+            """
+            INSERT INTO positions
+              (session_id, province, side, stake, entry_price, qty, margin)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(session_id, province) DO UPDATE SET
+              side = excluded.side,
+              stake = excluded.stake,
+              entry_price = excluded.entry_price,
+              qty = excluded.qty,
+              margin = excluded.margin
+            """,
+            (
+                position.session_id,
+                position.province,
+                position.side.value,
+                position.stake,
+                position.entry_price,
+                position.qty,
+                position.margin,
+            ),
+        )
+
+    async def delete_position(self, session_id: str, province: str) -> None:
+        await self._execute(
+            "DELETE FROM positions WHERE session_id = ? AND province = ?",
+            (session_id, province),
+        )
+
+    async def add_trade(self, trade: Trade) -> None:
+        await self._execute(
+            """
+            INSERT INTO trades
+              (id, session_id, bar_index, side, stake, price, pnl, province,
+               qty, margin, fee, created_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?)
+            """,
+            (
+                trade.id,
+                trade.session_id,
+                trade.bar_index,
+                trade.side.value,
+                trade.stake,
+                trade.price,
+                trade.pnl,
+                trade.province,
+                trade.qty,
+                trade.margin,
+                trade.created_at,
+            ),
+        )
+
+    async def set_order_status(self, order_id: str, status: OrderStatus) -> None:
+        await self._execute(
+            "UPDATE orders SET status = ? WHERE id = ?",
+            (status.value, order_id),
+        )
+
+
 class Store:
     def __init__(self, path: str | Path) -> None:
         self.path = Path(path)
@@ -284,6 +377,25 @@ class Store:
         db = await self.connect()
         await db.execute(sql, params)
         await db.commit()
+
+    @asynccontextmanager
+    async def transaction(self) -> AsyncIterator[StoreTxn]:
+        db = await aiosqlite.connect(self.path)
+        db.row_factory = aiosqlite.Row
+        try:
+            await db.execute("PRAGMA foreign_keys=ON")
+            await db.execute("PRAGMA busy_timeout=5000")
+            await db.execute("BEGIN IMMEDIATE")
+            txn = StoreTxn(db)
+            try:
+                yield txn
+            except BaseException:
+                await db.rollback()
+                raise
+            else:
+                await db.commit()
+        finally:
+            await db.close()
 
     async def fetchone(self, sql: str, params: tuple[Any, ...] = ()) -> dict[str, Any] | None:
         db = await self.connect()

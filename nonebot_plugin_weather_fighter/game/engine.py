@@ -683,23 +683,24 @@ class GameEngine:
                     )
                     positions[order.province] = position
                     opened_this_bar.add(order.province)
-                    await self.store.add_trade(
-                        Trade(
-                            id=uuid.uuid4().hex,
-                            session_id=session.id,
-                            bar_index=relative,
-                            side=order.side,
-                            stake=order.stake,
-                            price=order.price,
-                            pnl=0.0,
-                            created_at=now,
-                            province=order.province,
-                            qty=fill_qty,
-                            margin=order.stake,
-                        )
+                    trade = Trade(
+                        id=uuid.uuid4().hex,
+                        session_id=session.id,
+                        bar_index=relative,
+                        side=order.side,
+                        stake=order.stake,
+                        price=order.price,
+                        pnl=0.0,
+                        created_at=now,
+                        province=order.province,
+                        qty=fill_qty,
+                        margin=order.stake,
                     )
-                    await self.store.save_position(position)
-                    await self.store.save_account(account)
+                    async with self.store.transaction() as txn:
+                        await txn.save_account(account)
+                        await txn.save_position(position)
+                        await txn.add_trade(trade)
+                        await txn.set_order_status(order.id, OrderStatus.FILLED)
                 else:
                     existing = positions.get(order.province)
                     if existing is None:
@@ -713,8 +714,8 @@ class GameEngine:
                         board,
                         relative,
                         now,
+                        order_id=order.id,
                     )
-                await self.store.set_order_status(order.id, OrderStatus.FILLED)
                 orders[index] = replace(order, status=OrderStatus.FILLED)
 
             for province, position in list(positions.items()):
@@ -727,29 +728,30 @@ class GameEngine:
                 hit = bar.low <= wipe if position.side is Side.LONG else bar.high >= wipe
                 if not hit:
                     continue
-                await self.store.add_trade(
-                    Trade(
-                        id=uuid.uuid4().hex,
-                        session_id=session.id,
-                        bar_index=relative,
-                        side=position.side,
-                        stake=position.stake,
-                        price=wipe,
-                        pnl=-position.stake,
-                        created_at=now,
-                        province=position.province,
-                        qty=position.qty,
-                        margin=position.stake,
-                    )
+                trade = Trade(
+                    id=uuid.uuid4().hex,
+                    session_id=session.id,
+                    bar_index=relative,
+                    side=position.side,
+                    stake=position.stake,
+                    price=wipe,
+                    pnl=-position.stake,
+                    created_at=now,
+                    province=position.province,
+                    qty=position.qty,
+                    margin=position.stake,
                 )
-                await self.store.delete_position(session.id, position.province)
-                positions.pop(province, None)
+                remaining = {key: item for key, item in positions.items() if key != province}
                 account = replace(
                     account,
-                    stake=sum(item.stake for item in positions.values()),
+                    stake=sum(item.stake for item in remaining.values()),
                     equity=account.cash,
                 )
-                await self.store.save_account(account)
+                async with self.store.transaction() as txn:
+                    await txn.add_trade(trade)
+                    await txn.delete_position(session.id, position.province)
+                    await txn.save_account(account)
+                positions.pop(province, None)
 
             account = replace(
                 account,
@@ -1003,9 +1005,10 @@ class GameEngine:
             qty=qty,
             margin=stake,
         )
-        await self.store.save_account(account)
-        await self.store.save_position(position)
-        await self.store.add_trade(trade)
+        async with self.store.transaction() as txn:
+            await txn.save_account(account)
+            await txn.save_position(position)
+            await txn.add_trade(trade)
         return TradeOutcome(
             state=replace(state, account=account, positions=state.positions + (position,)),
             trade=trade,
@@ -1182,6 +1185,8 @@ class GameEngine:
         board: Season,
         relative: int,
         now: int,
+        *,
+        order_id: str | None = None,
     ) -> tuple[Account, Trade]:
         value = _bet_value(position, price, session.leverage)
         trade = Trade(
@@ -1197,14 +1202,18 @@ class GameEngine:
             qty=position.qty,
             margin=position.stake,
         )
-        await self.store.add_trade(trade)
-        await self.store.delete_position(session.id, position.province)
-        positions.pop(position.province, None)
+        remaining = {key: item for key, item in positions.items() if key != position.province}
         cash = account.cash + value
-        stake = sum(item.stake for item in positions.values())
-        equity = await self._equity_at(board, positions, cash, relative, session.leverage)
+        stake = sum(item.stake for item in remaining.values())
+        equity = await self._equity_at(board, remaining, cash, relative, session.leverage)
         next_account = replace(account, cash=cash, equity=equity, stake=stake)
-        await self.store.save_account(next_account)
+        async with self.store.transaction() as txn:
+            await txn.add_trade(trade)
+            await txn.delete_position(session.id, position.province)
+            await txn.save_account(next_account)
+            if order_id is not None:
+                await txn.set_order_status(order_id, OrderStatus.FILLED)
+        positions.pop(position.province, None)
         return next_account, trade
 
     # ------------------------------------------------------------------
