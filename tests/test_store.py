@@ -16,7 +16,7 @@ from nonebot_plugin_weather_fighter.models import (
     Trade,
 )
 from nonebot_plugin_weather_fighter.services.openmeteo import MinutelySeries, RegionSeries
-from nonebot_plugin_weather_fighter.services.store import Store
+from nonebot_plugin_weather_fighter.services.store import SCHEMA, Store
 
 TABLES = {
     "accounts",
@@ -227,4 +227,61 @@ async def test_migrates_m0_sessions_table(tmp_path: Path) -> None:
     await store.initialize()
     columns = {str(row["name"]) for row in await store.fetchall("PRAGMA table_info(sessions)")}
     assert {"speed", "return_pct"} <= columns
+    await store.close()
+
+
+async def test_migrate_v6_backfills_qty_and_margin(tmp_path: Path) -> None:
+    import sqlite3
+
+    path = tmp_path / "v6.db"
+    connection = sqlite3.connect(path)
+    connection.executescript(SCHEMA)
+    # v6: positions 已有 qty/margin；orders/trades 只有 qty，没有 margin
+    connection.execute("ALTER TABLE orders DROP COLUMN margin")
+    connection.execute("ALTER TABLE trades DROP COLUMN margin")
+    connection.execute("PRAGMA user_version = 6")
+    connection.execute(
+        """
+        INSERT INTO sessions
+          (id, user_id, group_id, season_id, principal, leverage, current_bar,
+           status, created_at, updated_at)
+        VALUES ('s1', 'u1', 'g1', 'season1', 10000, 10, 0, 'running', 0, 0)
+        """
+    )
+    connection.execute(
+        """
+        INSERT INTO positions (session_id, province, side, stake, entry_price, qty, margin)
+        VALUES ('s1', '河北省', 'long', 1000, 100, 0, 0)
+        """
+    )
+    connection.execute(
+        """
+        INSERT INTO orders
+          (id, session_id, kind, side, stake, price, status, province, qty, created_at)
+        VALUES ('o1', 's1', 'bet', 'long', 500, 50, 'open', '河北省', 0, 0)
+        """
+    )
+    connection.execute(
+        """
+        INSERT INTO trades
+          (id, session_id, bar_index, side, stake, price, pnl, province, qty, fee, created_at)
+        VALUES ('t1', 's1', 0, 'long', 200, 25, 0, '河北省', 0, 0, 0)
+        """
+    )
+    connection.commit()
+    connection.close()
+
+    store = Store(path)
+    await store.initialize()
+    positions = await store.get_positions("s1")
+    assert positions[0].qty == 100
+    assert positions[0].margin == 1000.0
+    orders = await store.list_open_orders("s1")
+    assert orders[0].qty == 100
+    assert orders[0].margin == 500.0
+    trades = await store.list_trades("s1")
+    assert trades[0].qty == 80
+    assert trades[0].margin == 200.0
+    row = await store.fetchone("PRAGMA user_version")
+    assert row is not None and int(row["user_version"]) == 7
     await store.close()
