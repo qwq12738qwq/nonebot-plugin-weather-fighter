@@ -374,8 +374,8 @@ def sample_header(bars: list[Bar]) -> dict[str, Any]:
         "up": change >= 0,
         "groups": (
             (
-                ("今日最高", f"{high:.1f}"),
-                ("今日最低", f"{low:.1f}"),
+                ("今日最高", f"{high:.1f}℃", "up"),
+                ("今日最低", f"{low:.1f}℃", "down"),
                 ("体感", f"{last.close - 1.0:.1f}℃"),
                 ("全天波动", f"{high - low:.1f}℃"),
             ),
