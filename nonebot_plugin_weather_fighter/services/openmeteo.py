@@ -6,6 +6,7 @@ import time as _time
 from dataclasses import dataclass, field
 from typing import Any
 
+from ..consts import weather_score
 from .cache import BucketCache, CacheValue
 from .coords import coords_query
 from .http import HttpClient, get_http
@@ -377,7 +378,7 @@ class OpenMeteoClient:
                     timeout=max(self.config.timeout, 30.0) + 3,
                 )
                 series = self._parse_region(province, selection, payload, host)
-                self._validate_gust(series.gust)
+                self._validate_columns(series.gust, series.temp)
                 return series
             except Exception as exc:  # noqa: BLE001 - 逐个主机兜底
                 errors.append(f"{host}: {type(exc).__name__}: {exc}")
@@ -405,22 +406,47 @@ class OpenMeteoClient:
             raise OpenMeteoError("Open-Meteo 区域 minutely_15.time 为空")
         times = [str(item) for item in first["time"]]
         size = len(times)
+        weights = [city.weight for city in selection.cities]
         minutely = [
-            block["minutely_15"] for block in blocks if isinstance(block.get("minutely_15"), dict)
+            (block["minutely_15"], weights[index] if index < len(weights) else 1.0)
+            for index, block in enumerate(blocks)
+            if isinstance(block.get("minutely_15"), dict)
         ]
 
-        def average(field: str) -> tuple[float | None, ...]:
+        def weighted_average(field: str) -> tuple[float | None, ...]:
             out: list[float | None] = []
             for index in range(size):
-                values: list[float] = []
-                for block in minutely:
+                total = 0.0
+                weight_sum = 0.0
+                for block, weight in minutely:
                     column = block.get(field)
                     if not isinstance(column, list) or index >= len(column):
                         continue
                     value = _float_or_none(column[index])
-                    if value is not None:
-                        values.append(value)
-                out.append(sum(values) / len(values) if values else None)
+                    if value is None:
+                        continue
+                    total += value * weight
+                    weight_sum += weight
+                out.append(total / weight_sum if weight_sum else None)
+            return tuple(out)
+
+        def weighted_code() -> tuple[float | None, ...]:
+            out: list[float | None] = []
+            for index in range(size):
+                counts: dict[int, float] = {}
+                for block, weight in minutely:
+                    column = block.get("weather_code")
+                    if not isinstance(column, list) or index >= len(column):
+                        continue
+                    code = _int_or_none(column[index])
+                    if code is None:
+                        continue
+                    counts[code] = counts.get(code, 0.0) + weight
+                if not counts:
+                    out.append(None)
+                    continue
+                code = min(counts, key=lambda item: (-counts[item], weather_score(item), item))
+                out.append(float(code))
             return tuple(out)
 
         return RegionSeries(
@@ -428,12 +454,12 @@ class OpenMeteoClient:
             scope=selection.scope,
             cities=tuple(city.name for city in selection.cities),
             time=tuple(times),
-            temp=average("temperature_2m"),
-            gust=average("wind_gusts_10m"),
-            precip=average("precipitation"),
-            wcode=average("weather_code"),
-            cape=average("cape"),
-            dew=average("dew_point_2m"),
+            temp=weighted_average("temperature_2m"),
+            gust=weighted_average("wind_gusts_10m"),
+            precip=weighted_average("precipitation"),
+            wcode=weighted_code(),
+            cape=weighted_average("cape"),
+            dew=weighted_average("dew_point_2m"),
             source=host,
         )
 
@@ -462,17 +488,26 @@ class OpenMeteoClient:
         )
 
     @staticmethod
-    def _validate_gust(gust: tuple[float | None, ...]) -> None:
-        probe = min(96, len(gust))
+    def _validate_column(column: tuple[float | None, ...], label: str) -> None:
+        probe = min(96, len(column))
         if probe == 0:
             raise OpenMeteoError("行情序列为空")
-        non_null = sum(1 for value in gust[:probe] if value is not None)
+        non_null = sum(1 for value in column[:probe] if value is not None)
         if non_null < probe * 0.5:
-            raise OpenMeteoError("这台主机的 15 分钟历史不够长")
+            raise OpenMeteoError(f"这台主机的 15 分钟{label}历史不够长")
+
+    @classmethod
+    def _validate_columns(
+        cls,
+        gust: tuple[float | None, ...],
+        temp: tuple[float | None, ...],
+    ) -> None:
+        cls._validate_column(gust, "阵风")
+        cls._validate_column(temp, "气温")
 
     @classmethod
     def _validate_history(cls, series: MinutelySeries) -> None:
-        cls._validate_gust(series.gust)
+        cls._validate_columns(series.gust, series.temp)
 
 
 _client: OpenMeteoClient | None = None

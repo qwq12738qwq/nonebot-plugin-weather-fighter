@@ -109,8 +109,45 @@ _HELP_TEXT = """天气战士 · 所有群共用一个盘
 HELP_TEXT = _HELP_TEXT
 
 
+WEATHER_SCORES = {
+    0: 100.0,
+    1: 95.0,
+    2: 85.0,
+    3: 78.0,
+    45: 55.0,
+    48: 55.0,
+    51: 65.0,
+    53: 65.0,
+    55: 65.0,
+    56: 45.0,
+    57: 45.0,
+    61: 35.0,
+    63: 35.0,
+    65: 10.0,
+    66: 8.0,
+    67: 8.0,
+    71: 25.0,
+    73: 25.0,
+    75: 25.0,
+    77: 25.0,
+    80: 40.0,
+    81: 40.0,
+    82: 12.0,
+    85: 20.0,
+    86: 20.0,
+    95: 6.0,
+    96: 0.0,
+    99: 0.0,
+}
+
+
 def weather_name(code: int) -> str:
     return WEATHER_NAMES.get(code, f"码 {code}")
+
+
+def weather_score(code: int) -> float:
+    """天气码对应的舒适度分值，供省份与区域指数共用。"""
+    return WEATHER_SCORES.get(code, 60.0)
 
 
 def weather_icon(code: int) -> str:

@@ -14,15 +14,17 @@ from nonebot_plugin_weather_fighter.services.provinces import resolve_province
 from nonebot_plugin_weather_fighter.services.regions import region_cities
 
 
-def payload(*, gust: float = 5.0, points: int = 192) -> dict[str, object]:
+def payload(
+    *, gust: float = 5.0, temp: float = 20.0, wcode: int = 0, points: int = 192
+) -> dict[str, object]:
     times = [f"2026-08-01T{(i // 60) % 24:02d}:{i % 60:02d}" for i in range(points)]
     return {
         "minutely_15": {
             "time": times,
-            "temperature_2m": [20.0] * points,
+            "temperature_2m": [temp] * points,
             "wind_gusts_10m": [gust] * points,
             "precipitation": [0.0] * points,
-            "weather_code": [0] * points,
+            "weather_code": [wcode] * points,
             "cape": [100.0] * points,
             "dew_point_2m": [10.0] * points,
         }
@@ -86,6 +88,51 @@ async def test_region_average() -> None:
     assert result.value.cities == tuple(city.name for city in selection.cities)
     assert result.value.scope == selection.scope
     assert route.called
+
+
+@respx.mock
+async def test_region_is_weighted_by_city_grade() -> None:
+    respx.get(FORECAST_HOSTS[0]).mock(
+        return_value=httpx.Response(
+            200,
+            json=[
+                payload(temp=20.0, wcode=61),
+                payload(temp=30.0, wcode=61),
+                payload(temp=30.0, wcode=95),
+            ],
+        )
+    )
+    found = province()
+    selection = region_cities(found)
+    weights = [city.weight for city in selection.cities[:3]]
+    result = await client().fetch_region(found, selection, "2026-08-01", "2026-08-02")
+    expected = (20.0 * weights[0] + 30.0 * weights[1] + 30.0 * weights[2]) / sum(weights)
+    assert result.value.temp[0] == pytest.approx(expected)
+    assert result.value.temp[0] != 26.666666  # 不是简单平均
+    assert result.value.wcode[0] in (61.0, 95.0)  # 众数而不是线性平均
+
+
+@respx.mock
+async def test_region_code_ties_pick_worst_weather() -> None:
+    respx.get(FORECAST_HOSTS[0]).mock(
+        return_value=httpx.Response(200, json=[payload(wcode=2), payload(wcode=3)])
+    )
+    found = province()
+    selection = region_cities(found)
+    first, second = selection.cities[0].weight, selection.cities[1].weight
+    result = await client().fetch_region(found, selection, "2026-08-01", "2026-08-02")
+    assert result.value.wcode[0] == (3.0 if first == second else 2.0)
+
+
+@respx.mock
+async def test_fallback_when_temperature_history_is_missing() -> None:
+    broken = payload()
+    broken["minutely_15"]["temperature_2m"] = [None] * 192
+    respx.get(FORECAST_HOSTS[0]).mock(return_value=httpx.Response(200, json=broken))
+    second = respx.get(FORECAST_HOSTS[1]).mock(return_value=httpx.Response(200, json=payload()))
+    result = await client().fetch_minutely_15(province())
+    assert result.value.source == FORECAST_HOSTS[1]
+    assert second.called
 
 
 @respx.mock

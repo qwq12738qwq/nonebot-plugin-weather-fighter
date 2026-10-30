@@ -60,7 +60,6 @@ DEFAULT_SAFETY_ENTRY = 0.20
 DEFAULT_SAFETY_GRANT = 0.05
 DEFAULT_SAFETY_TARGET = 0.35
 DISPLAY_WICK_FACTOR = 0.8
-DISPLAY_REGIONAL_FACTOR = 0.02
 CHART_BARS = 96
 TOTAL_BARS = (WARM_DAYS + TRADE_DAYS) * BARS_PER_DAY
 REFRESH_SECONDS = 30 * 60
@@ -131,7 +130,7 @@ class QuoteStats:
     ma20: float | None
     activity: float
     regional: float | None
-    regional_change_pct: float | None
+    regional_change: float | None
     day: int
     time_label: str
     session_label: str
@@ -224,9 +223,7 @@ def _display_bar(bar: WxiBar, previous_temp: float | None) -> WxiBar:
     wick = max(0.05, span * max(abs(close), 1.0) * DISPLAY_WICK_FACTOR)
     high = max(open_price, close) + wick
     low = min(open_price, close) - wick
-    regional = None
-    if bar.regional is not None:
-        regional = close + (bar.regional - bar.close) * DISPLAY_REGIONAL_FACTOR
+    regional = bar.regional
     return replace(
         bar,
         open=open_price,
@@ -1116,9 +1113,9 @@ class GameEngine:
                 bars[relative - 2].temp if relative > 1 else None,
             )
             previous_regional = previous_bar.regional
-        regional_change_pct: float | None = None
-        if regional is not None and previous_regional is not None and previous_regional != 0:
-            regional_change_pct = (regional - previous_regional) / previous_regional * 100
+        regional_change: float | None = None
+        if regional is not None and previous_regional is not None:
+            regional_change = regional - previous_regional
         today = bar.time[:10]
         day_start = relative
         while day_start > 0 and bars[day_start - 1].time[:10] == today:
@@ -1150,7 +1147,7 @@ class GameEngine:
             ma20=ma20,
             activity=bar.activity,
             regional=regional,
-            regional_change_pct=regional_change_pct,
+            regional_change=regional_change,
             day=day,
             time_label=time_label,
             session_label=session_label,
@@ -1276,9 +1273,7 @@ class GameEngine:
                 ("区域", num(stats.regional)),
                 (
                     "区域涨跌",
-                    "—"
-                    if stats.regional_change_pct is None
-                    else f"{stats.regional_change_pct:+.2f}%",
+                    "—" if stats.regional_change is None else f"{stats.regional_change:+.1f}℃",
                 ),
             ),
             (
