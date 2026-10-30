@@ -1,6 +1,6 @@
 [project]
 name = "nonebot-plugin-weather-fighter"
-version = "0.8.7"
+version = "0.8.8"
 description = "老实看天气,很枯燥吧"
 readme = "README.md"
 license = "MIT"
@@ -21,7 +21,6 @@ dependencies = [
   "httpx>=0.20",
   "jinja2>=2.1",
   "aiosqlite>=0.10",
-  "chinesecalendar>=0.90",
 ]
 
 [dependency-groups]
