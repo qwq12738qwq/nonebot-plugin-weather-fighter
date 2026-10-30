@@ -539,3 +539,22 @@ async def test_concurrent_buys_cannot_overdraw(tmp_path: Path) -> None:
     assert account is not None
     assert account.cash >= 0
     await store.close()
+
+
+async def test_leverage_cannot_change_with_open_order(tmp_path: Path) -> None:
+    now = {"value": at(27, 10, 0)}
+    engine, store, _ = await make_engine(tmp_path, now)
+    hebei = resolve_province("河北")
+    assert hebei is not None
+    state = await engine.ensure_game("u1", "g1", hebei)
+    await engine.place_order(
+        "u1", "g1", hebei, OrderKind.BET, Side.LONG, state.current.close, stake=1000
+    )
+
+    with pytest.raises(GameError, match="到价单"):
+        await engine.set_leverage("u1", "g1", 5)
+
+    await engine.cancel_orders("u1", "g1")
+    changed = await engine.set_leverage("u1", "g1", 5)
+    assert changed.session.leverage == pytest.approx(5)
+    await store.close()
