@@ -558,3 +558,16 @@ async def test_leverage_cannot_change_with_open_order(tmp_path: Path) -> None:
     changed = await engine.set_leverage("u1", "g1", 5)
     assert changed.session.leverage == pytest.approx(5)
     await store.close()
+
+
+async def test_region_can_be_disabled(tmp_path: Path) -> None:
+    now = {"value": at(27, 10, 0)}
+    engine, store, _ = await make_engine(tmp_path, now)
+    engine.region_enabled = False
+    hebei = resolve_province("河北")
+    assert hebei is not None
+    state = await engine.ensure_game("u1", "g1", hebei)
+    assert state.wxi.regional_line
+    assert all(value is None for value in state.wxi.regional_line)
+    assert all(bar.regional is None for bar in state.wxi.bars)
+    await store.close()
