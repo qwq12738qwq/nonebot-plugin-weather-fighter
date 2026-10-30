@@ -95,7 +95,6 @@
 - 法定节假日：使用 `chinesecalendar`（随依赖更新）
 - 彩云 v2.6 客户端预留,如果没配置彩云天气的API(`WEATHER_FIGHTER_CAIYUN_TOKEN`)默认使用免费的`Open-Meteo`数据
 - 缓存：懒刷新 + 30 分钟桶 + 单飞 + 负缓存 + 旧值兜底,尽可能减少请求次数
-- 市场时间以行情服务器 `Date` 响应头校准（启动时 + 每小时一次），不直接信任主机时钟；时间请求按 `WEATHER_FIGHTER_RETRY_COUNT` 重试（每次同步重置），同步失败沿用上次校准并在日志里告警。
 - 保底机制: 没钱可以等着吃`保底`,低于默认余额（`WEATHER_FIGHTER_PRINCIPAL`）的 `20%`（2,000）时进入保底；每个真实自然日补默认余额的 `5%`（500），补到 `35%`（3,500）停止。
 - **中文字体**已随插件打包，**不需要**系统安装 CJK 字体。
 - 如果你有更好的想法和建议,随时欢迎提出[issues](https://github.com/qwq12738qwq/nonebot-plugin-weather-fighter/issues/new)~(●´∀｀●)
