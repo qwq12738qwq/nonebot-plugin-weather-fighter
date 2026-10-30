@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 from dataclasses import replace
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -487,4 +488,54 @@ async def test_buy_by_shares_and_amount_conversion(tmp_path: Path) -> None:
     closed = await engine.close_position("u3", "g1", hebei)
     assert closed.trades[0].qty == other.trade.qty
     assert closed.trades[0].margin == pytest.approx(other.trade.stake)
+    await store.close()
+
+
+async def test_concurrent_quotes_fill_order_once(tmp_path: Path) -> None:
+    now = {"value": at(27, 10, 0)}
+    engine, store, _ = await make_engine(tmp_path, now)
+    hebei = resolve_province("河北")
+    assert hebei is not None
+    state = await engine.ensure_game("u1", "g1", hebei)
+    target = state.current.close
+    await engine.place_order("u1", "g1", hebei, OrderKind.BET, Side.LONG, target, stake=6000)
+
+    now["value"] = at(27, 10, 15)
+    await asyncio.gather(
+        engine.quote("u1", "g1", hebei),
+        engine.quote("u1", "g1", hebei),
+    )
+
+    trades = await store.list_trades(state.session.id)
+    assert len(trades) == 1
+    assert len(await store.get_positions(state.session.id)) == 1
+    account = await store.get_account(state.session.id)
+    assert account is not None
+    assert account.cash == pytest.approx(10_000 - trades[0].stake)
+    await store.close()
+
+
+async def test_concurrent_buys_cannot_overdraw(tmp_path: Path) -> None:
+    now = {"value": at(27, 10, 0)}
+    engine, store, _ = await make_engine(tmp_path, now)
+    hebei = resolve_province("河北")
+    shandong = resolve_province("山东")
+    assert hebei is not None and shandong is not None
+    await engine.ensure_game("u1", "g1", hebei)
+
+    results = await asyncio.gather(
+        engine.open_position("u1", "g1", hebei, Side.LONG, stake=6000),
+        engine.open_position("u1", "g1", shandong, Side.LONG, stake=6000),
+        return_exceptions=True,
+    )
+    errors = [result for result in results if isinstance(result, Exception)]
+    successes = [result for result in results if not isinstance(result, Exception)]
+    assert len(successes) == 1
+    assert len(errors) == 1
+    assert isinstance(errors[0], GameError)
+    state = await engine.ensure_game("u1", "g1", hebei)
+    assert len(await store.get_positions(state.session.id)) == 1
+    account = await store.get_account(state.session.id)
+    assert account is not None
+    assert account.cash >= 0
     await store.close()
