@@ -945,7 +945,7 @@ class GameEngine:
         if cash < MIN_STAKE:
             raise GameError(f"余额不足 {MIN_STAKE:.0f}，不能买入")
         price = state.current.close
-        if price <= 0:
+        if not math.isfinite(price) or price <= 0:
             raise GameError("行情异常，稍后再试")
         leverage = max(1e-9, float(state.session.leverage))
         need = max(1, math.ceil(MIN_STAKE * leverage / price))
@@ -961,6 +961,8 @@ class GameEngine:
                 ratio = 30.0 if percent is None else max(1.0, min(100.0, float(percent)))
                 stake = cash * ratio / 100.0
             stake = float(stake)
+            if not math.isfinite(stake):
+                raise GameError("金额格式不对")
             if stake < MIN_STAKE:
                 raise GameError(f"最少投入 {MIN_STAKE:.0f}（约 {need} 份）")
             if stake > cash + 1e-6:
@@ -1074,7 +1076,7 @@ class GameEngine:
         if state.ended:
             raise GameError("本局已经结束")
         price = float(price)
-        if price <= 0:
+        if not math.isfinite(price) or price <= 0:
             raise GameError("到价价格必须大于 0")
         now = int(self._clock())
         if kind is OrderKind.BET:
@@ -1102,6 +1104,8 @@ class GameEngine:
                     ratio = max(1.0, min(100.0, float(percent)))
                     stake = cash * ratio / 100.0
                 stake = float(stake)
+                if not math.isfinite(stake):
+                    raise GameError("金额格式不对")
                 if stake < MIN_STAKE:
                     raise GameError(f"最少投入 {MIN_STAKE:.0f}（约 {need} 份）")
                 qty = int(stake * leverage / price)

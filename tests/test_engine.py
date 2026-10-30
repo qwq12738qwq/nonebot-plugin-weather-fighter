@@ -590,3 +590,17 @@ async def test_region_refreshes_with_sliding_window(tmp_path: Path) -> None:
     assert client.region_calls[-1][0] > first_start
     assert any(bar.regional is not None for bar in later.wxi.bars)
     await store.close()
+
+
+async def test_nonfinite_inputs_are_rejected(tmp_path: Path) -> None:
+    now = {"value": at(27, 10, 0)}
+    engine, store, _ = await make_engine(tmp_path, now)
+    hebei = resolve_province("河北")
+    assert hebei is not None
+    await engine.ensure_game("u1", "g1", hebei)
+
+    with pytest.raises(GameError, match="价格"):
+        await engine.place_order("u1", "g1", hebei, OrderKind.BET, Side.LONG, float("nan"), qty=100)
+    with pytest.raises(GameError, match="金额"):
+        await engine.open_position("u1", "g1", hebei, Side.LONG, stake=float("nan"))
+    await store.close()
