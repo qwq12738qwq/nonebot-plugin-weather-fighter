@@ -115,9 +115,6 @@
 | `WEATHER_FIGHTER_ENABLE_REGION` | true | 是否加载同省区域指数 |
 | `WEATHER_FIGHTER_CAIYUN_TOKEN` | 空 | 彩云 token（预留） |
 
-> 渲染由 `nonebot-plugin-htmlrender` 负责，本插件不会修改它的 `render` 配置。
-> 需要指定浏览器或缓存目录时，请自行配置 `RENDER__PROVIDER_CONFIG__EXECUTABLE_PATH`
-> 或 `RENDER__PROVIDER_CONFIG__STORAGE_PATH`。
 
 ## 主图
 
