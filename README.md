@@ -115,6 +115,7 @@
 | `WEATHER_FIGHTER_ENABLE_REGION` | true | 是否加载同省区域指数 |
 | `WEATHER_FIGHTER_CAIYUN_TOKEN` | 空 | 彩云 token（预留） |
 
+
 ## 主图
 
 ![main chart](docs/main-chart.png)

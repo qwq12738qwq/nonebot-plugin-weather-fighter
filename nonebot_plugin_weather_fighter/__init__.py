@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import asyncio
 import contextlib
-import os
 
 from nonebot import get_driver, get_plugin_config, require
 from nonebot.plugin import PluginMetadata
@@ -11,31 +10,6 @@ require("nonebot_plugin_localstore")
 
 _driver = get_driver()
 _clock_task: asyncio.Task[None] | None = None
-
-
-def _playwright_cache_dir() -> str:
-    configured = os.environ.get("PLAYWRIGHT_BROWSERS_PATH")
-    if configured:
-        return configured
-
-    from nonebot_plugin_localstore import get_plugin_cache_dir
-
-    return str(get_plugin_cache_dir() / "ms-playwright")
-
-
-if getattr(_driver.config, "render", None) is None:
-    render_config: dict[str, object] = {"provider": "playwright"}
-    executable = os.environ.get("PLAYWRIGHT_CHROMIUM_EXECUTABLE")
-    if executable:
-        render_config["provider_config"] = {
-            "executable_path": executable,
-            "launch_args": os.environ.get(
-                "PLAYWRIGHT_CHROMIUM_ARGS", "--no-sandbox --disable-crashpad"
-            ),
-        }
-    else:
-        render_config["provider_config"] = {"storage_path": _playwright_cache_dir()}
-    _driver.config.render = render_config  # type: ignore[attr-defined]
 
 require("nonebot_plugin_htmlrender")
 
